@@ -1,0 +1,242 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Index - YT2026</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        :root {
+            color-scheme: light;
+            --bg: #eef2ff;
+            --panel: #ffffff;
+            --panel-shadow: rgba(0, 0, 0, 0.18);
+            --text: #1f2937;
+            --muted: #4b5563;
+            --card: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --card-text: #ffffff;
+            --button-bg: rgba(102, 126, 234, 0.1);
+            --button-border: rgba(102, 126, 234, 0.25);
+            --button-text: #1f2937;
+        }
+
+        :root[data-theme="dark"] {
+            color-scheme: dark;
+            --bg: #1a1b22;
+            --panel: #11131a;
+            --panel-shadow: rgba(0, 0, 0, 0.55);
+            --text: #f8fafc;
+            --muted: #cbd5e1;
+            --card: linear-gradient(135deg, #334155 0%, #1e293b 100%);
+            --card-text: #f8fafc;
+            --button-bg: rgba(148, 163, 184, 0.16);
+            --button-border: rgba(148, 163, 184, 0.35);
+            --button-text: #f8fafc;
+        }
+
+        :root[data-theme="contrast"] {
+            color-scheme: dark;
+            --bg: #000000;
+            --panel: #ffffff;
+            --panel-shadow: rgba(0, 0, 0, 0.3);
+            --text: #000000;
+            --muted: #1f2937;
+            --card: linear-gradient(135deg, #000000 0%, #000000 100%);
+            --card-text: #ffffff;
+            --button-bg: #ffffff;
+            --button-border: #000000;
+            --button-text: #000000;
+        }
+
+        .container {
+            background: var(--panel);
+            border-radius: 10px;
+            box-shadow: 0 20px 60px var(--panel-shadow);
+            padding: 40px;
+            max-width: 1100px;
+            width: 100%;
+        }
+
+        h1 {
+            color: var(--text);
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .subtitle {
+            color: var(--muted);
+            text-align: center;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .theme-switcher {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 28px;
+        }
+
+        .theme-button {
+            border: 1px solid var(--button-border);
+            background: var(--button-bg);
+            color: var(--button-text);
+            padding: 10px 16px;
+            border-radius: 999px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+        }
+
+        .theme-button:hover,
+        .theme-button.active {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.12);
+        }
+
+        .links-grid {
+            display: grid;
+            grid-template-columns: repeat(7, minmax(120px, 1fr));
+            gap: 15px;
+        }
+
+        a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 96px;
+            padding: 18px;
+            background: var(--card);
+            color: var(--card-text);
+            text-decoration: none;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 0.92rem;
+            line-height: 1.3;
+            font-weight: 500;
+            transition: transform 0.3s, box-shadow 0.3s, opacity 0.2s;
+            white-space: normal;
+            word-break: break-word;
+        }
+
+        a:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        a[href="#"] {
+            opacity: 0.35;
+            pointer-events: none;
+        }
+
+        @media (max-width: 700px) {
+            .links-grid {
+                grid-template-columns: repeat(4, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 500px) {
+            .links-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📚 YT2026</h1>
+        <p class="subtitle">Navigation Hub</p>
+        <div class="theme-switcher" role="toolbar" aria-label="Theme controls">
+            <button type="button" class="theme-button active" data-theme="">Light</button>
+            <button type="button" class="theme-button" data-theme="dark">Dark</button>
+            <button type="button" class="theme-button" data-theme="contrast">High Contrast</button>
+        </div>
+        <nav class="links-grid">
+            <a href="#"></a>
+            <a href="#"></a>
+            <a href="#"></a>
+            <a href="#"></a>
+            <a href="#"></a>
+            <a href="01-solution-oriented-slideshow.html">Solution-Oriented Slideshow</a>
+            <a href="02-prolific-creator-slideshow.html">Prolific Creator Slideshow</a>
+            <a href="03-ai-workflow-architect-slides.html">AI Workflow Architect Slides</a>
+            <a href="04-dead-tech-relics-slideshow.html">Dead Tech Relics Slideshow</a>
+            <a href="05-visible-thinking-landing.html">Visible Thinking Landing</a>
+            <a href="21.html">Page 21</a>
+            <a href="22.html">Page 22</a>
+            <a href="day8.html">Day 8</a>
+            <a href="day9.html">Day 9</a>
+            <a href="day10.html">Day 10</a>
+            <a href="day11.html">Day 11</a>
+            <a href="day12.html">Day 12</a>
+            <a href="day13.html">Day 13</a>
+            <a href="day14.html">Day 14</a>
+            <a href="day15.html">Day 15</a>
+            <a href="day16.html">Day 16</a>
+            <a href="day17.html">Day 17</a>
+            <a href="day18.html">Day 18</a>
+            <a href="day19.html">Day 19</a>
+            <a href="day20.html">Day 20</a>
+            <a href="day21.html">Day 21</a>
+            <a href="day22.html">Day 22</a>
+            <a href="day23.html">Day 23</a>
+            <a href="day24.html">Day 24</a>
+            <a href="day25.html">Day 25</a>
+            <a href="day26.html">Day 26</a>
+            <a href="day27.html">Day 27</a>
+            <a href="day28.html">Day 28</a>
+            <a href="day29.html">Day 29</a>
+            <a href="day30.html">Day 30</a>
+        </nav>
+    </div>
+    <script>
+        const buttons = document.querySelectorAll('.theme-button');
+        const root = document.documentElement;
+        const stored = localStorage.getItem('yt2026-theme');
+
+        if (stored) {
+            if (stored === 'dark' || stored === 'contrast') {
+                root.dataset.theme = stored;
+            } else {
+                root.removeAttribute('data-theme');
+            }
+            buttons.forEach(btn => btn.classList.toggle('active', btn.dataset.theme === stored));
+        }
+
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                const selected = button.dataset.theme;
+                if (selected) {
+                    root.dataset.theme = selected;
+                    localStorage.setItem('yt2026-theme', selected);
+                } else {
+                    root.removeAttribute('data-theme');
+                    localStorage.removeItem('yt2026-theme');
+                }
+                buttons.forEach(btn => btn.classList.toggle('active', btn === button));
+            });
+        });
+    </script>
+</body>
+</html>
+
