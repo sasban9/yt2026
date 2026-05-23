@@ -1,0 +1,814 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Prolific Creator System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink: #080809;
+  --bg: #0a0a0f;
+  --surface: #111118;
+  --surface2: #18181f;
+  --border: rgba(255,255,255,0.08);
+  --text: #e8e6f0;
+  --muted: rgba(232,230,240,0.45);
+  --purple: #9b6dff;
+  --purple-dim: rgba(155,109,255,0.15);
+  --pink: #ff6db3;
+  --pink-dim: rgba(255,109,179,0.12);
+  --cyan: #3debd1;
+  --cyan-dim: rgba(61,235,209,0.12);
+  --orange: #ff8c3d;
+  --orange-dim: rgba(255,140,61,0.12);
+  --yellow: #ffe066;
+  --yellow-dim: rgba(255,224,102,0.1);
+  --green: #52e07a;
+  --green-dim: rgba(82,224,122,0.12);
+}
+
+html, body { height: 100%; overflow: hidden; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* ── STAGE ── */
+.stage {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── SLIDE BASE ── */
+.slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 44px 6vw;
+  opacity: 0;
+  transform: translateX(0);
+  transition: opacity 0.38s ease, transform 0.38s ease;
+  pointer-events: none;
+  text-align: center;
+  visibility: hidden;
+  overflow: hidden;
+}
+.slide.active { opacity: 1; transform: translateX(0); pointer-events: all; visibility: visible; }
+.slide.enter-from-right { transform: translateX(48px); visibility: visible; }
+.slide.enter-from-left  { transform: translateX(-48px); visibility: visible; }
+.slide.exit-to-left  { opacity: 0; transform: translateX(-48px); visibility: visible; }
+.slide.exit-to-right { opacity: 0; transform: translateX(48px); visibility: visible; }
+
+/* ── SLIDE BACKGROUNDS ── */
+.bg-void    { background: #080809; }
+.bg-deep    { background: #0d0b14; }
+.bg-purple  { background: #0e0b1a; }
+.bg-teal    { background: #080f0e; }
+.bg-ember   { background: #110906; }
+.bg-dark    { background: #0a0a0f; }
+
+/* noise grain overlay */
+.slide::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 0; opacity: 0.4;
+}
+.slide > * { position: relative; z-index: 1; }
+
+/* ── GLOW BLOBS ── */
+.blob {
+  position: absolute; border-radius: 50%;
+  filter: blur(80px); pointer-events: none; z-index: 0;
+}
+
+/* ── TAGS ── */
+.tag {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-size: 11px; font-weight: 500; letter-spacing: 2.5px;
+  text-transform: uppercase; padding: 5px 14px;
+  border-radius: 100px; margin-bottom: 22px;
+  border: 1px solid;
+}
+.tag-purple { background: var(--purple-dim); color: var(--purple); border-color: rgba(155,109,255,0.25); }
+.tag-cyan   { background: var(--cyan-dim);   color: var(--cyan);   border-color: rgba(61,235,209,0.25); }
+.tag-pink   { background: var(--pink-dim);   color: var(--pink);   border-color: rgba(255,109,179,0.25); }
+.tag-orange { background: var(--orange-dim); color: var(--orange); border-color: rgba(255,140,61,0.25); }
+.tag-yellow { background: var(--yellow-dim); color: var(--yellow); border-color: rgba(255,224,102,0.2); }
+.tag-green  { background: var(--green-dim);  color: var(--green);  border-color: rgba(82,224,122,0.25); }
+
+/* ── HEADLINES ── */
+h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(34px, 5.5vw, 66px);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -1px;
+  color: var(--text);
+  max-width: 860px;
+}
+h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(26px, 4vw, 50px);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.5px;
+  color: var(--text);
+  max-width: 820px;
+}
+h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(18px, 2.2vw, 26px);
+  font-weight: 700; color: var(--text);
+}
+.sub {
+  font-size: clamp(14px, 1.6vw, 18px);
+  color: var(--muted);
+  line-height: 1.7;
+  max-width: 620px;
+  margin-top: 16px;
+}
+
+.hi-purple { color: var(--purple); }
+.hi-cyan   { color: var(--cyan); }
+.hi-pink   { color: var(--pink); }
+.hi-orange { color: var(--orange); }
+.hi-yellow { color: var(--yellow); }
+.hi-green  { color: var(--green); }
+em { font-style: italic; }
+
+/* ── DIVIDER ── */
+.divider {
+  width: 40px; height: 2px;
+  background: linear-gradient(90deg, var(--purple), transparent);
+  margin: 20px auto;
+  border-radius: 2px;
+}
+
+/* ── PILL ROW ── */
+.pill-row {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  justify-content: center; margin-top: 28px; max-width: 800px;
+}
+.pill {
+  padding: 9px 20px; border-radius: 100px;
+  font-size: clamp(13px, 1.3vw, 15px); font-weight: 500;
+  border: 1px solid;
+}
+.pill-p { background: var(--purple-dim); color: var(--purple); border-color: rgba(155,109,255,0.2); }
+.pill-c { background: var(--cyan-dim);   color: var(--cyan);   border-color: rgba(61,235,209,0.2); }
+.pill-o { background: var(--orange-dim); color: var(--orange); border-color: rgba(255,140,61,0.2); }
+.pill-g { background: var(--green-dim);  color: var(--green);  border-color: rgba(82,224,122,0.2); }
+.pill-y { background: var(--yellow-dim); color: var(--yellow); border-color: rgba(255,224,102,0.15); }
+.pill-pk{ background: var(--pink-dim);   color: var(--pink);   border-color: rgba(255,109,179,0.2); }
+
+/* ── STEP LIST ── */
+.step-list {
+  display: flex; flex-direction: column; gap: 12px;
+  width: 100%; max-width: 680px; text-align: left; margin-top: 24px;
+}
+.step-item {
+  display: flex; gap: 16px; align-items: flex-start;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 14px; padding: 16px 20px;
+  opacity: 0; transform: translateY(10px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+.slide.active .step-item:nth-child(1) { opacity: 1; transform: none; transition-delay: 0.08s; }
+.slide.active .step-item:nth-child(2) { opacity: 1; transform: none; transition-delay: 0.17s; }
+.slide.active .step-item:nth-child(3) { opacity: 1; transform: none; transition-delay: 0.26s; }
+.slide.active .step-item:nth-child(4) { opacity: 1; transform: none; transition-delay: 0.35s; }
+.slide.active .step-item:nth-child(5) { opacity: 1; transform: none; transition-delay: 0.44s; }
+.step-icon {
+  width: 34px; height: 34px; border-radius: 10px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; margin-top: 1px;
+}
+.step-body h4 { font-size: clamp(13px, 1.3vw, 15px); font-weight: 500; color: var(--text); margin-bottom: 3px; }
+.step-body p  { font-size: clamp(11px, 1.1vw, 13px); color: var(--muted); margin: 0; line-height: 1.55; }
+
+/* ── CREDIT CARDS ── */
+.credit-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 12px; width: 100%; max-width: 860px; margin-top: 26px;
+}
+.credit-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 16px; padding: 20px 18px; text-align: left;
+  opacity: 0; transform: translateY(12px);
+  transition: opacity 0.38s ease, transform 0.38s ease;
+}
+.slide.active .credit-card:nth-child(1) { opacity: 1; transform: none; transition-delay: 0.06s; }
+.slide.active .credit-card:nth-child(2) { opacity: 1; transform: none; transition-delay: 0.13s; }
+.slide.active .credit-card:nth-child(3) { opacity: 1; transform: none; transition-delay: 0.20s; }
+.slide.active .credit-card:nth-child(4) { opacity: 1; transform: none; transition-delay: 0.27s; }
+.slide.active .credit-card:nth-child(5) { opacity: 1; transform: none; transition-delay: 0.34s; }
+.slide.active .credit-card:nth-child(6) { opacity: 1; transform: none; transition-delay: 0.41s; }
+.cc-service {
+  font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+  font-weight: 600; margin-bottom: 10px;
+}
+.cc-name { font-size: clamp(13px, 1.3vw, 15px); font-weight: 600; color: var(--text); margin-bottom: 5px; }
+.cc-what { font-size: clamp(11px, 1.1vw, 13px); color: var(--muted); line-height: 1.5; }
+.cc-credits {
+  margin-top: 12px; display: inline-block;
+  background: rgba(255,255,255,0.05); border-radius: 6px;
+  padding: 3px 10px; font-size: 12px; color: rgba(255,255,255,0.5);
+}
+
+/* ── PIPELINE VISUAL ── */
+.pipeline {
+  display: flex; align-items: center; gap: 0;
+  margin-top: 30px; width: 100%; max-width: 820px;
+  flex-wrap: nowrap; overflow-x: auto;
+}
+.pipe-node {
+  flex: 1; min-width: 90px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 14px; padding: 16px 12px; text-align: center;
+  opacity: 0; transform: scale(0.92);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+.slide.active .pipe-node:nth-child(1) { opacity:1; transform:none; transition-delay:0.05s; }
+.slide.active .pipe-node:nth-child(3) { opacity:1; transform:none; transition-delay:0.15s; }
+.slide.active .pipe-node:nth-child(5) { opacity:1; transform:none; transition-delay:0.25s; }
+.slide.active .pipe-node:nth-child(7) { opacity:1; transform:none; transition-delay:0.35s; }
+.slide.active .pipe-node:nth-child(9) { opacity:1; transform:none; transition-delay:0.45s; }
+.pipe-arrow {
+  color: rgba(255,255,255,0.2); font-size: 18px; padding: 0 4px; flex-shrink: 0;
+  opacity: 0; transition: opacity 0.3s ease;
+}
+.slide.active .pipe-arrow { opacity: 1; transition-delay: 0.5s; }
+.pipe-node .pn-icon { font-size: 22px; margin-bottom: 8px; }
+.pipe-node .pn-label { font-size: clamp(11px, 1.1vw, 13px); font-weight: 600; color: var(--text); margin-bottom: 3px; }
+.pipe-node .pn-sub { font-size: clamp(10px, 1vw, 12px); color: var(--muted); line-height: 1.4; }
+
+/* ── COMPARE ── */
+.compare-row {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 14px; width: 100%; max-width: 820px; margin-top: 28px;
+}
+.cbox {
+  border-radius: 16px; padding: 24px 22px; text-align: left;
+  border: 1px solid;
+}
+.cbox.bad  { background: rgba(255,80,80,0.07);  border-color: rgba(255,80,80,0.18); }
+.cbox.good { background: rgba(82,224,122,0.07); border-color: rgba(82,224,122,0.2); }
+.cbox .cb-label {
+  font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+  font-weight: 600; margin-bottom: 14px;
+}
+.cbox.bad  .cb-label { color: #ff7070; }
+.cbox.good .cb-label { color: var(--green); }
+.cbox ul { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+.cbox li { font-size: clamp(12px, 1.2vw, 14px); color: rgba(232,230,240,0.75); display: flex; gap: 9px; align-items: flex-start; line-height: 1.5; }
+.cbox.bad  li::before { content:'✗'; color:#ff7070; flex-shrink:0; font-weight:700; }
+.cbox.good li::before { content:'✓'; color:var(--green); flex-shrink:0; font-weight:700; }
+
+/* ── QUOTE ── */
+.quote-block {
+  border-left: 3px solid var(--purple);
+  padding: 16px 24px; text-align: left;
+  max-width: 640px; margin-top: 24px;
+}
+.quote-block p {
+  font-size: clamp(16px, 2vw, 22px);
+  font-style: italic; color: rgba(232,230,240,0.85);
+  line-height: 1.5; font-family: 'DM Sans', sans-serif;
+}
+
+/* ── BIG STAT ── */
+.big-stat {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(64px, 13vw, 130px);
+  font-weight: 800; line-height: 1;
+  letter-spacing: -4px; margin: 8px 0;
+}
+
+/* ── BATCH TABLE ── */
+.batch-table {
+  width: 100%; max-width: 760px; margin-top: 24px;
+  border: 1px solid var(--border); border-radius: 16px;
+  overflow: hidden;
+}
+.bt-row {
+  display: grid; grid-template-columns: 100px 1fr 1fr;
+  border-bottom: 1px solid var(--border);
+  opacity: 0; transform: translateX(-12px);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+.bt-row:last-child { border-bottom: none; }
+.slide.active .bt-row:nth-child(1) { opacity:1; transform:none; transition-delay:0.04s; }
+.slide.active .bt-row:nth-child(2) { opacity:1; transform:none; transition-delay:0.12s; }
+.slide.active .bt-row:nth-child(3) { opacity:1; transform:none; transition-delay:0.20s; }
+.slide.active .bt-row:nth-child(4) { opacity:1; transform:none; transition-delay:0.28s; }
+.slide.active .bt-row:nth-child(5) { opacity:1; transform:none; transition-delay:0.36s; }
+.slide.active .bt-row:nth-child(6) { opacity:1; transform:none; transition-delay:0.44s; }
+.bt-cell {
+  padding: 12px 16px; font-size: clamp(12px, 1.2vw, 14px);
+  border-right: 1px solid var(--border); line-height: 1.5;
+}
+.bt-cell:last-child { border-right: none; }
+.bt-row.header .bt-cell {
+  font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--muted); font-weight: 500;
+  background: var(--surface);
+}
+.bt-row:not(.header) .bt-cell:first-child { color: var(--purple); font-weight: 600; }
+
+/* ── DAILY HABIT RING ── */
+.habit-ring {
+  display: flex; align-items: center; justify-content: center;
+  gap: 20px; flex-wrap: wrap; margin-top: 28px; max-width: 760px;
+}
+.ring-item {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  opacity: 0; transform: scale(0.9);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+.slide.active .ring-item:nth-child(1) { opacity:1; transform:none; transition-delay:0.06s; }
+.slide.active .ring-item:nth-child(2) { opacity:1; transform:none; transition-delay:0.14s; }
+.slide.active .ring-item:nth-child(3) { opacity:1; transform:none; transition-delay:0.22s; }
+.slide.active .ring-item:nth-child(4) { opacity:1; transform:none; transition-delay:0.30s; }
+.slide.active .ring-item:nth-child(5) { opacity:1; transform:none; transition-delay:0.38s; }
+.ring-circle {
+  width: 72px; height: 72px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px; border: 2px solid;
+}
+.ring-label { font-size: 12px; font-weight: 500; color: var(--muted); text-align: center; max-width: 80px; line-height: 1.4; }
+
+/* ── CONTROLS ── */
+.controls {
+  background: #07070a;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 13px 24px; gap: 18px; flex-shrink: 0;
+}
+.ctrl-btn {
+  width: 38px; height: 38px; border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 50%; background: transparent; color: rgba(255,255,255,0.55);
+  font-size: 15px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+.ctrl-btn:hover { background: rgba(155,109,255,0.12); color: var(--purple); border-color: rgba(155,109,255,0.3); }
+.ctrl-btn:disabled { opacity: 0.22; cursor: default; pointer-events: none; }
+.progress-track { flex: 1; display: flex; align-items: center; gap: 5px; }
+.progress-dot {
+  height: 3px; flex: 1; border-radius: 2px;
+  background: rgba(255,255,255,0.1); cursor: pointer;
+  transition: background 0.3s;
+}
+.progress-dot.done    { background: rgba(255,255,255,0.28); }
+.progress-dot.current { background: var(--purple); }
+.slide-counter { font-size: 12px; color: rgba(255,255,255,0.28); min-width: 40px; text-align: right; }
+.key-hint { font-size: 11px; color: rgba(255,255,255,0.16); display: none; }
+@media (min-width: 768px) { .key-hint { display: block; } }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 640px) {
+  .credit-grid { grid-template-columns: 1fr 1fr; }
+  .compare-row { grid-template-columns: 1fr; }
+  .pipeline { gap: 0; }
+  .pipe-node { min-width: 70px; padding: 12px 8px; }
+  .batch-table { font-size: 12px; }
+  .bt-row { grid-template-columns: 72px 1fr 1fr; }
+  .slide { padding: 28px 5vw; }
+  .controls { padding: 10px 14px; }
+}
+</style>
+</head>
+<body>
+
+<div class="stage" id="stage">
+
+  <!-- ─── SLIDE 1: TITLE ─── -->
+  <div class="slide bg-void active" data-slide="0">
+    <div class="blob" style="width:500px;height:500px;top:-100px;right:-150px;background:radial-gradient(circle,rgba(155,109,255,0.12),transparent 65%);"></div>
+    <div class="blob" style="width:300px;height:300px;bottom:-50px;left:-80px;background:radial-gradient(circle,rgba(61,235,209,0.08),transparent 65%);"></div>
+    <div class="tag tag-purple">🎬 The Creator System</div>
+    <h1>Stop <em class="hi-purple">waiting</em> for inspiration.<br>Start <em class="hi-cyan">producing</em> like a machine.</h1>
+    <div class="divider"></div>
+    <p class="sub">How to use daily credits and AI tools to batch-produce weeks of content in a single session — then let a pipeline publish it for you, every single day.</p>
+  </div>
+
+  <!-- ─── SLIDE 2: THE PROBLEM ─── -->
+  <div class="slide bg-deep" data-slide="1">
+    <div class="blob" style="width:400px;height:400px;top:-80px;left:-100px;background:radial-gradient(circle,rgba(255,80,80,0.1),transparent 65%);"></div>
+    <div class="tag tag-pink">The trap</div>
+    <h2>Most creators <em class="hi-pink">never get consistent</em><br>for the same reason.</h2>
+    <div class="compare-row">
+      <div class="cbox bad">
+        <div class="cb-label">The Inconsistent Creator</div>
+        <ul>
+          <li>Creates only when inspired</li>
+          <li>Posts whenever it's "ready"</li>
+          <li>Starts from scratch every time</li>
+          <li>Burns out after 2 weeks</li>
+          <li>Treats it like art, not output</li>
+        </ul>
+      </div>
+      <div class="cbox good">
+        <div class="cb-label">The Prolific Creator</div>
+        <ul>
+          <li>Creates on a fixed schedule</li>
+          <li>Posts like clockwork, in advance</li>
+          <li>Repurposes and multiplies</li>
+          <li>Batch-produces, rarely burns out</li>
+          <li>Treats it like a production line</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SLIDE 3: THE INSIGHT ─── -->
+  <div class="slide bg-purple" data-slide="2">
+    <div class="blob" style="width:560px;height:560px;top:-120px;right:-160px;background:radial-gradient(circle,rgba(155,109,255,0.18),transparent 60%);"></div>
+    <div class="tag tag-purple">The core insight</div>
+    <h2>Every AI tool gives you<br><em class="hi-purple">daily free credits.</em><br>That's your raw material.</h2>
+    <div class="quote-block">
+      <p>"You don't need a budget.<br>You need a daily routine that spends your credits before midnight resets them."</p>
+    </div>
+    <p class="sub" style="margin-top:20px;">ChatGPT, Claude, Midjourney, ElevenLabs, Runway, Canva AI — every single one resets daily. Most creators waste 80% of what they're already entitled to.</p>
+  </div>
+
+  <!-- ─── SLIDE 4: THE CREDIT STACK ─── -->
+  <div class="slide bg-dark" data-slide="3">
+    <div class="blob" style="width:420px;height:420px;bottom:-80px;right:-100px;background:radial-gradient(circle,rgba(255,224,102,0.08),transparent 65%);"></div>
+    <div class="tag tag-yellow">Your daily credit stack</div>
+    <h2>Six free tiers.<br><em class="hi-yellow">One daily production budget.</em></h2>
+    <div class="credit-grid">
+      <div class="credit-card">
+        <div class="cc-service" style="color:var(--purple);">Writing</div>
+        <div class="cc-name">ChatGPT / Claude</div>
+        <div class="cc-what">Scripts, captions, hooks, threads, email sequences, rephrasing</div>
+        <div class="cc-credits">Free tier resets daily</div>
+      </div>
+      <div class="credit-card">
+        <div class="cc-service" style="color:var(--cyan);">Visuals</div>
+        <div class="cc-name">Canva AI / Adobe Firefly</div>
+        <div class="cc-what">Thumbnails, carousels, quote cards, cover art, branded templates</div>
+        <div class="cc-credits">25–50 free credits/day</div>
+      </div>
+      <div class="credit-card">
+        <div class="cc-service" style="color:var(--pink);">Images</div>
+        <div class="cc-name">Midjourney / Leonardo AI</div>
+        <div class="cc-what">Hero visuals, concept art, social post imagery, scene generation</div>
+        <div class="cc-credits">~25 free jobs/day</div>
+      </div>
+      <div class="credit-card">
+        <div class="cc-service" style="color:var(--orange);">Voice</div>
+        <div class="cc-name">ElevenLabs / Murf</div>
+        <div class="cc-what">Voiceovers for reels, explainers, podcast clips, narration</div>
+        <div class="cc-credits">10k chars/month free</div>
+      </div>
+      <div class="credit-card">
+        <div class="cc-service" style="color:var(--green);">Video</div>
+        <div class="cc-name">Runway / CapCut AI</div>
+        <div class="cc-what">B-roll, transitions, auto-captions, video enhancement, short clips</div>
+        <div class="cc-credits">Limited free gen/day</div>
+      </div>
+      <div class="credit-card">
+        <div class="cc-service" style="color:var(--yellow);">Scheduling</div>
+        <div class="cc-name">Buffer / Later / Metricool</div>
+        <div class="cc-what">Auto-publish to Instagram, X, LinkedIn, YouTube, TikTok, Threads</div>
+        <div class="cc-credits">3–10 channels free</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SLIDE 5: THE DAILY HABIT ─── -->
+  <div class="slide bg-teal" data-slide="4">
+    <div class="blob" style="width:480px;height:480px;top:-100px;left:-120px;background:radial-gradient(circle,rgba(61,235,209,0.12),transparent 60%);"></div>
+    <div class="tag tag-cyan">Daily ritual</div>
+    <h2>The 30-minute daily<br><em class="hi-cyan">credit-burning routine.</em></h2>
+    <div class="habit-ring">
+      <div class="ring-item">
+        <div class="ring-circle" style="background:rgba(61,235,209,0.1);border-color:rgba(61,235,209,0.3);">⏰</div>
+        <div class="ring-label">Same time every day</div>
+      </div>
+      <div class="ring-item">
+        <div class="ring-circle" style="background:rgba(155,109,255,0.1);border-color:rgba(155,109,255,0.3);">✍️</div>
+        <div class="ring-label">Write 3 scripts or hooks</div>
+      </div>
+      <div class="ring-item">
+        <div class="ring-circle" style="background:rgba(255,140,61,0.1);border-color:rgba(255,140,61,0.3);">🖼️</div>
+        <div class="ring-label">Generate 5 visuals</div>
+      </div>
+      <div class="ring-item">
+        <div class="ring-circle" style="background:rgba(255,109,179,0.1);border-color:rgba(255,109,179,0.3);">🎙️</div>
+        <div class="ring-label">Record or gen 1 voiceover</div>
+      </div>
+      <div class="ring-item">
+        <div class="ring-circle" style="background:rgba(82,224,122,0.1);border-color:rgba(82,224,122,0.3);">📤</div>
+        <div class="ring-label">Drop into pipeline folder</div>
+      </div>
+    </div>
+    <p class="sub" style="margin-top:24px;">You're not publishing today. You're <strong style="color:var(--cyan);">stocking inventory.</strong> Daily credits = daily raw material. Your folder fills up automatically.</p>
+  </div>
+
+  <!-- ─── SLIDE 6: BATCH DAY ─── -->
+  <div class="slide bg-ember" data-slide="5">
+    <div class="blob" style="width:500px;height:500px;top:-100px;right:-130px;background:radial-gradient(circle,rgba(255,140,61,0.12),transparent 60%);"></div>
+    <div class="tag tag-orange">The power session</div>
+    <h2>Once a week:<br><em class="hi-orange">the 3-hour batch day.</em></h2>
+    <div class="batch-table">
+      <div class="bt-row header">
+        <div class="bt-cell">Hour</div>
+        <div class="bt-cell">What you do</div>
+        <div class="bt-cell">Output</div>
+      </div>
+      <div class="bt-row">
+        <div class="bt-cell">Hour 1</div>
+        <div class="bt-cell">Pull the week's scripts + drafts from your folder. Edit, trim, finalize 7 pieces.</div>
+        <div class="bt-cell">7 finished scripts or post copies</div>
+      </div>
+      <div class="bt-row">
+        <div class="bt-cell">Hour 2</div>
+        <div class="bt-cell">Match visuals to each piece. Generate any missing images. Add captions & subtitles.</div>
+        <div class="bt-cell">7 fully assembled posts</div>
+      </div>
+      <div class="bt-row">
+        <div class="bt-cell">Hour 3</div>
+        <div class="bt-cell">Load all 7 into Buffer/Later. Set publish dates, times, platforms. Write hashtags.</div>
+        <div class="bt-cell">7 days of content scheduled</div>
+      </div>
+    </div>
+    <p class="sub" style="margin-top:18px;">One session. Seven days handled. You <strong style="color:var(--orange);">never miss a day</strong> because you're never creating the day before.</p>
+  </div>
+
+  <!-- ─── SLIDE 7: THE PIPELINE ─── -->
+  <div class="slide bg-dark" data-slide="6">
+    <div class="blob" style="width:440px;height:440px;bottom:-80px;left:-100px;background:radial-gradient(circle,rgba(155,109,255,0.1),transparent 60%);"></div>
+    <div class="tag tag-purple">The system</div>
+    <h2>Your content<br><em class="hi-purple">production pipeline.</em></h2>
+    <div class="pipeline">
+      <div class="pipe-node">
+        <div class="pn-icon">☁️</div>
+        <div class="pn-label">Daily Credits</div>
+        <div class="pn-sub">AI tools reset every midnight</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-node">
+        <div class="pn-icon">📁</div>
+        <div class="pn-label">Raw Folder</div>
+        <div class="pn-sub">Scripts, images, audio pile up daily</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-node">
+        <div class="pn-icon">⚡</div>
+        <div class="pn-label">Batch Day</div>
+        <div class="pn-sub">Weekly 3-hr assembly session</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-node">
+        <div class="pn-icon">📅</div>
+        <div class="pn-label">Scheduler</div>
+        <div class="pn-sub">Buffer/Later auto-publishes</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-node">
+        <div class="pn-icon">📡</div>
+        <div class="pn-label">Audience</div>
+        <div class="pn-sub">Daily posts on every platform</div>
+      </div>
+    </div>
+    <p class="sub" style="margin-top:22px;">You only touch the pipeline once a week. The rest runs itself. This is how solo creators post <strong style="color:var(--purple);">7× a week on 4 platforms</strong> without an agency.</p>
+  </div>
+
+  <!-- ─── SLIDE 8: MULTIPLY ONE IDEA ─── -->
+  <div class="slide bg-teal" data-slide="7">
+    <div class="blob" style="width:460px;height:460px;top:-80px;right:-120px;background:radial-gradient(circle,rgba(61,235,209,0.1),transparent 60%);"></div>
+    <div class="tag tag-cyan">The multiplier</div>
+    <h2>One idea.<br><em class="hi-cyan">Twelve pieces of content.</em></h2>
+    <div class="step-list">
+      <div class="step-item">
+        <div class="step-icon" style="background:var(--purple-dim);">💡</div>
+        <div class="step-body">
+          <h4>Core idea or insight (1 min)</h4>
+          <p>One sentence: a lesson, opinion, tip, or story. This is your content atom.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-icon" style="background:var(--cyan-dim);">📝</div>
+        <div class="step-body">
+          <h4>AI expands it into 5 formats</h4>
+          <p>Long-form post → short caption → Twitter thread → carousel script → email newsletter. One prompt, five drafts.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-icon" style="background:var(--orange-dim);">🎙️</div>
+        <div class="step-body">
+          <h4>Record a 60-second audio take</h4>
+          <p>Read your script once. Trim it. That's a reel, a podcast clip, and a YouTube Short.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-icon" style="background:var(--green-dim);">🖼️</div>
+        <div class="step-body">
+          <h4>Generate 3 visuals from one prompt</h4>
+          <p>Quote card, carousel cover, and thumbnail. Three separate posts. One image generation session.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SLIDE 9: THE PUBLISHING SCHEDULE ─── -->
+  <div class="slide bg-purple" data-slide="8">
+    <div class="blob" style="width:500px;height:500px;top:-120px;left:-140px;background:radial-gradient(circle,rgba(155,109,255,0.15),transparent 60%);"></div>
+    <div class="tag tag-purple">Publishing rhythm</div>
+    <h2>What daily output<br><em class="hi-purple">actually looks like.</em></h2>
+    <div class="batch-table">
+      <div class="bt-row header">
+        <div class="bt-cell">Platform</div>
+        <div class="bt-cell">Format</div>
+        <div class="bt-cell">Frequency</div>
+      </div>
+      <div class="bt-row">
+        <div class="bt-cell">Instagram</div>
+        <div class="bt-cell">Reel + carousel alternate</div>
+        <div class="bt-cell">1× daily, 9am</div>
+      </div>
+      <div class="bt-row">
+        <div class="bt-cell">LinkedIn</div>
+        <div class="bt-cell">Long-form text post</div>
+        <div class="bt-cell">5× week, 8am</div>
+      </div>
+      <div class="bt-row">
+        <div class="bt-cell">X / Twitter</div>
+        <div class="bt-cell">Thread or single tweet</div>
+        <div class="bt-cell">2× daily, 8am + 6pm</div>
+      </div>
+      <div class="bt-row">
+        <div class="bt-cell">YouTube</div>
+        <div class="bt-cell">Shorts from reel audio</div>
+        <div class="bt-cell">3× week, noon</div>
+      </div>
+      <div class="bt-row">
+        <div class="bt-cell">Newsletter</div>
+        <div class="bt-cell">Weekly digest of top posts</div>
+        <div class="bt-cell">1× week, Friday</div>
+      </div>
+    </div>
+    <p class="sub" style="margin-top:16px;">All scheduled on Sunday. None of it requires you to be awake when it goes out.</p>
+  </div>
+
+  <!-- ─── SLIDE 10: THE GRIND IDENTITY ─── -->
+  <div class="slide bg-void" data-slide="9">
+    <div class="blob" style="width:500px;height:500px;top:-100px;right:-100px;background:radial-gradient(circle,rgba(255,224,102,0.1),transparent 60%);"></div>
+    <div class="tag tag-yellow">Mindset</div>
+    <h2>You're not a creator<br>waiting to go <em class="hi-yellow">viral.</em><br>You're a publisher.</h2>
+    <div class="quote-block" style="border-color:var(--yellow);">
+      <p>"The New York Times doesn't skip Thursday because the editor isn't feeling inspired. Neither should you."</p>
+    </div>
+    <div class="pill-row" style="margin-top:28px;">
+      <div class="pill pill-y">Volume beats perfection</div>
+      <div class="pill pill-y">Consistency beats talent</div>
+      <div class="pill pill-y">Systems beat willpower</div>
+      <div class="pill pill-y">Boring habits create big results</div>
+    </div>
+  </div>
+
+  <!-- ─── SLIDE 11: WHAT YOU BUILD IN 90 DAYS ─── -->
+  <div class="slide bg-teal" data-slide="10">
+    <div class="blob" style="width:420px;height:420px;bottom:-80px;right:-100px;background:radial-gradient(circle,rgba(82,224,122,0.1),transparent 60%);"></div>
+    <div class="tag tag-green">What 90 days looks like</div>
+    <h2>From zero to<br><em class="hi-green">unstoppable</em> in 3 months.</h2>
+    <div class="step-list">
+      <div class="step-item">
+        <div class="step-icon" style="background:rgba(82,224,122,0.1);">📅</div>
+        <div class="step-body">
+          <h4>30 days: 210+ pieces of content produced</h4>
+          <p>30 daily sessions × 7 pieces each. Your folder is overflowing. You're ahead of your schedule by two weeks.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-icon" style="background:rgba(61,235,209,0.1);">📈</div>
+        <div class="step-body">
+          <h4>60 days: algorithm starts rewarding you</h4>
+          <p>Consistency is the single biggest signal every platform rewards. You'll feel the distribution shift.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-icon" style="background:rgba(155,109,255,0.1);">🏆</div>
+        <div class="step-body">
+          <h4>90 days: you have a media operation</h4>
+          <p>600+ pieces created. A growing audience. A workflow that runs even when life gets busy. And you spent ₹0.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SLIDE 12: START TODAY ─── -->
+  <div class="slide bg-deep" data-slide="11">
+    <div class="blob" style="width:600px;height:600px;top:-150px;right:-180px;background:radial-gradient(circle,rgba(155,109,255,0.15),transparent 60%);"></div>
+    <div class="blob" style="width:380px;height:380px;bottom:-80px;left:-100px;background:radial-gradient(circle,rgba(61,235,209,0.08),transparent 65%);"></div>
+    <div class="tag tag-green">Your first move</div>
+    <h2>Start today.<br>Not when you're <em class="hi-purple">ready.</em></h2>
+    <div class="divider" style="background:linear-gradient(90deg,var(--green),transparent);"></div>
+    <div class="pill-row">
+      <div class="pill pill-p">1. Sign up for every free tier today</div>
+      <div class="pill pill-c">2. Create a "Raw Content" folder</div>
+      <div class="pill pill-o">3. Set a 30-min daily alarm</div>
+      <div class="pill pill-g">4. Spend every credit before midnight</div>
+      <div class="pill pill-y">5. Block Sunday for batch assembly</div>
+      <div class="pill pill-pk">6. Schedule your first 7 posts live</div>
+    </div>
+    <p class="sub" style="margin-top:24px;">Every day you wait, a day's worth of free credits expires unused.<br><strong style="color:rgba(232,230,240,0.85);">The pipeline doesn't start itself.</strong></p>
+  </div>
+
+</div>
+
+<!-- CONTROLS -->
+<div class="controls">
+  <button class="ctrl-btn" id="prevBtn" disabled>←</button>
+  <div class="progress-track" id="progressTrack"></div>
+  <div class="slide-counter" id="counter">1 / 12</div>
+  <span class="key-hint">← → keys</span>
+  <button class="ctrl-btn" id="nextBtn">→</button>
+</div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const counter = document.getElementById('counter');
+const track   = document.getElementById('progressTrack');
+const total   = slides.length;
+let current = 0, animating = false;
+
+for (let i = 0; i < total; i++) {
+  const dot = document.createElement('div');
+  dot.className = 'progress-dot' + (i === 0 ? ' current' : '');
+  dot.addEventListener('click', () => goTo(i));
+  track.appendChild(dot);
+}
+
+function updateDots() {
+  track.querySelectorAll('.progress-dot').forEach((d, i) => {
+    d.className = 'progress-dot' + (i < current ? ' done' : i === current ? ' current' : '');
+  });
+}
+
+function goTo(index) {
+  if (animating || index === current) return;
+  animating = true;
+  const dir = index > current ? 1 : -1;
+  const old = current;
+  current = index;
+
+  const exitClass  = dir > 0 ? 'exit-to-left'      : 'exit-to-right';
+  const enterClass = dir > 0 ? 'enter-from-right'   : 'enter-from-left';
+
+  slides[old].classList.remove('active');
+  slides[old].classList.add(exitClass);
+
+  slides[current].classList.add(enterClass);
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    slides[current].classList.remove(enterClass);
+    slides[current].classList.add('active');
+  }));
+
+  setTimeout(() => {
+    slides[old].classList.remove(exitClass);
+    animating = false;
+  }, 420);
+
+  counter.textContent = `${current + 1} / ${total}`;
+  prevBtn.disabled = current === 0;
+  nextBtn.disabled = current === total - 1;
+  updateDots();
+}
+
+prevBtn.addEventListener('click', () => goTo(current - 1));
+nextBtn.addEventListener('click', () => goTo(current + 1));
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') goTo(Math.min(current + 1, total - 1));
+  if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   goTo(Math.max(current - 1, 0));
+});
+
+let tx = 0;
+const stage = document.getElementById('stage');
+stage.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, { passive: true });
+stage.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - tx;
+  if (Math.abs(dx) > 50) goTo(dx < 0 ? Math.min(current+1, total-1) : Math.max(current-1, 0));
+});
+</script>
+</body>
+</html>
