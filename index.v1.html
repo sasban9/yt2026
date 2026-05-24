@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026 Calendar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            text-align: center;
+        }
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .month {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .month h2 {
+            margin-top: 0;
+            color: #333;
+        }
+        .month a {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #0078d4;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+        .month a:hover {
+            background-color: #106ebe;
+        }
+    </style>
+    <link rel="stylesheet" href="dark.css">
+</head>
+<body>
+    <h1>2026 Calendar</h1>
+    <div class="calendar-grid">
+        <a class="month btn btn-1" href="01"><h2>January</h2><span class="meta"><span class="ico">🔎</span>Open</span></a>
+        <a class="month btn btn-2" href="02"><h2>February</h2><span class="meta"><span class="ico">✨</span>Explore</span></a>
+        <a class="month btn btn-3" href="03"><h2>March</h2><span class="meta"><span class="ico">📂</span>Browse</span></a>
+        <a class="month btn btn-4" href="04"><h2>April</h2><span class="meta"><span class="ico">🔍</span>Inspect</span></a>
+        <a class="month btn btn-1" href="05"><h2>May</h2><span class="meta"><span class="ico">➡️</span>Enter</span></a>
+        <a class="month btn btn-2" href="06"><h2>June</h2><span class="meta"><span class="ico">👁️</span>See</span></a>
+        <a class="month btn btn-3" href="07"><h2>July</h2><span class="meta"><span class="ico">🚀</span>Jump</span></a>
+        <a class="month btn btn-4" href="08"><h2>August</h2><span class="meta"><span class="ico">🌟</span>Discover</span></a>
+        <a class="month btn btn-1" href="09"><h2>September</h2><span class="meta"><span class="ico">📋</span>Details</span></a>
+        <a class="month btn btn-2" href="10"><h2>October</h2><span class="meta"><span class="ico">➡️</span>Go</span></a>
+        <a class="month btn btn-3" href="11"><h2>November</h2><span class="meta"><span class="ico">👀</span>Peek</span></a>
+        <a class="month btn btn-4" href="12"><h2>December</h2><span class="meta"><span class="ico">📅</span>View Calendar</span></a>
+    </div>
+</body>
+    <script src="fancy-buttons.js"></script>
+</html>

@@ -1,5 +1,6 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,11 +12,17 @@
             box-sizing: border-box;
         }
 
+        html {
+            scrollbar-width: none;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: var(--bg);
             min-height: 100vh;
             display: flex;
+            flex-direction: column;
+            gap: 6rem;
             align-items: center;
             justify-content: center;
             padding: 20px;
@@ -54,7 +61,7 @@
             --bg: #000000;
             --panel: #ffffff;
             --panel-shadow: rgba(0, 0, 0, 0.3);
-            --text: #f8fafc;
+            --text: #000;
             --muted: #1f2937;
             --card: linear-gradient(135deg, #000000 0%, #000000 100%);
             --card-text: #ffffff;
@@ -86,6 +93,9 @@
         }
 
         .theme-switcher {
+            position: fixed;
+            top: 0px;
+            left: 0px;background: var(--button-bg);padding: 8px;
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
@@ -162,28 +172,74 @@
         }
     </style>
 </head>
+
 <body>
+    <div class="theme-switcher" role="toolbar" aria-label="Theme controls">
+        <button type="button" class="theme-button active" data-theme="">Light</button>
+        <button type="button" class="theme-button" data-theme="dark">Dark</button>
+        <button type="button" class="theme-button" data-theme="contrast">High Contrast</button>
+    </div>
     <div class="container">
-        <a href="../"><h1>📚 YT 2026 MAY</h1></a>
-        <p class="subtitle">Navigation Hub</p>
-        <div class="theme-switcher" role="toolbar" aria-label="Theme controls">
-            <button type="button" class="theme-button active" data-theme="">Light</button>
-            <button type="button" class="theme-button" data-theme="dark">Dark</button>
-            <button type="button" class="theme-button" data-theme="contrast">High Contrast</button>
-        </div>
+        <h1>📚 YT 2026 APRIL</h1>
+        <!-- <p class="subtitle">Navigation Hub</p> -->
+
         <nav class="links-grid">
-            <a href="#"></a>
-            <a href="#"></a>
             <a href="#"></a>
             <a href="#"></a>
             <a href="#"></a>
             <a href="01-solution-oriented-slideshow.html">Solution-Oriented Mindset</a>
             <a href="02-prolific-creator-slideshow.html">The Prolific Creator</a>
             <a href="03-ai-workflow-architect-slides.html"> CAREER AI Workflow Architect</a>
-            <a href="04-dead-tech-relics-slideshow.html">Dead Tech Relics </a>
-            <a href="05-visible-thinking-landing.html">Visible Thinking Landing</a>
-            <a href="21.html">May 06</a>
-            <a href="22.html">May 07</a>
+            <a href="05/04-dead-tech-relics-slideshow.html">Dead Tech Relics </a>
+            <a href="05/05-visible-thinking-landing.html">Visible Thinking Landing</a>
+            <a href="21.html">Apr 06</a>
+            <a href="22.html">Apr 07</a>
+            <a href="day8.html">Apr 8</a>
+            <a href="day9.html">Apr 9</a>
+            <a href="day10.html">Apr 10</a>
+            <a href="day11.html">Apr 11</a>
+            <a href="day12.html">Apr 12</a>
+            <a href="day13.html">Apr 13</a>
+            <a href="day14.html">Apr 14</a>
+            <a href="day15.html">Apr 15</a>
+            <a href="day16.html">Apr 16</a>
+            <a href="day17.html">Apr 17</a>
+            <a href="day18.html">Apr 18</a>
+            <a href="day19.html">Apr 19</a>
+            <a href="day20.html">Apr 20</a>
+            <a href="day21.html">Apr 21</a>
+            <a href="https://www.justinwelsh.me/newsletter/maximize-your-online-income-with-a-creator-funnel">Max
+                Income: Creator Funnel</a>
+            <a href="23-sasban-ai-knowledge-map.html">SASBAN AI Knowledge Map</a>
+            <a href="24-career-1-10-100.html">1-10-100 Rule: 30 Year Career Plan</a>
+            <a href="day25.html">Apr 25</a>
+            <a href="day26.html">Apr 26</a>
+            <a href="day27.html">Apr 27</a>
+            <a href="day28.html">Apr 28</a>
+            <a href="day29.html">Apr 29</a>
+            <a href="day30.html">Apr 30</a>
+            <a href="#"></a>
+            <a href="#"></a>
+        </nav>
+
+    </div>
+    <div class="container">
+        <h1>📚 YT 2026 MAY</h1>
+        <!-- <p class="subtitle">Navigation Hub</p> -->
+
+        <nav class="links-grid">
+            <a href="#"></a>
+            <a href="#"></a>
+            <a href="#"></a>
+            <a href="#"></a>
+            <a href="#"></a>
+            <a href="05/01-solution-oriented-slideshow.html">Solution-Oriented Mindset</a>
+            <a href="05/02-prolific-creator-slideshow.html">The Prolific Creator</a>
+            <a href="05/03-ai-workflow-architect-slides.html"> CAREER AI Workflow Architect</a>
+            <a href="05/04-dead-tech-relics-slideshow.html">Dead Tech Relics </a>
+            <a href="05/05-visible-thinking-landing.html">Visible Thinking Landing</a>
+            <a href="05/21.html">May 06</a>
+            <a href="05/22.html">May 07</a>
             <a href="day8.html">May 8</a>
             <a href="day9.html">May 9</a>
             <a href="day10.html">May 10</a>
@@ -198,15 +254,67 @@
             <a href="day19.html">May 19</a>
             <a href="day20.html">May 20</a>
             <a href="day21.html">May 21</a>
-            <a href="https://www.justinwelsh.me/newsletter/maximize-your-online-income-with-a-creator-funnel">Max Income: Creator Funnel</a>
-            <a href="23-sasban-ai-knowledge-map.html">SASBAN AI Knowledge Map</a>
-            <a href="24-career-1-10-100.html">1-10-100 Rule: 30 Year Career Plan</a>
+            <a href="https://www.justinwelsh.me/newsletter/maximize-your-online-income-with-a-creator-funnel">Max
+                Income: Creator Funnel</a>
+            <a href="05/23-sasban-ai-knowledge-map.html">SASBAN AI Knowledge Map</a>
+            <a href="05/24-career-1-10-100.html">1-10-100 Rule: 30 Year Career Plan</a>
             <a href="day25.html">May 25</a>
             <a href="day26.html">May 26</a>
             <a href="day27.html">May 27</a>
             <a href="day28.html">May 28</a>
             <a href="day29.html">May 29</a>
             <a href="day30.html">May 30</a>
+            <a href="day31.html">May 31</a>
+            <a href="#"></a>
+            <a href="#"></a>
+            <a href="#"></a>
+            <a href="#"></a>
+            <a href="#"></a>
+            <a href="#"></a>
+        </nav>
+
+    </div>
+    <div class="container">
+        <h1>📚 YT 2026 JUNE</h1>
+        <p class="subtitle"></p>
+
+        <nav class="links-grid">
+            <a href="#"></a>
+            <a href="01-solution-oriented-slideshow.html">Solution-Oriented Mindset</a>
+            <a href="02-prolific-creator-slideshow.html">The Prolific Creator</a>
+            <a href="03-ai-workflow-architect-slides.html"> CAREER AI Workflow Architect</a>
+            <a href="04-dead-tech-relics-slideshow.html">Dead Tech Relics </a>
+            <a href="05-visible-thinking-landing.html">Visible Thinking Landing</a>
+            <a href="21.html">June 06</a>
+            <a href="22.html">June 07</a>
+            <a href="day8.html">June 8</a>
+            <a href="day9.html">June 9</a>
+            <a href="day10.html">June 10</a>
+            <a href="day11.html">June 11</a>
+            <a href="day12.html">June 12</a>
+            <a href="day13.html">June 13</a>
+            <a href="day14.html">June 14</a>
+            <a href="day15.html">June 15</a>
+            <a href="day16.html">June 16</a>
+            <a href="day17.html">June 17</a>
+            <a href="day18.html">June 18</a>
+            <a href="day19.html">June 19</a>
+            <a href="day20.html">June 20</a>
+            <a href="day21.html">June 21</a>
+            <a href="https://www.justinwelsh.me/newsletter/maximize-your-online-income-with-a-creator-funnel">Max
+                Income: Creator Funnel</a>
+            <a href="23-sasban-ai-knowledge-map.html">SASBAN AI Knowledge Map</a>
+            <a href="24-career-1-10-100.html">1-10-100 Rule: 30 Year Career Plan</a>
+            <a href="day25.html">June 25</a>
+            <a href="day26.html">June 26</a>
+            <a href="day27.html">June 27</a>
+            <a href="day28.html">June 28</a>
+            <a href="day29.html">June 29</a>
+            <a href="day30.html">June 30</a>
+            <a href="#"></a>
+            <a href="#"></a>
+            <a href="#"></a>
+            <a href="#"></a>
         </nav>
     </div>
     <script>
@@ -238,5 +346,5 @@
         });
     </script>
 </body>
-</html>
 
+</html>

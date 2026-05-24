@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1 · 10 · 100 Cr — 30-Year Career Plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d0f14;
+  --bg2:#141720;
+  --bg3:#1a1e2a;
+  --bg4:#202433;
+  --border:rgba(255,255,255,0.07);
+  --border2:rgba(255,255,255,0.04);
+  --text:#e8e4f0;
+  --muted:rgba(232,228,240,0.45);
+  --dim:rgba(232,228,240,0.2);
+  --amber:#e8a030;
+  --amber2:rgba(232,160,48,0.15);
+  --cyan:#3dd6f5;
+  --cyan2:rgba(61,214,245,0.15);
+  --green:#3de87a;
+  --green2:rgba(61,232,122,0.15);
+}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.6;overflow-x:hidden}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:3px}
+
+/* ─── LAYOUT ─── */
+.wrap{max-width:1320px;margin:0 auto;padding:0 28px}
+
+/* ─── HEADER ─── */
+header{padding:48px 28px 36px;max-width:1320px;margin:0 auto}
+.eyebrow{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+.hero-title{font-family:'Syne',sans-serif;font-size:clamp(36px,5vw,64px);font-weight:800;line-height:1.05;letter-spacing:-1px;margin-bottom:12px}
+.hero-title .c1{color:var(--amber)}
+.hero-title .c2{color:var(--cyan)}
+.hero-sub{font-size:clamp(14px,1.4vw,16px);color:var(--muted);max-width:680px;line-height:1.65;margin-bottom:0}
+.header-row{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;flex-wrap:wrap}
+.shuffle-btn{display:flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;padding:10px 20px;cursor:pointer;border-radius:6px;transition:background .2s,border-color .2s;white-space:nowrap;flex-shrink:0;margin-top:4px}
+.shuffle-btn:hover{background:var(--bg4);border-color:rgba(255,255,255,0.14)}
+
+/* ─── SUMMARY CARDS ─── */
+.summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px}
+.scard{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:22px 24px}
+.scard.highlight{border-color:rgba(232,160,48,0.25);background:rgba(232,160,48,0.05)}
+.scard-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.scard-val{font-family:'Syne',sans-serif;font-size:clamp(22px,2.5vw,30px);font-weight:800;color:var(--text)}
+.scard-val.amber{color:var(--amber)}
+.scard-val.cyan{color:var(--cyan)}
+.scard-val.green{color:var(--green)}
+
+/* ─── CHART SECTION ─── */
+.chart-box{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:28px 28px 20px;margin-bottom:28px}
+.chart-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;flex-wrap:wrap;gap:12px}
+.chart-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;letter-spacing:.5px;color:var(--text)}
+.chart-sub{font-size:12px;color:var(--muted);margin-top:3px}
+.chart-legend{display:flex;gap:18px}
+.leg{display:flex;align-items:center;gap:6px;font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)}
+.leg-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+
+/* SVG bar chart */
+.chart-svg-wrap{position:relative;overflow:visible}
+.chart-svg-wrap svg{width:100%;display:block;overflow:visible}
+.bar-tooltip{position:absolute;background:var(--bg4);border:1px solid var(--border);border-radius:6px;padding:8px 12px;pointer-events:none;opacity:0;transition:opacity .15s;z-index:10;min-width:120px}
+.tt-year{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:3px}
+.tt-val{font-family:'Syne',sans-serif;font-size:14px;font-weight:700}
+
+/* ─── PHASE GRID ─── */
+.phase-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px}
+.phase-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.phase-header{padding:20px 22px 16px;border-bottom:1px solid var(--border)}
+.phase-header-row{display:flex;justify-content:space-between;align-items:flex-start}
+.phase-name{font-family:'Syne',sans-serif;font-size:17px;font-weight:700}
+.phase-name.p1{color:var(--amber)}
+.phase-name.p2{color:var(--cyan)}
+.phase-name.p3{color:var(--green)}
+.phase-meta{font-size:12px;color:var(--muted);margin-top:3px}
+.phase-btns{display:flex;gap:6px}
+.icon-btn{background:var(--bg3);border:1px solid var(--border);color:var(--muted);width:30px;height:30px;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;transition:all .2s}
+.icon-btn:hover{background:var(--bg4);color:var(--text)}
+
+.phase-inputs{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:16px 22px 14px}
+.inp-group{}
+.inp-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.inp-field{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:9px 12px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;color:var(--text);outline:none;transition:border-color .2s}
+.inp-field:focus{border-color:rgba(255,255,255,0.2)}
+.p1 .inp-field:focus{border-color:rgba(232,160,48,0.4)}
+.p2 .inp-field:focus{border-color:rgba(61,214,245,0.4)}
+.p3 .inp-field:focus{border-color:rgba(61,232,122,0.4)}
+
+.mini-chart-wrap{padding:0 22px 14px;height:140px;position:relative}
+.mini-chart-wrap svg{width:100%;height:100%;overflow:visible}
+
+.phase-total-row{display:flex;justify-content:space-between;align-items:baseline;padding:12px 22px;background:var(--bg3);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.total-label{font-size:12px;color:var(--muted)}
+.total-val{font-family:'Syne',sans-serif;font-size:16px;font-weight:700}
+
+.alloc-section{padding:14px 22px 18px}
+.alloc-header{display:flex;justify-content:space-between;margin-bottom:10px}
+.alloc-title{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
+.alloc-sum{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)}
+.alloc-sum.err{color:#e85050}
+.alloc-inputs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px}
+.alloc-inp-wrap .a-label{font-size:11px;color:var(--muted);margin-bottom:4px}
+.alloc-bar-track{height:5px;background:var(--bg4);border-radius:3px;overflow:hidden;display:flex}
+.ab-exp{background:var(--muted);height:100%;transition:width .35s}
+.ab-trv,.ab-trvp2,.ab-trvp3{background:var(--cyan);height:100%;transition:width .35s}
+.ab-sav,.ab-savp2,.ab-savp3{background:var(--amber);height:100%;transition:width .35s}
+.p3 .ab-sav{background:var(--green)}
+
+.alloc-pills{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px}
+.a-pill{border:1px solid var(--border);border-radius:8px;padding:10px 12px;text-align:center}
+.a-pill .pill-icon{font-size:14px;margin-bottom:4px}
+.a-pill .pill-lbl{font-size:11px;color:var(--muted);margin-bottom:3px}
+.a-pill .pill-val{font-family:'Syne',sans-serif;font-size:14px;font-weight:700}
+.a-pill .pill-pct{font-size:10px;color:var(--muted)}
+
+/* ─── THESIS ─── */
+.thesis-box{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:36px 32px;margin-bottom:36px}
+.thesis-eyebrow{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.thesis-heading{font-family:'Syne',sans-serif;font-size:clamp(18px,2vw,24px);font-weight:700;margin-bottom:16px}
+.thesis-body{font-size:clamp(14px,1.4vw,16px);color:rgba(232,228,240,0.75);line-height:1.75;max-width:820px;margin-bottom:28px}
+.thesis-body strong{color:var(--text)}
+.thesis-cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.tc{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:20px 22px}
+.tc.highlight{border-color:rgba(232,160,48,0.25);background:rgba(232,160,48,0.05)}
+.tc-label{font-size:12px;color:var(--muted);margin-bottom:8px}
+.tc-val{font-family:'Syne',sans-serif;font-size:clamp(20px,2.2vw,26px);font-weight:800;color:var(--text)}
+.tc-val.amber{color:var(--amber)}
+.tc-sub{font-size:12px;color:var(--muted);margin-top:4px}
+
+footer{text-align:center;padding:24px;font-family:'DM Mono',monospace;font-size:11px;color:var(--dim);border-top:1px solid var(--border2)}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:1024px){
+  .summary-grid{grid-template-columns:1fr 1fr}
+  .phase-grid{grid-template-columns:1fr}
+  .thesis-cards{grid-template-columns:1fr 1fr}
+}
+@media(max-width:640px){
+  .summary-grid{grid-template-columns:1fr 1fr}
+  .thesis-cards{grid-template-columns:1fr}
+  header,.wrap{padding-left:16px;padding-right:16px}
+  .phase-inputs{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ─── HEADER ─── -->
+<header>
+  <div class="header-row">
+    <div>
+      <div class="eyebrow">30-Year Career Plan</div>
+      <div class="hero-title">From <span class="c1">1 Cr</span> to <span class="c2">100 Cr,</span> in three acts.</div>
+      <div class="hero-sub">Income is never a smooth curve. Plan the targets, then shuffle the bars to see how you'd still spend half, travel early, and compound the rest.</div>
+    </div>
+    <button class="shuffle-btn" onclick="shuffleAll()">⇄ Shuffle all phases</button>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- ─── SUMMARY CARDS ─── -->
+  <div class="summary-grid">
+    <div class="scard">
+      <div class="scard-label">Total Income · 30Y</div>
+      <div class="scard-val amber" id="s-total">₹112 Cr</div>
+    </div>
+    <div class="scard">
+      <div class="scard-label">Living Expenses (50%)</div>
+      <div class="scard-val" id="s-exp">₹55.8 Cr</div>
+    </div>
+    <div class="scard">
+      <div class="scard-label">World Travel Fund</div>
+      <div class="scard-val cyan" id="s-trv">₹6.37 Cr</div>
+    </div>
+    <div class="scard highlight">
+      <div class="scard-label">Saved &amp; Invested</div>
+      <div class="scard-val amber" id="s-sav">₹49.4 Cr</div>
+    </div>
+  </div>
+
+  <!-- ─── 30-YEAR COMBINED CHART ─── -->
+  <div class="chart-box">
+    <div class="chart-header">
+      <div>
+        <div class="chart-title">INCOME ACROSS 30 YEARS</div>
+        <div class="chart-sub">Each color = one phase. Hover for the exact number.</div>
+      </div>
+      <div class="chart-legend">
+        <div class="leg"><div class="leg-dot" style="background:var(--amber)"></div>Explore</div>
+        <div class="leg"><div class="leg-dot" style="background:var(--cyan)"></div>Build</div>
+        <div class="leg"><div class="leg-dot" style="background:var(--green)"></div>Compound</div>
+      </div>
+    </div>
+    <div class="chart-svg-wrap" id="bigChartWrap">
+      <svg id="bigChart" viewBox="0 0 1260 220" preserveAspectRatio="none"></svg>
+      <div class="bar-tooltip" id="bigTip">
+        <div class="tt-year" id="ttYear"></div>
+        <div class="tt-val" id="ttVal"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── PHASE CARDS ─── -->
+  <div class="phase-grid">
+    <!-- PHASE 1 -->
+    <div class="phase-card" id="pc1">
+      <div class="phase-header">
+        <div class="phase-header-row">
+          <div>
+            <div class="phase-name p1">Phase 1 · Explore</div>
+            <div class="phase-meta">Years 1–10 · See the world</div>
+          </div>
+          <div class="phase-btns">
+            <button class="icon-btn" title="Shuffle" onclick="shufflePhase(1)">⇄</button>
+            <button class="icon-btn" title="Reset" onclick="resetPhase(1)">↺</button>
+          </div>
+        </div>
+      </div>
+      <div class="phase-inputs">
+        <div class="inp-group">
+          <div class="inp-label">10-year total (Cr)</div>
+          <input class="inp-field" id="p1-total" type="number" min="0.1" step="0.1" value="1" oninput="onPhaseInput(1)">
+        </div>
+        <div class="inp-group">
+          <div class="inp-label">Growth / yr (%)</div>
+          <input class="inp-field" id="p1-growth" type="number" min="0" max="200" step="1" value="20" oninput="onPhaseInput(1)">
+        </div>
+      </div>
+      <div class="mini-chart-wrap">
+        <svg id="chart1" viewBox="0 0 460 140" preserveAspectRatio="none"></svg>
+      </div>
+      <div class="phase-total-row">
+        <span class="total-label">10-year total</span>
+        <span class="total-val" id="p1-total-display" style="color:var(--amber)">₹1 Cr</span>
+      </div>
+      <div class="alloc-section">
+        <div class="alloc-header">
+          <span class="alloc-title">Allocation %</span>
+          <span class="alloc-sum" id="p1-sum">sum: 100%</span>
+        </div>
+        <div class="alloc-inputs">
+          <div class="alloc-inp-wrap">
+            <div class="a-label">Exp</div>
+            <input class="inp-field" id="p1-exp" type="number" min="0" max="100" value="50" oninput="onAllocInput(1)">
+          </div>
+          <div class="alloc-inp-wrap">
+            <div class="a-label">Trv</div>
+            <input class="inp-field" id="p1-trv" type="number" min="0" max="100" value="35" oninput="onAllocInput(1)">
+          </div>
+          <div class="alloc-inp-wrap">
+            <div class="a-label">Sav</div>
+            <input class="inp-field" id="p1-sav" type="number" min="0" max="100" value="15" oninput="onAllocInput(1)">
+          </div>
+        </div>
+        <div class="alloc-bar-track">
+          <div class="ab-exp" id="p1-bar-exp" style="width:50%"></div>
+          <div class="ab-trv" id="p1-bar-trv" style="width:35%"></div>
+          <div class="ab-sav" id="p1-bar-sav" style="width:15%"></div>
+        </div>
+        <div class="alloc-pills">
+          <div class="a-pill"><div class="pill-icon">🏠</div><div class="pill-lbl">Expenses</div><div class="pill-val" id="p1-exp-val">₹50 L</div><div class="pill-pct">50%</div></div>
+          <div class="a-pill"><div class="pill-icon">✈️</div><div class="pill-lbl">Travel</div><div class="pill-val" id="p1-trv-val" style="color:var(--cyan)">₹35 L</div><div class="pill-pct" id="p1-trv-pct">35%</div></div>
+          <div class="a-pill"><div class="pill-icon">📈</div><div class="pill-lbl">Savings</div><div class="pill-val" id="p1-sav-val" style="color:var(--amber)">₹15 L</div><div class="pill-pct" id="p1-sav-pct">15%</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PHASE 2 -->
+    <div class="phase-card" id="pc2">
+      <div class="phase-header">
+        <div class="phase-header-row">
+          <div>
+            <div class="phase-name p2">Phase 2 · Build</div>
+            <div class="phase-meta">Years 11–20 · Stack the chips</div>
+          </div>
+          <div class="phase-btns">
+            <button class="icon-btn" title="Shuffle" onclick="shufflePhase(2)">⇄</button>
+            <button class="icon-btn" title="Reset" onclick="resetPhase(2)">↺</button>
+          </div>
+        </div>
+      </div>
+      <div class="phase-inputs">
+        <div class="inp-group">
+          <div class="inp-label">10-year total (Cr)</div>
+          <input class="inp-field" id="p2-total" type="number" min="0.1" step="0.1" value="10" oninput="onPhaseInput(2)">
+        </div>
+        <div class="inp-group">
+          <div class="inp-label">Growth / yr (%)</div>
+          <input class="inp-field" id="p2-growth" type="number" min="0" max="200" step="1" value="10" oninput="onPhaseInput(2)">
+        </div>
+      </div>
+      <div class="mini-chart-wrap">
+        <svg id="chart2" viewBox="0 0 460 140" preserveAspectRatio="none"></svg>
+      </div>
+      <div class="phase-total-row">
+        <span class="total-label">10-year total</span>
+        <span class="total-val" id="p2-total-display" style="color:var(--cyan)">₹10 Cr</span>
+      </div>
+      <div class="alloc-section">
+        <div class="alloc-header">
+          <span class="alloc-title">Allocation %</span>
+          <span class="alloc-sum" id="p2-sum">sum: 100%</span>
+        </div>
+        <div class="alloc-inputs">
+          <div class="alloc-inp-wrap">
+            <div class="a-label">Exp</div>
+            <input class="inp-field" id="p2-exp" type="number" min="0" max="100" value="50" oninput="onAllocInput(2)">
+          </div>
+          <div class="alloc-inp-wrap">
+            <div class="a-label">Trv</div>
+            <input class="inp-field" id="p2-trv" type="number" min="0" max="100" value="10" oninput="onAllocInput(2)">
+          </div>
+          <div class="alloc-inp-wrap">
+            <div class="a-label">Sav</div>
+            <input class="inp-field" id="p2-sav" type="number" min="0" max="100" value="40" oninput="onAllocInput(2)">
+          </div>
+        </div>
+        <div class="alloc-bar-track">
+          <div class="ab-exp" id="p2-bar-exp" style="width:50%"></div>
+          <div class="ab-trvp2" id="p2-bar-trv" style="width:10%"></div>
+          <div class="ab-savp2" id="p2-bar-sav" style="width:40%"></div>
+        </div>
+        <div class="alloc-pills">
+          <div class="a-pill"><div class="pill-icon">🏠</div><div class="pill-lbl">Expenses</div><div class="pill-val" id="p2-exp-val">₹5 Cr</div><div class="pill-pct">50%</div></div>
+          <div class="a-pill"><div class="pill-icon">✈️</div><div class="pill-lbl">Travel</div><div class="pill-val" id="p2-trv-val" style="color:var(--cyan)">₹1 Cr</div><div class="pill-pct" id="p2-trv-pct">10%</div></div>
+          <div class="a-pill"><div class="pill-icon">📈</div><div class="pill-lbl">Savings</div><div class="pill-val" id="p2-sav-val" style="color:var(--cyan)">₹4 Cr</div><div class="pill-pct" id="p2-sav-pct">40%</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PHASE 3 -->
+    <div class="phase-card" id="pc3">
+      <div class="phase-header">
+        <div class="phase-header-row">
+          <div>
+            <div class="phase-name p3">Phase 3 · Compound</div>
+            <div class="phase-meta">Years 21–30 · Grow the net worth</div>
+          </div>
+          <div class="phase-btns">
+            <button class="icon-btn" title="Shuffle" onclick="shufflePhase(3)">⇄</button>
+            <button class="icon-btn" title="Reset" onclick="resetPhase(3)">↺</button>
+          </div>
+        </div>
+      </div>
+      <div class="phase-inputs">
+        <div class="inp-group">
+          <div class="inp-label">10-year total (Cr)</div>
+          <input class="inp-field" id="p3-total" type="number" min="0.1" step="0.1" value="100" oninput="onPhaseInput(3)">
+        </div>
+        <div class="inp-group">
+          <div class="inp-label">Growth / yr (%)</div>
+          <input class="inp-field" id="p3-growth" type="number" min="0" max="200" step="1" value="8" oninput="onPhaseInput(3)">
+        </div>
+      </div>
+      <div class="mini-chart-wrap">
+        <svg id="chart3" viewBox="0 0 460 140" preserveAspectRatio="none"></svg>
+      </div>
+      <div class="phase-total-row">
+        <span class="total-label">10-year total</span>
+        <span class="total-val" id="p3-total-display" style="color:var(--green)">₹100 Cr</span>
+      </div>
+      <div class="alloc-section">
+        <div class="alloc-header">
+          <span class="alloc-title">Allocation %</span>
+          <span class="alloc-sum" id="p3-sum">sum: 100%</span>
+        </div>
+        <div class="alloc-inputs">
+          <div class="alloc-inp-wrap">
+            <div class="a-label">Exp</div>
+            <input class="inp-field" id="p3-exp" type="number" min="0" max="100" value="50" oninput="onAllocInput(3)">
+          </div>
+          <div class="alloc-inp-wrap">
+            <div class="a-label">Trv</div>
+            <input class="inp-field" id="p3-trv" type="number" min="0" max="100" value="5" oninput="onAllocInput(3)">
+          </div>
+          <div class="alloc-inp-wrap">
+            <div class="a-label">Sav</div>
+            <input class="inp-field" id="p3-sav" type="number" min="0" max="100" value="45" oninput="onAllocInput(3)">
+          </div>
+        </div>
+        <div class="alloc-bar-track">
+          <div class="ab-exp" id="p3-bar-exp" style="width:50%"></div>
+          <div class="ab-trvp3" id="p3-bar-trv" style="width:5%"></div>
+          <div class="ab-savp3" id="p3-bar-sav" style="width:45%"></div>
+        </div>
+        <div class="alloc-pills">
+          <div class="a-pill"><div class="pill-icon">🏠</div><div class="pill-lbl">Expenses</div><div class="pill-val" id="p3-exp-val">₹50.2 Cr</div><div class="pill-pct">50%</div></div>
+          <div class="a-pill"><div class="pill-icon">✈️</div><div class="pill-lbl">Travel</div><div class="pill-val" id="p3-trv-val" style="color:var(--cyan)">₹5.02 Cr</div><div class="pill-pct" id="p3-trv-pct">5%</div></div>
+          <div class="a-pill"><div class="pill-icon">📈</div><div class="pill-lbl">Savings</div><div class="pill-val" id="p3-sav-val" style="color:var(--green)">₹45.2 Cr</div><div class="pill-pct" id="p3-sav-pct">45%</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── HALF-AND-HALF THESIS ─── -->
+  <div class="thesis-box">
+    <div class="thesis-eyebrow">The Half-and-Half Thesis</div>
+    <div class="thesis-heading">Spend half. Save half. For 30 years.</div>
+    <div class="thesis-body">Across 30 years, you can keep <strong>50% for life</strong> — rent, food, the people you love — and still set aside the other half. Travel hard while you're young; let the later phases stack savings. The bars wobble, life wobbles, the totals still work.</div>
+    <div class="thesis-cards">
+      <div class="tc">
+        <div class="tc-label">If you only spent on living</div>
+        <div class="tc-val" id="t-exp">₹55.8 Cr</div>
+        <div class="tc-sub">50% across all phases</div>
+      </div>
+      <div class="tc">
+        <div class="tc-label">Memories from Phase 1 travel</div>
+        <div class="tc-val" id="t-trv1">₹35 L</div>
+        <div class="tc-sub">35% of Phase 1 income</div>
+      </div>
+      <div class="tc highlight">
+        <div class="tc-label">Investable corpus by year 30</div>
+        <div class="tc-val amber" id="t-sav">₹49.4 Cr</div>
+        <div class="tc-sub">Before any compounding returns</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /wrap -->
+
+<footer>1·10·100 Crore Framework · 30-Year Career Plan · All values in Indian Rupees (₹)</footer>
+
+<!-- ─── TOOLTIP ─── -->
+<div class="bar-tooltip" id="globalTip" style="position:fixed;pointer-events:none;opacity:0;transition:opacity .15s;z-index:999;background:var(--bg4);border:1px solid var(--border);border-radius:6px;padding:8px 12px">
+  <div class="tt-year" id="gtYear"></div>
+  <div class="tt-val" id="gtVal"></div>
+</div>
+
+<script>
+// ─── STATE ───
+const DEFAULTS = {
+  p1:{total:1, growth:20, exp:50, trv:35, sav:15},
+  p2:{total:10, growth:10, exp:50, trv:10, sav:40},
+  p3:{total:100, growth:8,  exp:50, trv:5,  sav:45}
+};
+
+function getState(p){
+  return {
+    total:  parseFloat(document.getElementById(`p${p}-total`).value)  || DEFAULTS[`p${p}`].total,
+    growth: parseFloat(document.getElementById(`p${p}-growth`).value) || DEFAULTS[`p${p}`].growth,
+    exp:    parseFloat(document.getElementById(`p${p}-exp`).value)    || 50,
+    trv:    parseFloat(document.getElementById(`p${p}-trv`).value)    || 0,
+    sav:    parseFloat(document.getElementById(`p${p}-sav`).value)    || 0,
+  };
+}
+
+// ─── YEAR SERIES ───
+function makeYears(totalCr, growthPct, count=10){
+  // given total Cr and annual growth %, find base year value
+  // sum of geometric series: S = a * (r^n - 1)/(r-1) where r=1+g, n=count
+  const g = growthPct / 100;
+  const r = 1 + g;
+  let a;
+  if(Math.abs(g) < 0.0001){
+    a = totalCr / count;
+  } else {
+    a = totalCr * (r - 1) / (Math.pow(r, count) - 1);
+  }
+  const years = [];
+  for(let i=0;i<count;i++) years.push(a * Math.pow(r, i));
+  return years;
+}
+
+// ─── FORMAT ───
+function fmt(crValue){
+  const absV = Math.abs(crValue);
+  if(absV >= 1) return `₹${crValue.toFixed(absV>=10?1:2)} Cr`;
+  const l = crValue * 100;
+  if(absV*100 >= 1) return `₹${l.toFixed(l>=10?1:2)} L`;
+  const k = crValue * 10000;
+  return `₹${k.toFixed(0)} K`;
+}
+function fmtShort(crValue){
+  const absV = Math.abs(crValue);
+  if(absV >= 1) return `₹${crValue.toFixed(absV>=10?1:2)}Cr`;
+  const l = crValue * 100;
+  return `₹${l.toFixed(l>=10?1:2)}L`;
+}
+
+// ─── DRAW SVG BAR CHART ───
+const COLORS = {1:'#e8a030', 2:'#3dd6f5', 3:'#3de87a'};
+
+function drawMini(svgId, years, color, phase){
+  const svg = document.getElementById(svgId);
+  const maxY = Math.max(...years);
+  const W = 460, H = 140, padL=44, padR=8, padT=8, padB=24;
+  const plotW = W - padL - padR;
+  const plotH = H - padT - padB;
+  const n = years.length;
+  const barW = (plotW / n) * 0.68;
+  const gap  = (plotW / n) * 0.32;
+
+  // y-axis labels: 3 ticks
+  const ticks = makeTicks(maxY, 3);
+  let lines = `<line x1="${padL}" y1="${padT}" x2="${padL}" y2="${padT+plotH}" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>`;
+  let yLabels = '';
+  ticks.forEach(t => {
+    const y = padT + plotH - (t/maxY)*plotH;
+    lines += `<line x1="${padL}" y1="${y}" x2="${W-padR}" y2="${y}" stroke="rgba(255,255,255,0.06)" stroke-width="0.5" stroke-dasharray="3,3"/>`;
+    yLabels += `<text x="${padL-5}" y="${y+4}" font-size="9" fill="rgba(255,255,255,0.3)" text-anchor="end" font-family="DM Mono,monospace">${fmtShort(t)}</text>`;
+  });
+
+  let bars = '';
+  years.forEach((v, i) => {
+    const bh = maxY > 0 ? (v / maxY) * plotH : 0;
+    const bx = padL + i * (barW + gap) + gap/2;
+    const by = padT + plotH - bh;
+    const label = phase === 1 ? `Y${i+1}` : `Y${(phase-1)*10+i+1}`;
+    bars += `<rect x="${bx}" y="${by}" width="${barW}" height="${bh}" fill="${color}" rx="2" opacity="0.9"
+      onmouseenter="showTip(event,'${label}','${fmt(v)}')"
+      onmouseleave="hideTip()"
+      style="cursor:pointer;transition:opacity .15s" 
+      onmouseenter="this.style.opacity='1';showTip(event,'${label}','${fmt(v)}')"
+      onmouseleave="this.style.opacity='0.9';hideTip()"/>`;
+    // x label
+    bars += `<text x="${bx+barW/2}" y="${padT+plotH+14}" font-size="9" fill="rgba(255,255,255,0.3)" text-anchor="middle" font-family="DM Mono,monospace">${label}</text>`;
+  });
+
+  svg.innerHTML = lines + yLabels + bars;
+}
+
+function drawBig(allYears){
+  const svg = document.getElementById('bigChart');
+  const maxY = Math.max(...allYears.flat());
+  const W=1260, H=220, padL=54, padR=10, padT=8, padB=28;
+  const plotW=W-padL-padR, plotH=H-padT-padB;
+  const n=30;
+  const barW=(plotW/n)*0.7, gap=(plotW/n)*0.3;
+
+  const ticks = makeTicks(maxY, 4);
+  let lines='', yLbls='';
+  ticks.forEach(t=>{
+    const y = padT+plotH-(t/maxY)*plotH;
+    lines+=`<line x1="${padL}" y1="${y}" x2="${W-padR}" y2="${y}" stroke="rgba(255,255,255,0.06)" stroke-width="0.5" stroke-dasharray="3,3"/>`;
+    yLbls+=`<text x="${padL-6}" y="${y+4}" font-size="9" fill="rgba(255,255,255,0.3)" text-anchor="end" font-family="DM Mono,monospace">${fmtShort(t)}</text>`;
+  });
+
+  let bars='';
+  const phaseColors=['#e8a030','#3dd6f5','#3de87a'];
+  let gi=0;
+  allYears.forEach((phase,pi)=>{
+    phase.forEach((v,i)=>{
+      const bh = maxY>0?(v/maxY)*plotH:0;
+      const bx = padL+gi*(barW+gap)+gap/2;
+      const by = padT+plotH-bh;
+      const label=`Y${gi+1}`;
+      bars+=`<rect x="${bx}" y="${by}" width="${barW}" height="${bh}" fill="${phaseColors[pi]}" rx="2" opacity="0.85"
+        style="cursor:pointer"
+        onmouseenter="this.style.opacity='1';showTip(event,'${label}','${fmt(v)}')"
+        onmouseleave="this.style.opacity='0.85';hideTip()"/>`;
+      if((gi+1)%5===0||gi===0||gi===29){
+        bars+=`<text x="${bx+barW/2}" y="${padT+plotH+16}" font-size="9" fill="rgba(255,255,255,0.28)" text-anchor="middle" font-family="DM Mono,monospace">${label}</text>`;
+      }
+      gi++;
+    });
+  });
+
+  svg.innerHTML = lines+yLbls+bars;
+}
+
+function makeTicks(max, count){
+  if(max<=0) return [0];
+  const raw = max/(count-1);
+  const mag = Math.pow(10,Math.floor(Math.log10(raw)));
+  const nice = [1,2,2.5,5,10].map(f=>f*mag).find(f=>f>=raw) || raw;
+  const ticks=[];
+  for(let i=0;i<count;i++) ticks.push(parseFloat((nice*i).toPrecision(4)));
+  return ticks;
+}
+
+// ─── TOOLTIP ───
+function showTip(e, year, val){
+  const tip = document.getElementById('globalTip');
+  document.getElementById('gtYear').textContent = year;
+  document.getElementById('gtVal').textContent = val;
+  tip.style.opacity='1';
+  moveTip(e);
+}
+function moveTip(e){
+  const tip = document.getElementById('globalTip');
+  tip.style.left = (e.clientX+14)+'px';
+  tip.style.top  = (e.clientY-10)+'px';
+}
+function hideTip(){
+  document.getElementById('globalTip').style.opacity='0';
+}
+document.addEventListener('mousemove',moveTip);
+
+// ─── UPDATE ───
+function update(){
+  const s1=getState(1), s2=getState(2), s3=getState(3);
+
+  const y1 = makeYears(s1.total, s1.growth);
+  const y2 = makeYears(s2.total, s2.growth);
+  const y3 = makeYears(s3.total, s3.growth);
+
+  // mini charts
+  drawMini('chart1', y1, COLORS[1], 1);
+  drawMini('chart2', y2, COLORS[2], 2);
+  drawMini('chart3', y3, COLORS[3], 3);
+
+  // big chart
+  drawBig([y1, y2, y3]);
+
+  // totals
+  const t1 = y1.reduce((a,b)=>a+b,0);
+  const t2 = y2.reduce((a,b)=>a+b,0);
+  const t3 = y3.reduce((a,b)=>a+b,0);
+  const grandTotal = t1+t2+t3;
+
+  document.getElementById('p1-total-display').textContent = fmt(t1);
+  document.getElementById('p2-total-display').textContent = fmt(t2);
+  document.getElementById('p3-total-display').textContent = fmt(t3);
+
+  // allocations
+  [1,2,3].forEach(p=>{
+    const s=getState(p);
+    const t = p===1?t1:p===2?t2:t3;
+    const expV=(s.exp/100)*t, trvV=(s.trv/100)*t, savV=(s.sav/100)*t;
+    document.getElementById(`p${p}-exp-val`).textContent=fmt(expV);
+    document.getElementById(`p${p}-trv-val`).textContent=fmt(trvV);
+    document.getElementById(`p${p}-sav-val`).textContent=fmt(savV);
+    document.getElementById(`p${p}-trv-pct`).textContent=s.trv+'%';
+    document.getElementById(`p${p}-sav-pct`).textContent=s.sav+'%';
+    document.getElementById(`p${p}-bar-exp`).style.width=s.exp+'%';
+    document.getElementById(`p${p}-bar-trv`).style.width=s.trv+'%';
+    document.getElementById(`p${p}-bar-sav`).style.width=s.sav+'%';
+  });
+
+  // summary
+  const totalExp = (s1.exp/100)*t1 + (s2.exp/100)*t2 + (s3.exp/100)*t3;
+  const totalTrv = (s1.trv/100)*t1 + (s2.trv/100)*t2 + (s3.trv/100)*t3;
+  const totalSav = (s1.sav/100)*t1 + (s2.sav/100)*t2 + (s3.sav/100)*t3;
+
+  document.getElementById('s-total').textContent = fmt(grandTotal);
+  document.getElementById('s-exp').textContent   = fmt(totalExp);
+  document.getElementById('s-trv').textContent   = fmt(totalTrv);
+  document.getElementById('s-sav').textContent   = fmt(totalSav);
+
+  // thesis
+  document.getElementById('t-exp').textContent  = fmt(totalExp);
+  document.getElementById('t-trv1').textContent = fmt((s1.trv/100)*t1);
+  document.getElementById('t-sav').textContent  = fmt(totalSav);
+}
+
+// ─── INPUT HANDLERS ───
+function onPhaseInput(p){ update(); }
+
+function onAllocInput(p){
+  const e=parseFloat(document.getElementById(`p${p}-exp`).value)||0;
+  const t=parseFloat(document.getElementById(`p${p}-trv`).value)||0;
+  const s=parseFloat(document.getElementById(`p${p}-sav`).value)||0;
+  const sum=e+t+s;
+  const sumEl=document.getElementById(`p${p}-sum`);
+  sumEl.textContent=`sum: ${Math.round(sum)}%`;
+  sumEl.className=`alloc-sum${Math.abs(sum-100)>0.5?' err':''}`;
+  update();
+}
+
+// ─── SHUFFLE ───
+function shufflePhase(p){
+  const totals=[1,10,100];
+  const growths=[5,8,10,12,15,18,20,22,25,30];
+  const newGrowth=growths[Math.floor(Math.random()*growths.length)];
+  document.getElementById(`p${p}-growth`).value=newGrowth;
+  // randomize allocs keeping sum=100
+  const e=30+Math.floor(Math.random()*30);
+  const t=Math.floor(Math.random()*(70-e));
+  const s=100-e-t;
+  document.getElementById(`p${p}-exp`).value=e;
+  document.getElementById(`p${p}-trv`).value=t;
+  document.getElementById(`p${p}-sav`).value=s;
+  update();
+}
+function shuffleAll(){ [1,2,3].forEach(shufflePhase); }
+
+// ─── RESET ───
+function resetPhase(p){
+  const d=DEFAULTS[`p${p}`];
+  document.getElementById(`p${p}-total`).value=d.total;
+  document.getElementById(`p${p}-growth`).value=d.growth;
+  document.getElementById(`p${p}-exp`).value=d.exp;
+  document.getElementById(`p${p}-trv`).value=d.trv;
+  document.getElementById(`p${p}-sav`).value=d.sav;
+  document.getElementById(`p${p}-sum`).textContent='sum: 100%';
+  document.getElementById(`p${p}-sum`).className='alloc-sum';
+  update();
+}
+
+// ─── INIT ───
+update();
+</script>
+</body>
+</html>
