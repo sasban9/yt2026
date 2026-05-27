@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Three Phases — 1 · 10 · 100 Crore</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Bebas+Neue&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:#080608;font-family:'DM Mono',monospace;-webkit-font-smoothing:antialiased}
+
+:root{
+  --gold:#d4a030;--gold2:#f0c060;--gold3:rgba(212,160,48,0.15);
+  --amber:#c47820;--amber2:rgba(196,120,32,0.12);
+  --cyan:#3dd4e0;--cyan2:rgba(61,212,224,0.12);
+  --green:#38c870;--green2:rgba(56,200,112,0.1);
+  --bg:#080608;--bg2:#0e0b0e;--bg3:#14101a;
+  --text:#f0ead8;--muted:rgba(240,234,216,0.4);--dim:rgba(240,234,216,0.15);
+}
+
+/* ────────── STAGE ────────── */
+.stage{
+  width:100vw;height:100vh;position:relative;overflow:hidden;
+  background:radial-gradient(ellipse 120% 80% at 50% 110%,#1a0e08,#080608 70%);
+}
+
+/* grain */
+.stage::after{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E");
+  opacity:.5;mix-blend-mode:overlay;
+}
+
+/* ────────── SLIDE ELEMENT BASE ────────── */
+.el{
+  position:absolute;will-change:transform,opacity;
+  transition-timing-function:cubic-bezier(0.4,0,0.2,1);
+}
+.el.stay{transition:none}
+
+/* ────────── BACKGROUNDS ────────── */
+#bg-glow{
+  inset:0;position:absolute;pointer-events:none;z-index:0;
+  transition:background 1.2s ease;
+}
+
+/* ────────── PERSISTENT: TIMELINE ────────── */
+#timeline{
+  bottom:28px;left:5%;width:90%;height:3px;z-index:50;
+}
+.tl-track{width:100%;height:3px;background:rgba(255,255,255,0.06);border-radius:2px;position:relative}
+.tl-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--gold),var(--gold2));width:0;transition:width 0.8s cubic-bezier(0.4,0,0.2,1);box-shadow:0 0 12px rgba(212,160,48,0.4)}
+.tl-dot{position:absolute;top:50%;width:10px;height:10px;border-radius:50%;transform:translate(-50%,-50%);border:2px solid}
+.tl-dots-row{position:absolute;top:50%;left:0;width:100%;height:0;display:flex;justify-content:space-between;align-items:center}
+.tl-label{position:absolute;bottom:-22px;font-size:11px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;transform:translateX(-50%)}
+#slide-ctr{position:absolute;right:0;bottom:-20px;font-size:11px;color:var(--dim);letter-spacing:1px}
+
+/* ────────── PERSISTENT: PHASE BAR ────────── */
+#phase-bar{
+  top:28px;left:50%;transform:translateX(-50%);
+  display:flex;gap:32px;z-index:50;align-items:center;
+}
+.ph-chip{
+  font-size:12px;letter-spacing:3px;text-transform:uppercase;
+  color:var(--dim);transition:color .5s,opacity .5s;opacity:0.4;
+  display:flex;align-items:center;gap:8px;
+}
+.ph-chip.active{opacity:1;}
+.ph-chip .dot{width:8px;height:8px;border-radius:50%;background:var(--dim);transition:background .5s;flex-shrink:0}
+.ph-chip.p1.active{color:var(--gold)}.ph-chip.p1.active .dot{background:var(--gold);box-shadow:0 0 8px var(--gold)}
+.ph-chip.p2.active{color:var(--cyan)}.ph-chip.p2.active .dot{background:var(--cyan);box-shadow:0 0 8px var(--cyan)}
+.ph-chip.p3.active{color:var(--green)}.ph-chip.p3.active .dot{background:var(--green);box-shadow:0 0 8px var(--green)}
+
+/* ────────── NAV ZONES ────────── */
+.nav-zone{position:fixed;top:0;bottom:0;width:18%;z-index:200;cursor:pointer;opacity:0}
+#nz-prev{left:0}
+#nz-next{right:0}
+.nav-hint{
+  position:fixed;top:50%;transform:translateY(-50%);z-index:201;
+  font-size:28px;color:rgba(255,255,255,0.12);pointer-events:none;
+  transition:opacity .3s;opacity:0;
+}
+.nav-hint.left{left:16px}
+.nav-hint.right{right:16px}
+
+/* ────────── BIG NUMBER ────────── */
+.big-num{
+  font-family:'Bebas Neue',sans-serif;
+  letter-spacing:-1px;line-height:0.92;
+}
+.serif-display{
+  font-family:'Cormorant Garamond',serif;
+  font-weight:300;line-height:1.05;
+}
+
+/* ────────── COIN ────────── */
+.coin{
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  position:absolute;font-family:'Bebas Neue',sans-serif;
+  border:2px solid;flex-shrink:0;
+  box-shadow:inset 0 0 20px rgba(0,0,0,0.4),0 0 0 1px rgba(255,255,255,0.04);
+}
+
+/* ────────── BAR CHART ────────── */
+.bar-group{position:absolute;display:flex;align-items:flex-end;gap:6px}
+.bar{border-radius:3px 3px 0 0;transform-origin:bottom;transform:scaleY(0);transition:transform 0.8s cubic-bezier(0.34,1.4,0.64,1)}
+.bar.grow{transform:scaleY(1)}
+
+/* ────────── PILE ────────── */
+.pile{position:absolute;display:flex;flex-direction:column;align-items:center;gap:8px}
+.pile-bar{border-radius:6px 6px 0 0;transform-origin:bottom;transform:scaleY(0);transition:transform 1s cubic-bezier(0.34,1.3,0.64,1)}
+.pile-bar.grow{transform:scaleY(1)}
+.pile-label{font-size:12px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-top:6px}
+.pile-amount{font-family:'Bebas Neue',sans-serif;font-size:28px;margin-top:2px}
+
+/* ────────── SPLIT VISUAL ────────── */
+.split-vis{position:absolute;overflow:hidden;border-radius:4px}
+.split-half{position:absolute;top:0;bottom:0;transition:width 1s cubic-bezier(0.4,0,0.2,1)}
+
+/* ────────── RING ────────── */
+.ring{
+  border-radius:50%;position:absolute;
+  border:2px solid;
+  transform-origin:center;
+}
+
+/* ────────── FLOW ARROW ────────── */
+.flow-arrow{
+  position:absolute;
+  font-family:'Bebas Neue',sans-serif;font-size:36px;
+  color:var(--dim);
+  opacity:0;
+  transition:opacity .6s;
+}
+.flow-arrow.show{opacity:1}
+
+/* ────────── FLOATING WORDS ────────── */
+.float-word{
+  position:absolute;
+  font-size:12px;letter-spacing:3px;text-transform:uppercase;
+  color:var(--muted);opacity:0;
+  animation:none;
+  transition:opacity .5s;
+}
+.float-word.show{opacity:1}
+
+/* ────────── KEYFRAMES ────────── */
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideDown{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-40px)}}
+@keyframes slideLeft{from{opacity:0;transform:translateX(60px)}to{opacity:1;transform:translateX(0)}}
+@keyframes slideRight{from{opacity:0;transform:translateX(-60px)}to{opacity:1;transform:translateX(0)}}
+@keyframes zoomIn{from{opacity:0;transform:scale(0.7)}to{opacity:1;transform:scale(1)}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.7;transform:scale(0.97)}}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes countUp{from{opacity:0}to{opacity:1}}
+@keyframes floatUp{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes glow{0%,100%{box-shadow:0 0 20px rgba(212,160,48,0.3)}50%{box-shadow:0 0 40px rgba(212,160,48,0.6)}}
+@keyframes waveIn{from{opacity:0;clip-path:inset(0 100% 0 0)}to{opacity:1;clip-path:inset(0 0% 0 0)}}
+@keyframes particleFly{0%{transform:translate(0,0) scale(1);opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(0);opacity:0}}
+
+.anim-fadeIn{animation:fadeIn .6s forwards}
+.anim-slideUp{animation:slideUp .7s cubic-bezier(0.34,1.2,0.64,1) forwards}
+.anim-slideDown{animation:slideDown .5s ease forwards}
+.anim-slideLeft{animation:slideLeft .7s cubic-bezier(0.34,1.2,0.64,1) forwards}
+.anim-slideRight{animation:slideRight .7s cubic-bezier(0.34,1.2,0.64,1) forwards}
+.anim-zoomIn{animation:zoomIn .6s cubic-bezier(0.34,1.4,0.64,1) forwards}
+.anim-pulse{animation:pulse 2s ease infinite}
+.anim-glow{animation:glow 2s ease infinite}
+.anim-floatUp{animation:floatUp 3s ease-in-out infinite}
+.anim-waveIn{animation:waveIn .8s cubic-bezier(0.4,0,0.2,1) forwards}
+
+.delay-1{animation-delay:.1s}
+.delay-2{animation-delay:.2s}
+.delay-3{animation-delay:.35s}
+.delay-4{animation-delay:.5s}
+.delay-5{animation-delay:.65s}
+.delay-6{animation-delay:.8s}
+.delay-7{animation-delay:1s}
+.delay-8{animation-delay:1.2s}
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+
+  <!-- PERSISTENT GLOW -->
+  <div class="el stay" id="bg-glow"></div>
+
+  <!-- PERSISTENT PHASE BAR -->
+  <div class="el stay" id="phase-bar">
+    <div class="ph-chip p1" id="chip1"><div class="dot"></div>Phase 1</div>
+    <div style="width:20px;height:1px;background:var(--dim)"></div>
+    <div class="ph-chip p2" id="chip2"><div class="dot"></div>Phase 2</div>
+    <div style="width:20px;height:1px;background:var(--dim)"></div>
+    <div class="ph-chip p3" id="chip3"><div class="dot"></div>Phase 3</div>
+  </div>
+
+  <!-- PERSISTENT TIMELINE -->
+  <div class="el stay" id="timeline">
+    <div class="tl-track">
+      <div class="tl-fill" id="tl-fill"></div>
+      <div class="tl-dots-row" id="tl-dots-row"></div>
+    </div>
+    <span id="slide-ctr">1 / 24</span>
+  </div>
+
+  <!-- SLIDE LAYER (dynamically populated) -->
+  <div id="slide-layer" style="position:absolute;inset:0;z-index:10"></div>
+
+  <!-- NAV ZONES -->
+  <div class="nav-zone" id="nz-prev"></div>
+  <div class="nav-zone" id="nz-next"></div>
+  <div class="nav-hint left" id="hint-l">‹</div>
+  <div class="nav-hint right" id="hint-r">›</div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════════════════
+const $ = id => document.getElementById(id);
+const lerp = (a,b,t) => a+(b-a)*t;
+const W = () => window.innerWidth;
+const H = () => window.innerHeight;
+const cx = () => W()/2;
+const cy = () => H()/2;
+
+const COL = {
+  gold:'#d4a030', gold2:'#f0c060', goldD:'rgba(212,160,48,0.15)',
+  amber:'#c47820',
+  cyan:'#3dd4e0', cyanD:'rgba(61,212,224,0.12)',
+  green:'#38c870', greenD:'rgba(56,200,112,0.1)',
+  text:'#f0ead8', muted:'rgba(240,234,216,0.42)', dim:'rgba(240,234,216,0.16)',
+};
+
+function el(tag='div', attrs={}, styles={}, html=''){
+  const e = document.createElement(tag);
+  Object.entries(attrs).forEach(([k,v]) => e.setAttribute(k,v));
+  Object.assign(e.style, styles);
+  if(html) e.innerHTML = html;
+  return e;
+}
+
+// ═══════════════════════════════════════════════════════════
+// SLIDE DEFINITIONS
+// ═══════════════════════════════════════════════════════════
+// Each slide: { id, phase (0-3), bgColor, build(layer) }
+// build() adds elements to the layer div
+
+const SLIDES = [];
+
+function def(phase, bgHex, buildFn){
+  SLIDES.push({ phase, bg: bgHex, build: buildFn });
+}
+
+// ── HELPER BUILDERS ──
+function addText(layer, text, x, y, size, color, font='Bebas Neue', weight=400, animClass='anim-fadeIn', delay=0, extra={}){
+  const d = el('div',{},{
+    position:'absolute',
+    left: typeof x === 'string' ? x : x+'px',
+    top:  typeof y === 'string' ? y : y+'px',
+    fontSize: size+'px',
+    color,
+    fontFamily: font === 'serif' ? "'Cormorant Garamond',serif" : font === 'mono' ? "'DM Mono',monospace" : "'Bebas Neue',sans-serif",
+    fontWeight: weight,
+    lineHeight:'1',
+    letterSpacing: font==='Bebas Neue'?'-1px':'',
+    opacity:'0',
+    transform: animClass.includes('Up') ? 'translateY(40px)' : animClass.includes('Left') ? 'translateX(60px)' : animClass.includes('Zoom') ? 'scale(0.7)' : 'none',
+    ...extra
+  });
+  d.textContent = text;
+  d.className = animClass + (delay > 0 ? ' delay-'+delay : '');
+  d.style.animationFillMode = 'forwards';
+  layer.appendChild(d);
+  return d;
+}
+
+function addCoin(layer, x, y, size, color, text, animClass='anim-zoomIn', delay=0){
+  const d = el('div',{},{
+    position:'absolute',
+    left:(typeof x==='string'?x:x+'px'),
+    top:(typeof y==='string'?y:y+'px'),
+    width:size+'px',height:size+'px',
+    borderRadius:'50%',
+    display:'flex',alignItems:'center',justifyContent:'center',
+    background:`radial-gradient(circle at 35% 35%, ${color}33, ${color}08)`,
+    border:`2px solid ${color}`,
+    boxShadow:`0 0 ${size*0.3}px ${color}44, inset 0 0 ${size*0.2}px rgba(0,0,0,0.5)`,
+    color,
+    fontFamily:"'Bebas Neue',sans-serif",
+    fontSize:Math.max(14,size*0.22)+'px',
+    opacity:'0',
+  });
+  d.className = animClass + (delay>0?' delay-'+delay:'');
+  d.style.animationFillMode='forwards';
+  d.textContent = text;
+  layer.appendChild(d);
+  return d;
+}
+
+function addBar(layer, x, y, w, h, color, grow=true, delay=0){
+  const wrap = el('div',{},{position:'absolute',left:x+'px',bottom:y+'px',width:w+'px',height:h+'px'});
+  wrap.style.background = `linear-gradient(to top, ${color}bb, ${color}55)`;
+  wrap.style.borderRadius = '4px 4px 0 0';
+  wrap.style.transformOrigin = 'bottom';
+  wrap.style.transform = 'scaleY(0)';
+  wrap.style.transition = `transform 0.9s cubic-bezier(0.34,1.4,0.64,1) ${delay*0.12}s`;
+  wrap.style.boxShadow = `0 0 20px ${color}33`;
+  if(grow) setTimeout(()=>wrap.style.transform='scaleY(1)', 100);
+  layer.appendChild(wrap);
+  return wrap;
+}
+
+function addPile(layer, x, y, width, height, color, label, amount, delay=0){
+  const wrap = el('div',{},{position:'absolute',left:x+'px',top:y+'px',width:width+'px',display:'flex',flexDirection:'column',alignItems:'center',gap:'6px'});
+  const barWrap = el('div',{},{width:'100%',height:height+'px',background:'rgba(255,255,255,0.04)',borderRadius:'6px',overflow:'hidden',display:'flex',flexDirection:'column',justifyContent:'flex-end'});
+  const bar = el('div',{},{width:'100%',background:`linear-gradient(to top, ${color}cc, ${color}44)`,borderRadius:'4px 4px 0 0',height:'100%',transformOrigin:'bottom',transform:'scaleY(0)',transition:`transform 1s cubic-bezier(0.34,1.3,0.64,1) ${delay*0.15}s`,boxShadow:`0 0 24px ${color}33`});
+  barWrap.appendChild(bar);
+  const lbl = el('div',{},{fontSize:'11px',color:'rgba(240,234,216,0.4)',letterSpacing:'2px',textTransform:'uppercase',marginTop:'6px',fontFamily:"'DM Mono',monospace"});
+  lbl.textContent = label;
+  const amt = el('div',{},{fontFamily:"'Bebas Neue',sans-serif",fontSize:'26px',color,marginTop:'2px'});
+  amt.textContent = amount;
+  wrap.appendChild(barWrap);
+  wrap.appendChild(lbl);
+  wrap.appendChild(amt);
+  layer.appendChild(wrap);
+  setTimeout(()=>bar.style.transform='scaleY(1)',150);
+  return {wrap,bar};
+}
+
+function addSplit(layer, x, y, w, h, leftColor, rightColor, leftPct=50, delay=0){
+  const wrap = el('div',{},{position:'absolute',left:x+'px',top:y+'px',width:w+'px',height:h+'px',borderRadius:'4px',overflow:'hidden',background:'rgba(255,255,255,0.04)'});
+  const left = el('div',{},{position:'absolute',top:0,left:0,bottom:0,width:'0%',background:`linear-gradient(135deg, ${leftColor}cc, ${leftColor}44)`,transition:`width 1.2s cubic-bezier(0.4,0,0.2,1) ${delay*0.1}s`});
+  const right = el('div',{},{position:'absolute',top:0,right:0,bottom:0,width:'0%',background:`linear-gradient(135deg, ${rightColor}cc, ${rightColor}44)`,transition:`width 1.2s cubic-bezier(0.4,0,0.2,1) ${(delay+2)*0.1}s`});
+  const divider = el('div',{},{position:'absolute',top:0,bottom:0,left:`${leftPct}%`,width:'2px',background:'rgba(0,0,0,0.4)',transform:'scaleY(0)',transition:'transform .3s .8s'});
+  wrap.appendChild(left);wrap.appendChild(right);wrap.appendChild(divider);
+  layer.appendChild(wrap);
+  setTimeout(()=>{
+    left.style.width=leftPct+'%';
+    right.style.width=(100-leftPct)+'%';
+    divider.style.transform='scaleY(1)';
+  },200);
+  return {wrap,left,right};
+}
+
+function addRing(layer, x, y, size, color, delay=0){
+  const d = el('div',{},{
+    position:'absolute',
+    left:(typeof x==='string'?x:(x-size/2))+'px',
+    top:(typeof y==='string'?y:(y-size/2))+'px',
+    width:size+'px',height:size+'px',
+    borderRadius:'50%',
+    border:`1px solid ${color}`,
+    opacity:'0',
+    animation:`fadeIn .6s ${delay}s forwards`,
+    animationFillMode:'forwards',
+    boxShadow:`0 0 ${size*0.15}px ${color}22`,
+  });
+  layer.appendChild(d);
+  return d;
+}
+
+function addLabel(layer, text, x, y, color=COL.muted, size=11, delay=0){
+  const d = el('div',{},{
+    position:'absolute',
+    left:typeof x==='string'?x:x+'px',
+    top:typeof y==='string'?y:y+'px',
+    fontSize:size+'px',
+    color,
+    fontFamily:"'DM Mono',monospace",
+    letterSpacing:'2.5px',
+    textTransform:'uppercase',
+    opacity:'0',
+    animation:`fadeIn .5s ${delay}s forwards`,
+    animationFillMode:'forwards',
+  });
+  d.textContent = text;
+  layer.appendChild(d);
+  return d;
+}
+
+function addCounterNum(layer, final, x, y, size, color, prefix='', suffix='', delay=0){
+  const d = el('div',{},{
+    position:'absolute',
+    left:typeof x==='string'?x:x+'px',
+    top:typeof y==='string'?y:y+'px',
+    fontSize:size+'px',
+    color,
+    fontFamily:"'Bebas Neue',sans-serif",
+    letterSpacing:'-1px',
+    lineHeight:'1',
+  });
+  d.textContent = prefix+'0'+suffix;
+  layer.appendChild(d);
+  setTimeout(()=>{
+    let start = 0;
+    const end = parseFloat(final);
+    const dur = 1500;
+    const t0 = performance.now();
+    function tick(now){
+      const p = Math.min((now-t0)/dur,1);
+      const val = lerp(0,end,p < 0.5 ? 2*p*p : -1+(4-2*p)*p);
+      d.textContent = prefix + (Number.isInteger(end) ? Math.round(val) : val.toFixed(1)) + suffix;
+      if(p<1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }, delay*150);
+  return d;
+}
+
+function addGlowCircle(layer, x, y, size, color){
+  const d = el('div',{},{
+    position:'absolute',
+    left:typeof x==='string'?x:(x-size/2)+'px',
+    top:typeof y==='string'?y:(y-size/2)+'px',
+    width:size+'px',height:size+'px',
+    borderRadius:'50%',
+    background:`radial-gradient(circle, ${color}18 0%, transparent 70%)`,
+    pointerEvents:'none',
+  });
+  layer.appendChild(d);
+  return d;
+}
+
+function addLine(layer, x1, y1, x2, y2, color, delay=0){
+  const angle = Math.atan2(y2-y1, x2-x1) * 180/Math.PI;
+  const length = Math.sqrt((x2-x1)**2+(y2-y1)**2);
+  const d = el('div',{},{
+    position:'absolute',
+    left:x1+'px',top:y1+'px',
+    width:length+'px',height:'1px',
+    background:color,
+    transformOrigin:'0 50%',
+    transform:`rotate(${angle}deg)`,
+    opacity:'0',
+    animation:`waveIn .6s ${delay}s forwards`,
+    animationFillMode:'forwards',
+  });
+  layer.appendChild(d);
+  return d;
+}
+
+// ═══════════════════════════════════════════════════════════
+// THE 24 SLIDES
+// ═══════════════════════════════════════════════════════════
+
+// ─ SLIDE 1: TITLE ─
+def(0, '#080608', (L) => {
+  addGlowCircle(L,'calc(50% - 300px)','calc(50% - 200px)',600,COL.gold);
+  addText(L,'YOUR CAREER','calc(50% - 260px)','calc(50% - 80px)',Math.min(W()*0.09,80),COL.muted,'Cormorant Garamond',300,'anim-fadeIn',0,{letterSpacing:'8px',whiteSpace:'nowrap'});
+  addText(L,'IN THREE PHASES',  '5%','calc(50% - 20px)',Math.min(W()*0.12,110),COL.text,'Bebas Neue',400,'anim-slideRight',2,{letterSpacing:'-2px'});
+  addRing(L,'calc(50% - 180px)','calc(50% - 200px)',360,COL.goldD+'66',0.3);
+  addRing(L,'calc(50% - 240px)','calc(50% - 260px)',480,COL.goldD+'33',0.5);
+  addText(L,'1 · 10 · 100  Crore','5%','calc(50% + 110px)',Math.min(W()*0.05,44),COL.gold,'Bebas Neue',400,'anim-slideUp',3,{letterSpacing:'4px'});
+});
+
+// ─ SLIDE 2: THREE PHASES PREVIEW ─
+def(0, '#08060a', (L) => {
+  const cxW = W()/2, cyH = H()/2;
+  [COL.gold,COL.cyan,COL.green].forEach((c,i) => {
+    addGlowCircle(L,cxW-240+i*240-80,cyH-80,160,c);
+    addCoin(L,cxW-240+i*240-60,cyH-60,120,c,'',`anim-zoomIn delay-${i+2}`);
+    addText(L, ['₹1 Cr','₹10 Cr','₹100 Cr'][i], cxW-240+i*240-28, cyH+80, Math.min(W()*0.03,28), c,'Bebas Neue',400,'anim-slideUp',i+2);
+    addLabel(L,['Phase 1','Phase 2','Phase 3'][i],cxW-240+i*240-20,cyH+115,c,11,(i+4)*0.15);
+  });
+  addText(L,'THREE DECADES','5%','calc(15% + 0px)',Math.min(W()*0.035,30),COL.muted,'DM Mono',400,'anim-fadeIn',0,{letterSpacing:'4px',textTransform:'uppercase'});
+  addText(L,'ONE LIFE','5%','calc(15% + 40px)',Math.min(W()*0.08,72),COL.text,'Bebas Neue',400,'anim-slideRight',1);
+});
+
+// ─ SLIDE 3: PHASE 1 ENTER ─
+def(1,'#0a0800',(L)=>{
+  addGlowCircle(L,'calc(50% - 320px)','calc(50% - 320px)',640,COL.gold);
+  addText(L,'PHASE','5%','calc(50% - 120px)',Math.min(W()*0.042,38),COL.gold,'DM Mono',400,'anim-fadeIn',0,{letterSpacing:'8px',textTransform:'uppercase'});
+  addText(L,'01','5%','calc(50% - 80px)',Math.min(W()*0.24,220),COL.gold,'Bebas Neue',400,'anim-zoomIn',1,{lineHeight:'0.88'});
+  addText(L,'EXPLORE','5%','calc(50% + 145px)',Math.min(W()*0.06,56),COL.text,'Bebas Neue',400,'anim-slideRight',2,{letterSpacing:'4px'});
+  const coins = [[COL.gold,80],[COL.gold+'aa',60],[COL.gold+'66',45]];
+  coins.forEach(([c,s],i) => {
+    addCoin(L,'calc(55% + '+(i*80)+'px)','calc(50% - '+(s/2+20)+'px)',s,c,'',`anim-zoomIn delay-${i+3}`);
+  });
+  addLabel(L,'YEARS 1 – 10','5%','calc(50% + 210px)',COL.gold,11,0.8);
+});
+
+// ─ SLIDE 4: PHASE 1 INCOME CURVE ─
+def(1,'#0a0800',(L)=>{
+  const bx=W()*0.08, by=H()*0.72;
+  const vals=[3,4,5,7,9,12,16,20,26,32];
+  const maxV=32;
+  const barW=Math.min(W()*0.052,60), gap=8;
+  vals.forEach((v,i)=>{
+    const bh=(v/maxV)*(H()*0.48);
+    addBar(L,bx+i*(barW+gap),by-bh,barW,bh,COL.gold,true,i);
+    addLabel(L,v+'L',bx+i*(barW+gap)+barW*0.1,by+8,COL.muted,10,(i+2)*0.1);
+  });
+  addText(L,'₹3L  →  ₹32L','calc(55%)',  'calc(40%)',Math.min(W()*0.048,42),COL.gold2,'Bebas Neue',400,'anim-slideLeft',0,{letterSpacing:'2px'});
+  addLabel(L,'ANNUAL INCOME ACROSS 10 YEARS','calc(55%)','calc(47%)',COL.muted,11,0.4);
+  addText(L,'YEAR 1','calc(5%)','calc(30%)',Math.min(W()*0.028,24),COL.muted,'DM Mono',400,'anim-fadeIn',1);
+  addText(L,'YEAR 10','calc(5%)','calc(38%)',Math.min(W()*0.05,44),COL.gold,'Bebas Neue',400,'anim-fadeIn',2);
+});
+
+// ─ SLIDE 5: PHASE 1 TOTAL ─
+def(1,'#0c0900',(L)=>{
+  addGlowCircle(L,cx()-200,cy()-200,400,COL.gold);
+  addLabel(L,'TOTAL EARNED IN DECADE 1','50%','calc(50% - 130px)',COL.muted,11,0,{transform:'translateX(-50%)',textAlign:'center'});
+  const n=addCounterNum(L,1,'50%','calc(50% - 100px)',Math.min(W()*0.22,200),COL.gold,'₹','',1);
+  n.style.transform='translateX(-50%)'; n.style.textAlign='center';
+  addLabel(L,'CRORE','50%','calc(50% + 110px)',COL.gold2,14,3,{transform:'translateX(-50%)',textAlign:'center',letterSpacing:'8px'});
+  addRing(L,cx(),cy(),Math.min(W()*0.35,320),COL.gold+'33',0.2);
+  addRing(L,cx(),cy(),Math.min(W()*0.5,460),COL.gold+'18',0.4);
+  addRing(L,cx(),cy(),Math.min(W()*0.65,600),COL.gold+'0a',0.6);
+});
+
+// ─ SLIDE 6: THE HALF RULE ─
+def(1,'#0c0900',(L)=>{
+  addGlowCircle(L,cx()-200,cy()-200,400,COL.gold);
+  addLabel(L,'THE ONE RULE','5%','calc(50% - 160px)',COL.muted,11,0);
+  addText(L,'KEEP','5%','calc(50% - 120px)',Math.min(W()*0.058,52),COL.text,'Bebas Neue',400,'anim-slideRight',1);
+  addText(L,'HALF','5%','calc(50% - 68px)',Math.min(W()*0.13,120),COL.gold,'Bebas Neue',400,'anim-slideRight',2,{lineHeight:'0.88'});
+  addText(L,'ALWAYS.','5%','calc(50% + 58px)',Math.min(W()*0.07,64),COL.muted,'Cormorant Garamond',300,'anim-fadeIn',3,{fontStyle:'italic'});
+  // big 50% on right
+  addText(L,'50%','55%','calc(50% - 130px)',Math.min(W()*0.18,170),COL.gold+'44','Bebas Neue',400,'anim-zoomIn',1,{letterSpacing:'-3px'});
+});
+
+// ─ SLIDE 7: PHASE 1 SPLIT ─
+def(1,'#0c0900',(L)=>{
+  const sw=Math.min(W()*0.6,560), sh=Math.min(H()*0.16,100);
+  const sx=(W()-sw)/2, sy=cy()-sh/2-20;
+  addSplit(L,sx,sy,sw,sh,COL.gold,COL.muted,50,0);
+  // left label
+  addLabel(L,'SAVE',sx,sy+sh+14,COL.gold,11,0.4);
+  addText(L,'₹50 L',sx,sy+sh+32,Math.min(W()*0.036,32),COL.gold,'Bebas Neue',400,'anim-fadeIn',3,{letterSpacing:'-1px'});
+  // right label
+  addLabel(L,'SPEND',sx+sw*0.52,sy+sh+14,COL.muted,11,0.4);
+  addText(L,'₹50 L',sx+sw*0.52,sy+sh+32,Math.min(W()*0.036,32),COL.muted,'Bebas Neue',400,'anim-fadeIn',4);
+  addLabel(L,'PHASE 1  ·  ₹1 CRORE','50%','calc(50% - 120px)',COL.gold,13,0.1,{transform:'translateX(-50%)',textAlign:'center'});
+  addText(L,'HALF SAVED · HALF LIVED','50%','calc(50% + 100px)',Math.min(W()*0.028,24),COL.muted,'Cormorant Garamond',300,'anim-fadeIn',5,{fontStyle:'italic',transform:'translateX(-50%)'});
+});
+
+// ─ SLIDE 8: PHASE 1 SAVINGS PILE ─
+def(1,'#0c0900',(L)=>{
+  const ph=Math.min(H()*0.42,280), pw=Math.min(W()*0.16,130);
+  const px=cx()-pw/2, py=cy()-ph*0.7;
+  addGlowCircle(L,px,py,200,COL.gold);
+  addPile(L,px,py,pw,ph,COL.gold,'Saved','₹50 L',0);
+  addText(L,'YOUR FIRST','5%','calc(50% - 80px)',Math.min(W()*0.032,28),COL.muted,'DM Mono',400,'anim-fadeIn',0,{letterSpacing:'3px',textTransform:'uppercase'});
+  addText(L,'SEED','5%','calc(50% - 42px)',Math.min(W()*0.12,110),COL.gold,'Bebas Neue',400,'anim-slideRight',1,{lineHeight:'0.9'});
+  addText(L,'PLANTED.','5%','calc(50% + 74px)',Math.min(W()*0.06,56),COL.text,'Bebas Neue',400,'anim-slideUp',2);
+  // small orbit coins
+  [60,40,30].forEach((s,i)=>{
+    addCoin(L,'calc(62% + '+(i*s*1.2)+'px)','calc(42% - '+(s*0.5)+'px)',s,COL.gold+'88','',`anim-zoomIn delay-${i+3}`);
+  });
+});
+
+// ─ SLIDE 9: PHASE 2 TRANSITION ─
+def(2,'#04090e',(L)=>{
+  addGlowCircle(L,cx()-200,cy()-200,400,COL.cyan);
+  addText(L,'PHASE','5%','calc(50% - 120px)',Math.min(W()*0.042,38),COL.cyan,'DM Mono',400,'anim-fadeIn',0,{letterSpacing:'8px',textTransform:'uppercase'});
+  addText(L,'02','5%','calc(50% - 80px)',Math.min(W()*0.24,220),COL.cyan,'Bebas Neue',400,'anim-zoomIn',1,{lineHeight:'0.88'});
+  addText(L,'BUILD','5%','calc(50% + 145px)',Math.min(W()*0.08,72),COL.text,'Bebas Neue',400,'anim-slideRight',2,{letterSpacing:'4px'});
+  addLabel(L,'YEARS 11 – 20','5%','calc(50% + 225px)',COL.cyan,11,0.8);
+  // Income jump hint
+  addText(L,'10×','calc(55%)','calc(45%)',Math.min(W()*0.14,130),COL.cyan+'44','Bebas Neue',400,'anim-zoomIn',3,{letterSpacing:'-2px'});
+  addLabel(L,'MORE INCOME THAN PHASE 1','calc(55%)','calc(65%)',COL.cyan+'88',11,0.6);
+});
+
+// ─ SLIDE 10: PHASE 2 INCOME ─
+def(2,'#040a0e',(L)=>{
+  const bx=W()*0.08, by=H()*0.72;
+  const vals=[40,50,65,80,100,130,160,200,250,310];
+  const maxV=310;
+  const barW=Math.min(W()*0.052,60), gap=8;
+  vals.forEach((v,i)=>{
+    const bh=(v/maxV)*(H()*0.48);
+    addBar(L,bx+i*(barW+gap),by-bh,barW,bh,COL.cyan,true,i);
+    addLabel(L,(v>=100?v/100+'Cr':v+'L'),bx+i*(barW+gap)+barW*0.1,by+8,COL.muted,10,(i+2)*0.1);
+  });
+  addText(L,'₹40L  →  ₹3.1Cr','calc(55%)',  'calc(40%)',Math.min(W()*0.044,40),COL.cyan,'Bebas Neue',400,'anim-slideLeft',0,{letterSpacing:'2px'});
+  addLabel(L,'ANNUAL INCOME ACROSS 10 YEARS','calc(55%)','calc(47%)',COL.muted,11,0.4);
+  addText(L,'YEAR 11','calc(5%)','calc(30%)',Math.min(W()*0.028,24),COL.muted,'DM Mono',400,'anim-fadeIn',1);
+  addText(L,'YEAR 20','calc(5%)','calc(38%)',Math.min(W()*0.05,44),COL.cyan,'Bebas Neue',400,'anim-fadeIn',2);
+});
+
+// ─ SLIDE 11: PHASE 2 TOTAL ─
+def(2,'#040a10',(L)=>{
+  addGlowCircle(L,cx()-200,cy()-200,400,COL.cyan);
+  addLabel(L,'TOTAL EARNED IN DECADE 2','50%','calc(50% - 130px)',COL.muted,11,0,{transform:'translateX(-50%)',textAlign:'center'});
+  const n=addCounterNum(L,10,'50%','calc(50% - 100px)',Math.min(W()*0.22,200),COL.cyan,'₹','',1);
+  n.style.transform='translateX(-50%)'; n.style.textAlign='center';
+  addLabel(L,'CRORE','50%','calc(50% + 110px)',COL.cyan,14,3,{transform:'translateX(-50%)',textAlign:'center',letterSpacing:'8px'});
+  addRing(L,cx(),cy(),Math.min(W()*0.35,320),COL.cyan+'33',0.2);
+  addRing(L,cx(),cy(),Math.min(W()*0.5,460),COL.cyan+'18',0.4);
+});
+
+// ─ SLIDE 12: PHASE 2 SPLIT ─
+def(2,'#040a10',(L)=>{
+  const sw=Math.min(W()*0.6,560), sh=Math.min(H()*0.16,100);
+  const sx=(W()-sw)/2, sy=cy()-sh/2-20;
+  addSplit(L,sx,sy,sw,sh,COL.cyan,COL.muted,50,0);
+  addLabel(L,'SAVE',sx,sy+sh+14,COL.cyan,11,0.4);
+  addText(L,'₹5 Cr',sx,sy+sh+32,Math.min(W()*0.036,32),COL.cyan,'Bebas Neue',400,'anim-fadeIn',3,{letterSpacing:'-1px'});
+  addLabel(L,'SPEND',sx+sw*0.52,sy+sh+14,COL.muted,11,0.4);
+  addText(L,'₹5 Cr',sx+sw*0.52,sy+sh+32,Math.min(W()*0.036,32),COL.muted,'Bebas Neue',400,'anim-fadeIn',4);
+  addLabel(L,'PHASE 2  ·  ₹10 CRORE','50%','calc(50% - 120px)',COL.cyan,13,0.1,{transform:'translateX(-50%)',textAlign:'center'});
+  addText(L,'SAME RULE. BIGGER NUMBERS.','50%','calc(50% + 100px)',Math.min(W()*0.024,21),COL.muted,'Cormorant Garamond',300,'anim-fadeIn',5,{fontStyle:'italic',transform:'translateX(-50%)'});
+});
+
+// ─ SLIDE 13: CUMULATIVE SAVINGS ─
+def(2,'#040a10',(L)=>{
+  const pw=Math.min(W()*0.14,100), ph2=Math.min(H()*0.48,320);
+  const gap=40, startX=cx()-pw-gap/2;
+  addGlowCircle(L,startX+pw/2,cy()-50,180,COL.gold);
+  addGlowCircle(L,startX+pw+gap+pw/2,cy()-50,220,COL.cyan);
+  addPile(L,startX,cy()-ph2*0.25-80,pw,ph2*0.25,COL.gold,'Phase 1','₹50 L',0);
+  addPile(L,startX+pw+gap,cy()-ph2-80,pw,ph2,COL.cyan,'Phase 2','₹5 Cr',1);
+  addLabel(L,'SAVINGS GROWING','50%','calc(12%)',COL.muted,11,0.1,{transform:'translateX(-50%)',textAlign:'center'});
+  addText(L,'₹5.5 Cr','50%','calc(20%)',Math.min(W()*0.08,72),COL.cyan,'Bebas Neue',400,'anim-slideUp',2,{transform:'translateX(-50%)',textAlign:'center'});
+  addLabel(L,'TOTAL SAVED AFTER 20 YEARS','50%','calc(30%)',COL.muted,11,0.4,{transform:'translateX(-50%)',textAlign:'center'});
+});
+
+// ─ SLIDE 14: COMPOUND MAGIC ─
+def(2,'#020c0c',(L)=>{
+  addGlowCircle(L,cx()-200,cy()-200,500,COL.cyan+'44');
+  addLabel(L,'YOUR SAVINGS ARE NOW WORKING','50%','calc(38%)',COL.muted,11,0,{transform:'translateX(-50%)',textAlign:'center'});
+  addText(L,'₹5.5 Cr','50%','calc(43%)',Math.min(W()*0.1,90),COL.cyan,'Bebas Neue',400,'anim-zoomIn',1,{transform:'translateX(-50%)',textAlign:'center'});
+  addLabel(L,'INVESTED · 12% CAGR · 10 YEARS','50%','calc(57%)',COL.cyan,11,0.3,{transform:'translateX(-50%)',textAlign:'center'});
+  addText(L,'= ₹17 Cr','50%','calc(62%)',Math.min(W()*0.1,90),COL.gold2,'Bebas Neue',400,'anim-slideUp',4,{transform:'translateX(-50%)',textAlign:'center'});
+  addLabel(L,'COMPOUND RETURNS ALONE','50%','calc(74%)',COL.gold,11,0.6,{transform:'translateX(-50%)',textAlign:'center'});
+  // arrows
+  [0.35,0.45,0.55,0.65].forEach((y,i)=>{
+    const arrowD = el('div',{},{position:'absolute',left:'50%',top:(y*H())+'px',transform:'translateX(-50%) rotate(90deg)',fontSize:'20px',color:COL.cyan+'44',opacity:'0',animation:`fadeIn .4s ${0.8+i*0.15}s forwards`,animationFillMode:'forwards'});
+    arrowD.textContent='↓';
+    L.appendChild(arrowD);
+  });
+});
+
+// ─ SLIDE 15: PHASE 3 TRANSITION ─
+def(3,'#040e06',(L)=>{
+  addGlowCircle(L,cx()-200,cy()-200,500,COL.green);
+  addText(L,'PHASE','5%','calc(50% - 120px)',Math.min(W()*0.042,38),COL.green,'DM Mono',400,'anim-fadeIn',0,{letterSpacing:'8px',textTransform:'uppercase'});
+  addText(L,'03','5%','calc(50% - 80px)',Math.min(W()*0.24,220),COL.green,'Bebas Neue',400,'anim-zoomIn',1,{lineHeight:'0.88'});
+  addText(L,'COMPOUND','5%','calc(50% + 145px)',Math.min(W()*0.07,64),COL.text,'Bebas Neue',400,'anim-slideRight',2,{letterSpacing:'4px'});
+  addLabel(L,'YEARS 21 – 30','5%','calc(50% + 218px)',COL.green,11,0.8);
+  addText(L,'100×','calc(55%)','calc(45%)',Math.min(W()*0.14,130),COL.green+'33','Bebas Neue',400,'anim-zoomIn',3,{letterSpacing:'-2px'});
+  addLabel(L,'MORE INCOME THAN PHASE 1','calc(55%)','calc(65%)',COL.green+'88',11,0.6);
+});
+
+// ─ SLIDE 16: PHASE 3 INCOME ─
+def(3,'#040e06',(L)=>{
+  const bx=W()*0.08, by=H()*0.72;
+  const vals=[7,8,9,11,13,16,19,23,28,34];
+  const maxV=34;
+  const barW=Math.min(W()*0.052,60), gap=8;
+  vals.forEach((v,i)=>{
+    const bh=(v/maxV)*(H()*0.48);
+    addBar(L,bx+i*(barW+gap),by-bh,barW,bh,COL.green,true,i);
+    addLabel(L,v+'Cr',bx+i*(barW+gap)+barW*0.1,by+8,COL.muted,10,(i+2)*0.1);
+  });
+  addText(L,'₹7Cr  →  ₹34Cr','calc(55%)',  'calc(40%)',Math.min(W()*0.044,40),COL.green,'Bebas Neue',400,'anim-slideLeft',0,{letterSpacing:'2px'});
+  addLabel(L,'ANNUAL INCOME ACROSS 10 YEARS','calc(55%)','calc(47%)',COL.muted,11,0.4);
+  addText(L,'YEAR 21','calc(5%)','calc(30%)',Math.min(W()*0.028,24),COL.muted,'DM Mono',400,'anim-fadeIn',1);
+  addText(L,'YEAR 30','calc(5%)','calc(38%)',Math.min(W()*0.05,44),COL.green,'Bebas Neue',400,'anim-fadeIn',2);
+});
+
+// ─ SLIDE 17: PHASE 3 TOTAL ─
+def(3,'#040e06',(L)=>{
+  addGlowCircle(L,cx()-200,cy()-200,500,COL.green);
+  addLabel(L,'TOTAL EARNED IN DECADE 3','50%','calc(50% - 130px)',COL.muted,11,0,{transform:'translateX(-50%)',textAlign:'center'});
+  const n=addCounterNum(L,100,'50%','calc(50% - 100px)',Math.min(W()*0.22,200),COL.green,'₹','',1);
+  n.style.transform='translateX(-50%)'; n.style.textAlign='center';
+  addLabel(L,'CRORE','50%','calc(50% + 110px)',COL.green,14,3,{transform:'translateX(-50%)',textAlign:'center',letterSpacing:'8px'});
+  addRing(L,cx(),cy(),Math.min(W()*0.35,320),COL.green+'33',0.2);
+  addRing(L,cx(),cy(),Math.min(W()*0.5,460),COL.green+'18',0.4);
+  addRing(L,cx(),cy(),Math.min(W()*0.65,600),COL.green+'0a',0.6);
+});
+
+// ─ SLIDE 18: PHASE 3 SPLIT ─
+def(3,'#040e06',(L)=>{
+  const sw=Math.min(W()*0.6,560), sh=Math.min(H()*0.16,100);
+  const sx=(W()-sw)/2, sy=cy()-sh/2-20;
+  addSplit(L,sx,sy,sw,sh,COL.green,COL.muted,50,0);
+  addLabel(L,'SAVE',sx,sy+sh+14,COL.green,11,0.4);
+  addText(L,'₹50 Cr',sx,sy+sh+32,Math.min(W()*0.036,32),COL.green,'Bebas Neue',400,'anim-fadeIn',3,{letterSpacing:'-1px'});
+  addLabel(L,'SPEND',sx+sw*0.52,sy+sh+14,COL.muted,11,0.4);
+  addText(L,'₹50 Cr',sx+sw*0.52,sy+sh+32,Math.min(W()*0.036,32),COL.muted,'Bebas Neue',400,'anim-fadeIn',4);
+  addLabel(L,'PHASE 3  ·  ₹100 CRORE','50%','calc(50% - 120px)',COL.green,13,0.1,{transform:'translateX(-50%)',textAlign:'center'});
+  addText(L,'SCALE CHANGES. RULE STAYS.','50%','calc(50% + 100px)',Math.min(W()*0.024,21),COL.muted,'Cormorant Garamond',300,'anim-fadeIn',5,{fontStyle:'italic',transform:'translateX(-50%)'});
+});
+
+// ─ SLIDE 19: ALL THREE PILES ─
+def(0,'#080608',(L)=>{
+  const ph3=Math.min(H()*0.52,340);
+  const pw=Math.min(W()*0.1,80);
+  const centers=[cx()-pw*2.8,cx()-pw*0.5,cx()+pw*1.8];
+  const heights=[ph3*0.15,ph3*0.44,ph3];
+  const colors=[COL.gold,COL.cyan,COL.green];
+  const amounts=['₹50 L','₹5 Cr','₹50 Cr'];
+  const labels=['Phase 1','Phase 2','Phase 3'];
+  centers.forEach((px,i)=>{
+    const py=cy()-heights[i]-60;
+    addGlowCircle(L,px,py+heights[i]/2,140,colors[i]);
+    addPile(L,px,py,pw,heights[i],colors[i],labels[i],amounts[i],i);
+  });
+  addLabel(L,'SAVINGS ACROSS ALL THREE PHASES','50%','calc(12%)',COL.muted,11,0.1,{transform:'translateX(-50%)',textAlign:'center'});
+  addText(L,'₹55.5 Cr','50%','calc(20%)',Math.min(W()*0.08,72),COL.text,'Bebas Neue',400,'anim-slideUp',4,{transform:'translateX(-50%)',textAlign:'center'});
+  addLabel(L,'TOTAL SAVED · 30 YEARS','50%','calc(30%)',COL.gold,11,0.7,{transform:'translateX(-50%)',textAlign:'center'});
+});
+
+// ─ SLIDE 20: THE FORMULA ─
+def(0,'#080608',(L)=>{
+  addGlowCircle(L,cx()-200,cy()-200,500,COL.gold+'44');
+  addLabel(L,'THE FORMULA','50%','calc(28%)',COL.muted,11,0,{transform:'translateX(-50%)',textAlign:'center'});
+  // Stacked equation
+  const terms=[
+    ['₹1 Cr',COL.gold,1],['×',COL.dim,2],
+    ['₹10 Cr',COL.cyan,3],['×',COL.dim,4],
+    ['₹100 Cr',COL.green,5],['=',COL.dim,6],
+    ['₹111 Cr',COL.gold2,7],
+  ];
+  const startX=W()*0.1;
+  const fsize=Math.min(W()*0.056,50);
+  let curX=startX;
+  terms.forEach(([txt,col,dly])=>{
+    const d=el('div',{},{
+      position:'absolute',top:'46%',left:curX+'px',
+      fontFamily:"'Bebas Neue',sans-serif",fontSize:fsize+'px',
+      color:col,letterSpacing:'-1px',lineHeight:'1',
+      opacity:'0',animation:`slideUp .6s ${dly*0.12}s forwards`,animationFillMode:'forwards',
+      whiteSpace:'nowrap',
+    });
+    d.textContent=txt;
+    L.appendChild(d);
+    curX += ctx.measureText ? fsize*txt.length*0.62 : txt.length*fsize*0.58+20;
+  });
+  addLabel(L,'EARNED ACROSS 30 YEARS','50%','calc(60%)',COL.gold,11,1,{transform:'translateX(-50%)',textAlign:'center'});
+  addLabel(L,'HALF SAVED = ₹55.5 CRORE','50%','calc(66%)',COL.muted,11,1.3,{transform:'translateX(-50%)',textAlign:'center'});
+});
+
+// ─ SLIDE 21: INCOME + SAVINGS COMPARISON ─
+def(0,'#080608',(L)=>{
+  const bx=W()*0.06, by=H()*0.72;
+  const groups=[
+    {label:'P1',earned:1,saved:0.5,color:COL.gold},
+    {label:'P2',earned:10,saved:5,color:COL.cyan},
+    {label:'P3',earned:100,saved:50,color:COL.green},
+  ];
+  const maxV=100;
+  const groupW=Math.min(W()*0.18,140), gap2=W()*0.07;
+  const maxH=H()*0.5;
+  groups.forEach((g,i)=>{
+    const gx=bx+i*(groupW+gap2);
+    const h1=(g.earned/maxV)*maxH;
+    const h2=(g.saved/maxV)*maxH;
+    addBar(L,gx,by-h1,groupW*0.44,h1,g.color+'88',true,i*2);
+    addBar(L,gx+groupW*0.52,by-h2,groupW*0.44,h2,g.color,true,i*2+1);
+    addLabel(L,g.label,gx+groupW*0.3,by+8,g.color,12,(i+1)*0.2,{textAlign:'center'});
+  });
+  addLabel(L,'EARNED  vs  SAVED','50%','calc(18%)',COL.muted,11,0,{transform:'translateX(-50%)',textAlign:'center'});
+  addText(L,'SAME RATIO','50%','calc(24%)',Math.min(W()*0.07,62),COL.gold2,'Bebas Neue',400,'anim-slideUp',3,{transform:'translateX(-50%)',textAlign:'center'});
+  addText(L,'EVERY DECADE','50%','calc(35%)',Math.min(W()*0.042,38),COL.muted,'Cormorant Garamond',300,'anim-fadeIn',4,{fontStyle:'italic',transform:'translateX(-50%)'});
+  // legend
+  addLabel(L,'■ EARNED','62%','calc(82%)',COL.muted,11,0.5);
+  addLabel(L,'■ SAVED','74%','calc(82%)',COL.gold,11,0.5);
+});
+
+// ─ SLIDE 22: COMPOUND SNOWBALL ─
+def(0,'#060808',(L)=>{
+  addGlowCircle(L,cx()-200,cy()-200,600,COL.green+'44');
+  const sizes=[50,80,110,150,200];
+  sizes.forEach((s,i)=>{
+    const angle=(i/sizes.length)*Math.PI*1.8+Math.PI*0.5;
+    const r=120+i*30;
+    const x=cx()+Math.cos(angle)*r-s/2;
+    const y=cy()+Math.sin(angle)*r*0.5-s/2;
+    const c=[COL.gold,COL.gold,COL.cyan,COL.cyan,COL.green][i];
+    addCoin(L,x,y,s,c,'',`anim-zoomIn delay-${i+1}`);
+  });
+  addLabel(L,'YOUR SAVINGS COMPOUND','50%','calc(28%)',COL.muted,11,0,{transform:'translateX(-50%)',textAlign:'center'});
+  addText(L,'₹55 Cr','50%','calc(35%)',Math.min(W()*0.14,130),COL.green,'Bebas Neue',400,'anim-zoomIn',2,{transform:'translateX(-50%)',textAlign:'center',letterSpacing:'-2px'});
+  addLabel(L,'SAVED  ·  12% CAGR  ·  AVG 15 YRS','50%','calc(53%)',COL.green,11,0.4,{transform:'translateX(-50%)',textAlign:'center'});
+  addText(L,'= ₹300+ Cr','50%','calc(59%)',Math.min(W()*0.09,82),COL.gold2,'Bebas Neue',400,'anim-slideUp',5,{transform:'translateX(-50%)',textAlign:'center'});
+  addLabel(L,'CORPUS AT YEAR 30','50%','calc(70%)',COL.gold,11,0.7,{transform:'translateX(-50%)',textAlign:'center'});
+});
+
+// ─ SLIDE 23: THE THREE RULES ─
+def(0,'#080608',(L)=>{
+  addGlowCircle(L,cx()-200,cy()-200,500,COL.gold+'33');
+  const rules=[
+    ['01','EARN MORE EACH DECADE',COL.gold],
+    ['02','SAVE EXACTLY HALF',COL.cyan],
+    ['03','LET TIME COMPOUND IT',COL.green],
+  ];
+  addLabel(L,'THREE RULES. THIRTY YEARS.','50%','calc(18%)',COL.muted,11,0,{transform:'translateX(-50%)',textAlign:'center'});
+  rules.forEach(([num,txt,c],i)=>{
+    const y=H()*0.32+i*(H()*0.2);
+    addText(L,num,'6%',y,Math.min(W()*0.1,90),c+'33','Bebas Neue',400,'anim-fadeIn',i+1,{lineHeight:'1'});
+    addText(L,txt,'18%',y+8,Math.min(W()*0.04,36),c,'Bebas Neue',400,'anim-slideRight',i+2,{letterSpacing:'1px'});
+    addLine(L,W()*0.18,y+Math.min(W()*0.04,36)+14,W()*0.82,y+Math.min(W()*0.04,36)+14,'rgba(255,255,255,0.06)',(i+3)*0.15);
+  });
+});
+
+// ─ SLIDE 24: CLOSING ─
+def(0,'#080608',(L)=>{
+  addGlowCircle(L,cx()-300,cy()-300,700,COL.gold+'33');
+  addGlowCircle(L,cx()+100,cy()+100,400,COL.green+'22');
+  addText(L,'1','5%','calc(40%)',Math.min(W()*0.28,260),COL.gold+'aa','Bebas Neue',400,'anim-zoomIn',1,{lineHeight:'0.88',letterSpacing:'-4px'});
+  addText(L,'10','calc(28%)',' calc(40%)',Math.min(W()*0.28,260),COL.cyan+'88','Bebas Neue',400,'anim-zoomIn',2,{lineHeight:'0.88',letterSpacing:'-4px'});
+  addText(L,'100','calc(54%)','calc(40%)',Math.min(W()*0.28,260),COL.green+'66','Bebas Neue',400,'anim-zoomIn',3,{lineHeight:'0.88',letterSpacing:'-4px'});
+  addText(L,'YOUR CAREER.','5%','calc(72%)',Math.min(W()*0.06,56),COL.text,'Bebas Neue',400,'anim-slideRight',4,{letterSpacing:'2px'});
+  addText(L,'YOUR RULE.','5%','calc(82%)',Math.min(W()*0.06,56),COL.muted,'Cormorant Garamond',300,'anim-fadeIn',5,{fontStyle:'italic'});
+  addRing(L,cx(),cy(),Math.min(W()*0.6,560),COL.gold+'18',0.8);
+});
+
+// ═══════════════════════════════════════════════════════════
+// SLIDE ENGINE
+// ═══════════════════════════════════════════════════════════
+const N = SLIDES.length;
+let cur = 0;
+const layer = $('slide-layer');
+
+// Build timeline dots
+const dotRow = $('tl-dots-row');
+for(let i=0;i<N;i++){
+  const d=el('div',{},{
+    width:'6px',height:'6px',borderRadius:'50%',background:'rgba(255,255,255,0.1)',
+    cursor:'pointer',transition:'background .3s, transform .3s',flexShrink:'0',
+  });
+  d.addEventListener('click',()=>goTo(i));
+  dotRow.appendChild(d);
+}
+
+const PHASE_COLORS=['rgba(0,0,0,0)',`radial-gradient(ellipse 100% 80% at 50% 110%, #180c00 0%, #08060a 60%)`,`radial-gradient(ellipse 100% 80% at 50% 110%, #001218 0%, #04080e 60%)`,`radial-gradient(ellipse 100% 80% at 50% 110%, #001808 0%, #040e06 60%)`];
+
+function showSlide(n){
+  const s=SLIDES[n];
+  // clear
+  while(layer.firstChild) layer.removeChild(layer.firstChild);
+  // bg
+  $('bg-glow').style.background = PHASE_COLORS[s.phase] || PHASE_COLORS[0];
+  // phase chips
+  ['chip1','chip2','chip3'].forEach((id,i)=>{
+    const ch=$(id);
+    ch.classList.toggle('active',i+1===s.phase||(s.phase===0&&n>=19));
+    ch.classList.toggle('p1',i===0);
+    ch.classList.toggle('p2',i===1);
+    ch.classList.toggle('p3',i===2);
+  });
+  if(s.phase===0&&n<=1){
+    $('chip1').classList.remove('active');$('chip2').classList.remove('active');$('chip3').classList.remove('active');
+  }
+  // timeline
+  $('tl-fill').style.width = ((n/(N-1))*100)+'%';
+  dotRow.querySelectorAll('div').forEach((d,i)=>{
+    const phase=SLIDES[i].phase;
+    const colors=[COL.gold,COL.cyan,COL.green];
+    d.style.background = i<=n ? (phase>0?colors[phase-1]:'rgba(255,255,255,0.3)') : 'rgba(255,255,255,0.1)';
+    d.style.transform = i===n ? 'scale(1.6)' : 'scale(1)';
+    d.style.boxShadow = i===n && phase>0 ? `0 0 6px ${colors[phase-1]}` : 'none';
+  });
+  $('slide-ctr').textContent = `${n+1} / ${N}`;
+  // build
+  s.build(layer);
+}
+
+function goTo(n){
+  if(n<0||n>=N) return;
+  cur=n;
+  showSlide(cur);
+  $('nz-prev').style.pointerEvents=cur>0?'auto':'none';
+  $('nz-next').style.pointerEvents=cur<N-1?'auto':'none';
+}
+
+// NAV
+$('nz-prev').addEventListener('click',()=>goTo(cur-1));
+$('nz-next').addEventListener('click',()=>goTo(cur+1));
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key==='ArrowDown'||e.key===' ') goTo(cur+1);
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp') goTo(cur-1);
+});
+let touchX=0;
+document.addEventListener('touchstart',e=>{touchX=e.touches[0].clientX},{passive:true});
+document.addEventListener('touchend',e=>{
+  const dx=e.changedTouches[0].clientX-touchX;
+  if(Math.abs(dx)>50) goTo(dx<0?cur+1:cur-1);
+});
+
+// hover hints
+$('nz-prev').addEventListener('mouseenter',()=>$('hint-l').style.opacity='.4');
+$('nz-prev').addEventListener('mouseleave',()=>$('hint-l').style.opacity='0');
+$('nz-next').addEventListener('mouseenter',()=>$('hint-r').style.opacity='.4');
+$('nz-next').addEventListener('mouseleave',()=>$('hint-r').style.opacity='0');
+
+// fake ctx for text measurement fallback
+const ctx = {measureText:()=>({width:0})};
+
+// GO
+goTo(0);
+</script>
+</body>
+</html>

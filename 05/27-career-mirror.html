@@ -1,0 +1,991 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The New Parenting Intelligence — Career Mirror</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #0a0f1e;
+  --bg2: #111827;
+  --saffron: #f4961a;
+  --saffron-light: #fbb954;
+  --white: #f8f4ee;
+  --muted: #8a9ab8;
+  --dim: #3a4a6b;
+  --green: #2dca72;
+  --red: #ff6b6b;
+  --font-d: 'Playfair Display', Georgia, serif;
+  --font-b: 'DM Sans', sans-serif;
+  --font-m: 'DM Mono', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 100%; height: 100%;
+  background: var(--bg);
+  color: var(--white);
+  font-family: var(--font-b);
+  overflow: hidden;
+  user-select: none;
+}
+
+/* ── PROGRESS BAR ── */
+#progress-bar {
+  position: fixed;
+  top: 0; left: 0;
+  height: 3px;
+  background: var(--saffron);
+  transition: width 0.4s cubic-bezier(.4,0,.2,1);
+  z-index: 100;
+  box-shadow: 0 0 12px rgba(244,150,26,0.6);
+}
+
+/* ── NAV UI ── */
+#ui {
+  position: fixed;
+  bottom: 28px;
+  left: 36%;
+  /* transform: translateX(-50%); */
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: rgba(10,15,30,0.8);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 50px;
+  padding: 10px 24px;
+}
+
+.nav-btn {
+  background: none;
+  border: 1.5px solid rgba(255,255,255,0.2);
+  color: var(--white);
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.nav-btn:hover:not(:disabled) {
+  background: var(--saffron);
+  border-color: var(--saffron);
+  color: var(--bg);
+}
+
+.nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+#slide-counter {
+  font-family: var(--font-m);
+  font-size: 0.8rem;
+  color: var(--muted);
+  min-width: 70px;
+  text-align: center;
+}
+
+/* ── SLIDE DECK ── */
+#deck {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 40px 90px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease, transform 0.5s cubic-bezier(.4,0,.2,1);
+  transform: translateX(40px);
+  text-align: center;
+  overflow: hidden;
+}
+
+.slide.active {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(0);
+}
+
+.slide.exit-left {
+  opacity: 0;
+  transform: translateX(-60px);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+/* ── SLIDE VARIANTS ── */
+.slide-cover { background: var(--bg); }
+.slide-dark { background: var(--bg); }
+.slide-warm { background: #110e06; }
+.slide-accent { background: #0f1a0a; }
+.slide-contrast {
+  background: var(--saffron);
+  color: var(--bg);
+}
+.slide-contrast .s-eyebrow { color: rgba(10,15,30,0.6); }
+.slide-contrast .s-body { color: rgba(10,15,30,0.75); }
+.slide-contrast .s-title { color: var(--bg); }
+
+/* ── BG DECORATION ── */
+.slide::before {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.slide-cover::before {
+  width: 600px; height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(244,150,26,0.12) 0%, transparent 70%);
+  top: -200px; right: -200px;
+}
+
+/* ── SLIDE CONTENT ── */
+.slide-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 860px;
+  width: 100%;
+}
+
+.s-eyebrow {
+  font-family: var(--font-m);
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--saffron);
+  margin-bottom: 20px;
+  display: block;
+}
+
+.s-title {
+  font-family: var(--font-d);
+  font-size: clamp(2rem, 5vw, 3.8rem);
+  font-weight: 900;
+  line-height: 1.1;
+  color: var(--white);
+}
+
+.s-title em {
+  font-style: italic;
+  color: var(--saffron);
+}
+
+.s-title.huge {
+  font-size: clamp(2.6rem, 7vw, 5.5rem);
+}
+
+.s-title.medium {
+  font-size: clamp(1.9rem, 4vw, 3rem);
+}
+
+.s-body {
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  color: var(--muted);
+  line-height: 1.7;
+  margin-top: 24px;
+  max-width: 660px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.s-body strong {
+  color: var(--white);
+  font-weight: 600;
+}
+
+.s-body em {
+  color: var(--saffron-light);
+  font-style: normal;
+}
+
+/* ── LISTS ── */
+.s-list {
+  list-style: none;
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  text-align: left;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.s-list li {
+  font-size: clamp(1rem, 1.8vw, 1.15rem);
+  color: var(--white);
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  line-height: 1.5;
+}
+
+.s-list li .bullet {
+  color: var(--saffron);
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.s-list li .bullet.red { color: var(--red); }
+.s-list li .bullet.green { color: var(--green); }
+.s-list li .bullet.dim { color: var(--muted); }
+
+/* ── COMPARE BLOCK ── */
+.compare-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 32px;
+  text-align: left;
+  max-width: 780px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.compare-col {
+  background: rgba(255,255,255,0.04);
+  border: 1.5px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.compare-col.good {
+  background: rgba(45,202,114,0.05);
+  border-color: rgba(45,202,114,0.2);
+}
+
+.compare-col h4 {
+  font-family: var(--font-m);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.compare-col h4.label-old { color: var(--red); }
+.compare-col h4.label-new { color: var(--green); }
+
+.compare-col ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.compare-col ul li {
+  font-size: clamp(0.9rem, 1.5vw, 1rem);
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  line-height: 1.45;
+}
+
+.compare-col.good ul li { color: rgba(248,244,238,0.85); }
+
+/* ── CODE-STYLE BLOCK ── */
+.code-block {
+  background: rgba(255,255,255,0.04);
+  border: 1.5px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  padding: 28px 32px;
+  font-family: var(--font-m);
+  font-size: clamp(0.95rem, 1.6vw, 1.05rem);
+  line-height: 2;
+  text-align: left;
+  max-width: 640px;
+  margin: 28px auto 0;
+  color: var(--saffron-light);
+}
+
+.code-block .op { color: var(--muted); }
+.code-block .result { color: var(--green); font-weight: 500; }
+.code-block .divider {
+  border: none;
+  border-top: 1px dashed rgba(255,255,255,0.1);
+  margin: 14px 0;
+}
+
+/* ── PULL QUOTE ── */
+.pull-quote {
+  font-family: var(--font-d);
+  font-size: clamp(1.4rem, 3.5vw, 2.4rem);
+  font-style: italic;
+  color: var(--white);
+  line-height: 1.4;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 32px;
+  border-left: 4px solid var(--saffron);
+  text-align: left;
+  background: rgba(244,150,26,0.05);
+  border-radius: 0 14px 14px 0;
+}
+
+/* ── STAT DISPLAY ── */
+.big-stat {
+  font-family: var(--font-d);
+  font-size: clamp(4rem, 12vw, 9rem);
+  font-weight: 900;
+  color: var(--saffron);
+  line-height: 1;
+}
+
+/* ── ARROW FLOW ── */
+.flow-items {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 36px;
+}
+
+.flow-item {
+  background: rgba(244,150,26,0.1);
+  border: 1.5px solid rgba(244,150,26,0.25);
+  color: var(--saffron-light);
+  padding: 12px 22px;
+  border-radius: 50px;
+  font-size: clamp(0.9rem, 1.6vw, 1rem);
+  font-weight: 500;
+}
+
+.flow-arrow {
+  color: var(--saffron);
+  font-size: 1.2rem;
+  opacity: 0.6;
+}
+
+/* ── SLIDE NUMBER ── */
+.s-slide-num {
+  position: absolute;
+  top: 28px;
+  right: 32px;
+  font-family: var(--font-m);
+  font-size: 0.72rem;
+  color: var(--dim);
+  z-index: 2;
+}
+
+/* ── LOGO MARK ── */
+.logomark {
+  position: absolute;
+  top: 26px;
+  left: 32px;
+  font-family: var(--font-d);
+  font-size: 1.05rem;
+  font-weight: 900;
+  color: rgba(244,150,26,0.4);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.logomark .dot {
+  width: 7px; height: 7px;
+  background: var(--saffron);
+  border-radius: 50%;
+  opacity: 0.6;
+}
+
+/* ── KEYBOARD HINT ── */
+#kbd-hint {
+  position: fixed;
+  top: 28px;
+  right: 28px;
+  font-family: var(--font-m);
+  font-size: 0.7rem;
+  color: var(--dim);
+  z-index: 100;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+kbd {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 4px;
+  padding: 3px 7px;
+  font-family: var(--font-m);
+  font-size: 0.68rem;
+  color: var(--muted);
+}
+
+/* ── MOBILE ── */
+@media (max-width: 600px) {
+  .slide { padding: 50px 20px 100px; }
+  .compare-cols { grid-template-columns: 1fr; gap: 14px; }
+  .flow-items { gap: 8px; }
+  .flow-item { padding: 10px 16px; }
+  #kbd-hint { display: none; }
+  .logomark { font-size: 0.9rem; }
+  .pull-quote { padding: 20px; }
+}
+
+/* ── TOUCH SWIPE INDICATOR ── */
+#swipe-hint {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-m);
+  font-size: 0.68rem;
+  color: var(--dim);
+  z-index: 99;
+  display: none;
+}
+
+@media (max-width: 600px) {
+  #swipe-hint { display: block; }
+}
+</style>
+</head>
+<body>
+
+<div id="progress-bar" style="width:4%"></div>
+
+<!-- <div id="kbd-hint">
+  <kbd>←</kbd><kbd>→</kbd> navigate &nbsp;·&nbsp; <kbd>Space</kbd> next
+</div>
+
+<div id="swipe-hint">← swipe to navigate →</div> -->
+
+<div id="deck">
+
+  <!-- ══ SLIDE 1 — COVER ══ -->
+  <div class="slide slide-cover active">
+    <div class="logomark"><span class="dot"></span> Career Mirror</div>
+    <div class="s-slide-num">01 / 25</div>
+    <div class="slide-inner">
+      <span class="s-eyebrow">A new framework for Indian parents</span>
+      <h1 class="s-title huge">The New <em>Parenting</em> Intelligence</h1>
+      <p class="s-body">Why raising children in 2025 demands a completely different set of tools — and how AI changes everything.</p>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 2 ══ -->
+  <div class="slide slide-dark">
+    <div class="logomark"><span class="dot"></span> Career Mirror</div>
+    <div class="s-slide-num">02 / 25</div>
+    <div class="slide-inner">
+      <span class="s-eyebrow">30 years ago</span>
+      <h2 class="s-title">Parents had <em>almost no tools</em> to understand their child.</h2>
+      <p class="s-body">They relied on marks, teacher comments, visible hobbies, and intuition. A child's deeper patterns were mostly <strong>invisible.</strong></p>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 3 ══ -->
+  <div class="slide slide-dark">
+    <div class="logomark"><span class="dot"></span> Career Mirror</div>
+    <div class="s-slide-num">03 / 25</div>
+    <div class="slide-inner">
+      <span class="s-eyebrow">The invisible child</span>
+      <h2 class="s-title medium">If your child showed any of these — nobody noticed.</h2>
+      <ul class="s-list">
+        <li><span class="bullet">◆</span> Systems thinking and natural organization</li>
+        <li><span class="bullet">◆</span> Obsession with storytelling or creating</li>
+        <li><span class="bullet">◆</span> Entrepreneurial instincts and curiosity</li>
+        <li><span class="bullet">◆</span> Deep analytical curiosity about how things work</li>
+        <li><span class="bullet">◆</span> Leadership patterns in everyday behavior</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 4 ══ -->
+  <div class="slide slide-warm">
+    <div class="logomark"><span class="dot"></span> Career Mirror</div>
+    <div class="s-slide-num">04 / 25</div>
+    <div class="slide-inner">
+      <span class="s-eyebrow">Why parents defaulted</span>
+      <h2 class="s-title medium">So parents defaulted to the <em>only</em> visible ladders.</h2>
+      <div class="flow-items">
+        <div class="flow-item">Engineering</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-item">Medicine</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-item">Government Jobs</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-item">CA / MBA</div>
+      </div>
+      <p class="s-body" style="margin-top:28px;">Not because parents were wrong — because those were <strong>the clearest visible paths</strong> available.</p>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 5 ══ -->
+  <div class="slide slide-dark">
+    <div class="logomark"><span class="dot"></span> Career Mirror</div>
+    <div class="s-slide-num">05 / 25</div>
+    <div class="slide-inner">
+      <span class="s-eyebrow">The old equation</span>
+      <h2 class="s-title medium">The 1990s parenting model reduced children to a formula.</h2>
+      <div class="code-block">
+        <span class="op">Math marks</span> → Engineering<br>
+        <span class="op">Biology marks</span> → Medicine<br>
+        <span class="op">Good English</span> → Law / IAS<br>
+        <span class="op">Commerce</span> → CA / MBA<br>
+        <hr class="divider">
+        <span class="result">Output: A "safe" career path</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 6 ══ -->
+  <div class="slide slide-dark">
+    <div class="logomark"><span class="dot"></span> Career Mirror</div>
+    <div class="s-slide-num">06 / 25</div>
+    <div class="slide-inner">
+      <span class="s-eyebrow">Why it worked then</span>
+      <h2 class="s-title medium">That system existed because careers were <em>linear.</em></h2>
+      <ul class="s-list">
+        <li><span class="bullet dim">—</span> More predictable and slower-changing</li>
+        <li><span class="bullet dim">—</span> Strongly degree-linked and institution-driven</li>
+        <li><span class="bullet dim">—</span> Rewarded standardization and credentials</li>
+        <li><span class="bullet dim">—</span> Did not require tracking curiosity or creativity</li>
+      </ul>
+      <p class="s-body" style="margin-top:24px;">Parents were navigating with <em>sparse data</em> in a slow-moving economy. That was rational.</p>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 7 ══ -->
+  <div class="slide slide-contrast">
+    <div class="logomark" style="color:rgba(10,15,30,0.4)"><span class="dot" style="background:var(--bg); opacity:0.5"></span> Career Mirror</div>
+    <div class="s-slide-num" style="color:rgba(10,15,30,0.4)">07 / 25</div>
+    <div class="slide-inner">
+      <span class="s-eyebrow">The shift</span>
+      <h1 class="s-title huge" style="color:var(--bg);">Everything has <em style="color:var(--bg); text-decoration:underline; text-decoration-style:wavy;">changed.</em></h1>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 8 ══ -->
+  <div class="slide slide-dark">
+    <div class="logomark"><span class="dot"></span> Career Mirror</div>
+    <div class="s-slide-num">08 / 25</div>
+    <div class="slide-inner">
+      <span class="s-eyebrow">Today's reality</span>
+      <h2 class="s-title medium">A teenager's future potential is now hidden in <em>unexpected places.</em></h2>
+      <ul class="s-list">
+        <li><span class="bullet">◆</span> Internet behavior and curiosity trails</li>
+        <li><span class="bullet">◆</span> Side projects and creative experiments</li>
+        <li><span class="bullet">◆</span> Communication patterns and writing</li>
+        <li><span class="bullet">◆</span> Systems thinking and problem-solving style</li>
+        <li><span class="bullet">◆</span> Adaptability under uncertainty</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 9 ══ -->
+  <div class="slide slide-dark">
+    <div class="logomark"><span class="dot"></span> Career Mirror</div>
+    <div class="s-slide-num">09 / 25</div>
+    <div class="slide-inner">
+      <span class="s-eyebrow">The new teenager</span>
+      <h2 class="s-title medium">Today a student may build a career <em>before college.</em></h2>
+      <ul class="s-list">
+        <li><span class="bullet green">✓</span> Build AI workflows at age 16</li>
+        <li><span class="bullet green">✓</span> Run a niche YouTube channel at 15</li>
+        <li><span class="bullet green">✓</span> Learn design from global creators online</li>
+        <li><span class="bullet green">✓</span> Manage communities and earn independently</li>
+        <li><span class="bullet green">✓</span> Write, automate, and create real audiences</li>
+      </ul>
+      <p class="s-body" style="margin-top:20px;">Most of these signals are <strong>completely invisible</strong> to traditional schooling.</p>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 10 ══ -->
+  <div class="slide slide-warm">
+    <div class="logomark"><span class="dot"></span> Career Mirror</div>
+    <div class="s-slide-num">10 / 25</div>
+    <div class="slide-inner">
+      <span class="s-eyebrow">A new responsibility</span>
+      <h2 class="s-title">Parents are no longer just protectors and providers.</h2>
+      <div class="pull-quote" style="margin-top:32px;">
+        They are increasingly becoming<br><em>observers of evolving potential.</em>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 11 ══ -->
+  <div class="slide slide-dark">
+    <div class="logomark"><span class="dot"></span> Career Mirror</div>
+    <div class="s-slide-num">11 / 25</div>
+    <div class="slide-inner">
+      <span class="s-eyebrow">The old toolkit is broken</span>
+      <h2 class="s-title medium">A child's direction can no longer be inferred from marks alone.</h2>
+      <ul class="s-list">
+        <li><span class="bullet red">✗</span> Stream selection doesn't reveal future fit</li>
+        <li><span class="bullet red">✗</span> Coaching results don't reveal strengths</li>
+        <li><span class="bullet red">✗</span> Rank doesn't reveal curiosity patterns</li>
+        <li><span class="bullet red">✗</span> Aptitude tests don't track behavioral evolution</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 12 ══ -->
+  <div class="slide slide-dark">
+    <div class="logomark"><span class="dot"></span> Career Mirror</div>
+    <div class="s-slide-num">12 / 25</div>
+    <div class="slide-inner">
+      <span class="s-eyebrow">A historical first</span>
+      <h2 class="s-title">For the first time in history, <em>parents can track evolution</em> instead of snapshots.</h2>
+      <p class="s-body">Previously, a child's growth disappeared into memory. Now it can become structured longitudinal intelligence — compounding over years.</p>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 13 ══ -->
+  <div class="slide slide-dark">
+    <div class="logomark"><span class="dot"></span> Career Mirror</div>
+    <div class="s-slide-num">13 / 25</div>
+    <div class="slide-inner">
+      <span class="s-eyebrow">Old world vs new world</span>
+      <h2 class="s-title medium">The difference between these two equations is enormous.</h2>
+      <div class="compare-cols">
+        <div class="compare-col">
+          <h4 class="label-old">1990s Model</h4>
+          <ul>
+            <li>📋 Parent memory</li>
+            <li>📋 School report cards</li>
+            <li>📋 Social comparison</li>
+            <li style="color:var(--red); font-weight:600;">= Career decisions</li>
+          </ul>
+        </div>
+        <div class="compare-col good">
+          <h4 class="label-new">Today's Model</h4>
+          <ul>
+            <li>✦ Daily reflections</li>
+            <li>✦ Behavioral tracking</li>
+            <li>✦ AI pattern recognition</li>
+            <li>✦ Longitudinal analysis</li>
+            <li style="color:var(--green); font-weight:600;">= Evolving competency map</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 14 ══ -->
+  <div class="slide slide-warm">
+    <div class="logomark"><span class="dot"></span> Career Mirror</div>
+    <div class="s-slide-num">14 / 25</div>
+    <div class="slide-inner">
+      <span class="s-eyebrow">A civilization-level shift</span>
+      <h1 class="s-title huge">This is not an <em>upgrade.</em><br>It's a different civilization.</h1>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 15 ══ -->
+  <div class="slide slide-dark">
+    <div class="logomark"><span class="dot"></span> Career Mirror</div>
+    <div class="s-slide-num">15 / 25</div>
+    <div class="slide-inner">
+      <span class="s-eyebrow">Why this changes parenting</span>
+      <h2 class="s-title medium">Once the tools exist, <em>ignorance becomes less excusable.</em></h2>
+      <p class="s-body">Thirty years ago, parents genuinely could not track emotional patterns, curiosity evolution, or long-term energy alignment. <strong>Now they can.</strong> Which means modern parenting increasingly requires observation, documentation, and adaptive guidance — not just pressure and exam management.</p>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 16 ══ -->
+  <div class="slide slide-dark">
+    <div class="logomark"><span class="dot"></span> Career Mirror</div>
+    <div class="s-slide-num">16 / 25</div>
+    <div class="slide-inner">
+      <span class="s-eyebrow">The hidden danger</span>
+      <h2 class="s-title medium">Many parents use <em>1998 decision frameworks</em> for 2035 careers.</h2>
+      <p class="s-body">That mismatch creates anxiety, over-coaching, herd behavior, and career blindness. Especially in India, where competitive exam identity is extremely strong.</p>
+      <div class="code-block" style="margin-top:28px;">
+        <span class="op">Input:</span> 2035 world<br>
+        <span class="op">Framework:</span> 1998 logic<br>
+        <hr class="divider">
+        <span style="color:var(--red);">Output: Wrong decisions + anxiety</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 17 ══ -->
+  <div class="slide slide-dark">
+    <div class="logomark"><span class="dot"></span> Career Mirror</div>
+    <div class="s-slide-num">17 / 25</div>
+    <div class="slide-inner">
+      <span class="s-eyebrow">What AI can do</span>
+      <h2 class="s-title medium">AI changes parenting because it sees what <em>humans miss.</em></h2>
+      <ul class="s-list">
+        <li><span class="bullet">◆</span> Detects behavioral patterns invisible to the naked eye</li>
+        <li><span class="bullet">◆</span> Summarizes years of observations into clear insights</li>
+        <li><span class="bullet">◆</span> Compares behavioral clusters across weeks and months</li>
+        <li><span class="bullet">◆</span> Identifies archetypes and motivational patterns</li>
+        <li><span class="bullet">◆</span> Notices consistency and reveals contradictions</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 18 ══ -->
+  <div class="slide slide-warm">
+    <div class="logomark"><span class="dot"></span> Career Mirror</div>
+    <div class="s-slide-num">18 / 25</div>
+    <div class="slide-inner">
+      <span class="s-eyebrow">Real example</span>
+      <h2 class="s-title medium">A parent thinks: <em>"My child should become a doctor."</em></h2>
+      <p class="s-body">But 4 years of journals reveal:</p>
+      <ul class="s-list" style="margin-top:18px;">
+        <li><span class="bullet green">→</span> Strong creator tendencies, high autonomy needs</li>
+        <li><span class="bullet green">→</span> Low repetition tolerance, strong communication ability</li>
+        <li><span class="bullet green">→</span> Entrepreneurial curiosity, dislike of rigid hierarchies</li>
+      </ul>
+      <p class="s-body" style="margin-top:20px; color:var(--saffron-light);">That changes the conversation <strong>entirely.</strong></p>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 19 ══ -->
+  <div class="slide slide-dark">
+    <div class="logomark"><span class="dot"></span> Career Mirror</div>
+    <div class="s-slide-num">19 / 25</div>
+    <div class="slide-inner">
+      <span class="s-eyebrow">Trajectories, not snapshots</span>
+      <h2 class="s-title medium">A teenager may transform <em>multiple times</em> between 13 and 17.</h2>
+      <p class="s-body">Report cards, exam scores, and occasional praise are snapshots. But human potential is not static. What's needed is a system that captures <strong>trajectories</strong> — not just moments in time.</p>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 20 ══ -->
+  <div class="slide slide-dark">
+    <div class="logomark"><span class="dot"></span> Career Mirror</div>
+    <div class="s-slide-num">20 / 25</div>
+    <div class="slide-inner">
+      <span class="s-eyebrow">The deeper shift</span>
+      <h2 class="s-title medium">The future rewards <em>flexible individuals,</em> not merely obedient professionals.</h2>
+      <div class="compare-cols">
+        <div class="compare-col">
+          <h4 class="label-old">Old optimization</h4>
+          <ul>
+            <li>Survival and stability</li>
+            <li>Respectable employment</li>
+            <li>Degree credentials</li>
+            <li>Predictable ladders</li>
+          </ul>
+        </div>
+        <div class="compare-col good">
+          <h4 class="label-new">New optimization</h4>
+          <ul>
+            <li>Adaptability and leverage</li>
+            <li>Self-awareness</li>
+            <li>Communication</li>
+            <li>Systems thinking + AI fluency</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 21 ══ -->
+  <div class="slide slide-dark">
+    <div class="logomark"><span class="dot"></span> Career Mirror</div>
+    <div class="s-slide-num">21 / 25</div>
+    <div class="slide-inner">
+      <span class="s-eyebrow">The new ideal parent</span>
+      <h2 class="s-title medium">The future rewards parents who <em>observe more</em> and compare less.</h2>
+      <ul class="s-list">
+        <li><span class="bullet green">✓</span> Document behavioral patterns consistently</li>
+        <li><span class="bullet green">✓</span> Expose children widely to different fields</li>
+        <li><span class="bullet green">✓</span> Encourage experimentation over perfection</li>
+        <li><span class="bullet green">✓</span> Help children notice their recurring strengths</li>
+        <li><span class="bullet red">✗</span> Force career certainty too early</li>
+        <li><span class="bullet red">✗</span> Optimize only for prestige or marks</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 22 ══ -->
+  <div class="slide slide-warm">
+    <div class="logomark"><span class="dot"></span> Career Mirror</div>
+    <div class="s-slide-num">22 / 25</div>
+    <div class="slide-inner">
+      <span class="s-eyebrow">The old question vs the new question</span>
+      <div class="compare-cols" style="margin-top:0">
+        <div class="compare-col" style="text-align:center; align-items:center;">
+          <h4 class="label-old" style="text-align:center;">Old question</h4>
+          <p style="font-family:var(--font-d); font-size:clamp(1rem,2vw,1.2rem); font-style:italic; color:rgba(255,255,255,0.5); line-height:1.5;">"Which stable career can secure my child's future?"</p>
+        </div>
+        <div class="compare-col good" style="text-align:center;">
+          <h4 class="label-new" style="text-align:center;">New question</h4>
+          <p style="font-family:var(--font-d); font-size:clamp(1rem,2vw,1.2rem); font-style:italic; color:var(--white); line-height:1.5;">"What kind of human is my child repeatedly becoming over time?"</p>
+        </div>
+      </div>
+      <p class="s-body" style="margin-top:24px;">That is a <em>much deeper question.</em></p>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 23 ══ -->
+  <div class="slide slide-dark">
+    <div class="logomark"><span class="dot"></span> Career Mirror</div>
+    <div class="s-slide-num">23 / 25</div>
+    <div class="slide-inner">
+      <span class="s-eyebrow">The most important reframe</span>
+      <div class="pull-quote">
+        The job of modern parents is no longer merely "choosing the safest path." It is increasingly helping the child understand themselves deeply enough to navigate a rapidly changing world.
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 24 ══ -->
+  <div class="slide slide-dark">
+    <div class="logomark"><span class="dot"></span> Career Mirror</div>
+    <div class="s-slide-num">24 / 25</div>
+    <div class="slide-inner">
+      <span class="s-eyebrow">The opportunity</span>
+      <h2 class="s-title">AI may be the first tool in history capable of helping families do this <em>at scale.</em></h2>
+      <p class="s-body">Not just for the wealthy, not just for those with access to the best counselors — but for every parent willing to document and reflect.</p>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 25 — END ══ -->
+  <div class="slide slide-warm">
+    <div class="logomark"><span class="dot"></span> Career Mirror</div>
+    <div class="s-slide-num">25 / 25</div>
+    <div class="slide-inner">
+      <span class="s-eyebrow">Career Mirror · ₹999 · Grades 9–12</span>
+      <h1 class="s-title huge">Don't let your child make <em>permanent decisions</em> with temporary self-awareness.</h1>
+      <p class="s-body" style="margin-top:28px; font-size:1.1rem;">Start the AI-powered self-discovery project today.</p>
+      <div style="margin-top:32px;">
+        <a href="https://wa.me/917019492748" target="_blank" style="
+          display:inline-flex; align-items:center; gap:12px;
+          background:var(--saffron); color:var(--bg);
+          font-family:var(--font-b); font-weight:700; font-size:1.1rem;
+          padding:18px 36px; border-radius:50px; text-decoration:none;
+          box-shadow: 0 4px 28px rgba(244,150,26,0.4);
+          transition: all 0.2s;
+        ">💬 Chat on WhatsApp</a>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /#deck -->
+
+<!-- NAV -->
+<div id="ui" style="transform: scale(0.5);">
+  <button class="nav-btn" id="btn-prev" disabled>←</button>
+  <span id="slide-counter">1 / 25</span>
+  <button class="nav-btn" id="btn-next">→</button>
+</div>
+
+<script>
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const total = slides.length;
+  let current = 0;
+  let isAnimating = false;
+
+  const btnPrev = document.getElementById('btn-prev');
+  const btnNext = document.getElementById('btn-next');
+  const counter = document.getElementById('slide-counter');
+  const progressBar = document.getElementById('progress-bar');
+
+  function goTo(index) {
+    if (isAnimating || index < 0 || index >= total) return;
+    isAnimating = true;
+
+    const prev = slides[current];
+    prev.classList.remove('active');
+    prev.classList.add('exit-left');
+
+    current = index;
+    const next = slides[current];
+    next.style.transform = index > current ? 'translateX(60px)' : 'translateX(-60px)';
+    next.classList.add('active');
+
+    setTimeout(() => {
+      prev.classList.remove('exit-left');
+      isAnimating = false;
+    }, 380);
+
+    updateUI();
+  }
+
+  function next() {
+    if (current < total - 1) {
+      const leaving = slides[current];
+      leaving.classList.remove('active');
+      leaving.classList.add('exit-left');
+      current++;
+      const arriving = slides[current];
+      arriving.style.transform = 'translateX(60px)';
+      arriving.classList.add('active');
+      setTimeout(() => {
+        leaving.classList.remove('exit-left');
+        arriving.style.transform = '';
+        isAnimating = false;
+      }, 400);
+      updateUI();
+    }
+  }
+
+  function prev() {
+    if (current > 0) {
+      const leaving = slides[current];
+      leaving.classList.remove('active');
+      leaving.style.transform = 'translateX(60px)';
+      leaving.style.opacity = '0';
+      current--;
+      const arriving = slides[current];
+      arriving.style.transform = 'translateX(-60px)';
+      arriving.classList.add('active');
+      setTimeout(() => {
+        leaving.style.transform = '';
+        leaving.style.opacity = '';
+        arriving.style.transform = '';
+        isAnimating = false;
+      }, 400);
+      updateUI();
+    }
+  }
+
+  function updateUI() {
+    counter.textContent = `${current + 1} / ${total}`;
+    btnPrev.disabled = current === 0;
+    btnNext.disabled = current === total - 1;
+    const pct = ((current + 1) / total * 100).toFixed(1);
+    progressBar.style.width = pct + '%';
+  }
+
+  btnNext.addEventListener('click', next);
+  btnPrev.addEventListener('click', prev);
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); next(); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
+  });
+
+  // Touch swipe
+  let touchStartX = 0;
+  document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 50) { dx < 0 ? next() : prev(); }
+  }, { passive: true });
+
+  updateUI();
+</script>
+</body>
+</html>

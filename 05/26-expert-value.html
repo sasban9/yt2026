@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Why Experts Get Paid 10x — The Anatomy of Expert Value</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Jost:wght@300;400;500;600&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+
+<style>
+/* ─────────────────────── RESET & ROOT ─────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --cream:    #f4f0e6;
+  --cream2:   #ede8d8;
+  --cream3:   #e4ddc8;
+  --ink:      #1a1612;
+  --ink2:     #3a342a;
+  --ink3:     #6b5f4e;
+  --copper:   #9b4e1a;
+  --copper2:  #c46624;
+  --copper-d: rgba(155,78,26,0.08);
+  --rule:     rgba(26,22,18,0.14);
+  --rule2:    rgba(26,22,18,0.06);
+  --serif:    'Cormorant Garamond', Georgia, serif;
+  --sans:     'Jost', sans-serif;
+  --mono:     'DM Mono', monospace;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--sans);
+  background: var(--cream);
+  color: var(--ink);
+  font-size: 16px;
+  line-height: 1.7;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* paper texture */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity: 0.6;
+}
+
+body > * { position: relative; z-index: 1; }
+
+/* ─────────────────────── SCROLLBAR ─────────────────────── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--cream); }
+::-webkit-scrollbar-thumb { background: var(--copper); border-radius: 2px; }
+
+/* ─────────────────────── NAV ─────────────────────── */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(244,240,230,0.94);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--rule);
+  padding: 14px 5vw;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-mark {
+  font-family: var(--mono);
+  font-size: 12px; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--copper);
+}
+.nav-right {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--ink3);
+}
+
+/* ─────────────────────── HERO ─────────────────────── */
+.hero {
+  min-height: 96vh;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: 8vw 5vw 6vw;
+  border-bottom: 2px solid var(--ink);
+  position: relative; overflow: hidden;
+}
+
+.hero-num {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--copper); margin-bottom: 32px;
+  opacity: 0; animation: fadeUp .7s .1s forwards;
+}
+
+.hero-h1 {
+  font-family: var(--serif);
+  font-size: clamp(52px, 8.5vw, 120px);
+  font-weight: 300;
+  line-height: 0.95;
+  letter-spacing: -2px;
+  color: var(--ink);
+  max-width: 1100px;
+  opacity: 0; animation: fadeUp .8s .2s forwards;
+}
+.hero-h1 em { font-style: italic; color: var(--copper); }
+.hero-h1 strong { font-weight: 600; }
+
+.hero-rule {
+  width: 60px; height: 2px; background: var(--copper);
+  margin: 44px 0 36px;
+  opacity: 0; animation: fadeUp .6s .4s forwards;
+}
+
+.hero-body {
+  display: grid; grid-template-columns: 1.2fr 1fr;
+  gap: 5vw; max-width: 1000px;
+  opacity: 0; animation: fadeUp .7s .5s forwards;
+}
+.hero-lede {
+  font-family: var(--serif);
+  font-size: clamp(20px, 2.2vw, 26px);
+  line-height: 1.55; color: var(--ink2); font-weight: 300;
+}
+.hero-lede strong { font-weight: 600; color: var(--ink); }
+
+.hero-sidebar { padding-top: 6px; }
+.hero-sidebar-item {
+  border-top: 1px solid var(--rule);
+  padding: 14px 0;
+}
+.hero-sidebar-item:last-child { border-bottom: 1px solid var(--rule); }
+.si-label { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--ink3); margin-bottom: 4px; }
+.si-val { font-family: var(--serif); font-size: 22px; font-weight: 600; color: var(--ink); }
+.si-val em { font-style: italic; color: var(--copper); }
+
+/* large background ghost text */
+.hero-ghost {
+  position: absolute; bottom: -0.1em; right: -0.02em;
+  font-family: var(--serif); font-size: clamp(180px, 28vw, 340px);
+  font-weight: 700; color: rgba(26,22,18,0.04);
+  line-height: 1; pointer-events: none; user-select: none;
+  white-space: nowrap;
+}
+
+/* ─────────────────────── FORMULA BAND ─────────────────────── */
+.formula-band {
+  background: var(--ink);
+  padding: 52px 5vw;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.formula-inner {
+  max-width: 1100px; margin: 0 auto; display: flex; align-items: center;
+  gap: 28px; flex-wrap: wrap; justify-content: center;
+}
+.f-label {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+  color: rgba(255,255,255,0.35); margin-bottom: 12px; text-align: center; width: 100%;
+}
+.f-term {
+  font-family: var(--serif); font-size: clamp(20px, 2.5vw, 30px);
+  font-weight: 600; color: var(--cream);
+  text-align: center;
+}
+.f-term.highlight { color: #d4956a; }
+.f-op {
+  font-family: var(--serif); font-size: 28px; color: rgba(255,255,255,0.2);
+}
+.f-equals { font-family: var(--serif); font-size: 32px; color: rgba(255,255,255,0.3); }
+.f-result {
+  font-family: var(--serif); font-size: clamp(24px, 3vw, 36px); font-weight: 700;
+  color: #d4956a; font-style: italic;
+}
+
+/* ─────────────────────── SECTIONS ─────────────────────── */
+.section {
+  max-width: 1200px; margin: 0 auto;
+  padding: 80px 5vw;
+}
+
+.section-header {
+  display: grid; grid-template-columns: 80px 1fr;
+  gap: 24px; align-items: baseline;
+  padding-bottom: 28px; margin-bottom: 52px;
+  border-bottom: 2px solid var(--ink);
+}
+.section-num {
+  font-family: var(--serif); font-size: 64px; font-weight: 300;
+  color: rgba(26,22,18,0.12); line-height: 1; letter-spacing: -2px;
+}
+.section-title {
+  font-family: var(--serif); font-size: clamp(32px, 4vw, 52px);
+  font-weight: 600; line-height: 1.05; letter-spacing: -0.5px;
+  color: var(--ink);
+}
+.section-title em { font-style: italic; color: var(--copper); }
+
+/* ─────────────────────── TWO-COL ARTICLE ─────────────────────── */
+.article-2col {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 52px;
+}
+.article-col p {
+  font-size: clamp(15px, 1.5vw, 17px); color: var(--ink2);
+  line-height: 1.8; margin-bottom: 16px;
+}
+.article-col p strong { color: var(--ink); font-weight: 600; }
+.article-col p:last-child { margin-bottom: 0; }
+
+/* ─────────────────────── PULL QUOTE ─────────────────────── */
+.pull-quote {
+  font-family: var(--serif);
+  font-size: clamp(24px, 3.5vw, 42px);
+  font-weight: 300; font-style: italic;
+  line-height: 1.3; color: var(--ink);
+  border-left: 4px solid var(--copper);
+  padding: 20px 0 20px 36px;
+  max-width: 820px; margin: 60px auto;
+}
+.pull-quote strong { font-weight: 600; font-style: normal; color: var(--copper); }
+
+/* ─────────────────────── COMPARISON BLOCK ─────────────────────── */
+.compare {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 0; margin: 40px 0; border: 1px solid var(--rule);
+}
+.compare-col { padding: 28px 28px; }
+.compare-col + .compare-col { border-left: 1px solid var(--rule); background: var(--copper-d); }
+.comp-label {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 2.5px;
+  text-transform: uppercase; margin-bottom: 16px;
+}
+.compare-col:first-child .comp-label { color: var(--ink3); }
+.compare-col:last-child  .comp-label { color: var(--copper); }
+.comp-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.comp-list li {
+  font-size: 15px; color: var(--ink2); padding-left: 18px;
+  position: relative; line-height: 1.55;
+}
+.comp-list li::before { content: '—'; position: absolute; left: 0; color: var(--rule); }
+.compare-col:last-child .comp-list li::before { color: var(--copper); content: '+'; font-weight: 600; }
+.compare-col:last-child .comp-list li { color: var(--ink); }
+
+/* ─────────────────────── DIVIDER ─────────────────────── */
+.rule-section {
+  max-width: 1200px; margin: 0 auto; padding: 0 5vw;
+}
+.rule-full { border: none; border-top: 1px solid var(--rule); margin: 0; }
+
+/* ─────────────────────── SKILLS GRID ─────────────────────── */
+.skills-section {
+  background: var(--cream2);
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  padding: 80px 5vw;
+}
+.skills-inner { max-width: 1200px; margin: 0 auto; }
+.skills-label {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--copper); margin-bottom: 12px;
+}
+.skills-title {
+  font-family: var(--serif); font-size: clamp(32px, 4.5vw, 58px);
+  font-weight: 300; letter-spacing: -1px; color: var(--ink);
+  margin-bottom: 52px; max-width: 780px;
+}
+.skills-title em { font-style: italic; }
+.skills-title strong { font-weight: 700; }
+
+.skills-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+}
+.skill-cell {
+  padding: 28px 24px;
+  border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+  transition: background .2s;
+  cursor: default;
+}
+.skill-cell:hover { background: var(--cream3); }
+.skill-cell:nth-child(4n) { border-right: none; }
+.skill-cell:nth-last-child(-n+4) { border-bottom: none; }
+.sk-roman {
+  font-family: var(--serif); font-size: 28px; font-weight: 300;
+  color: rgba(26,22,18,0.15); line-height: 1; margin-bottom: 10px;
+}
+.sk-name {
+  font-family: var(--serif); font-size: 22px; font-weight: 600;
+  color: var(--ink); margin-bottom: 8px; line-height: 1.15;
+}
+.sk-body { font-size: 14px; color: var(--ink3); line-height: 1.6; }
+
+/* ─────────────────────── TRUTH BAND ─────────────────────── */
+.truth-band {
+  background: var(--ink); color: var(--cream);
+  padding: 80px 5vw;
+}
+.truth-inner { max-width: 1200px; margin: 0 auto; }
+.truth-label {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 3px;
+  text-transform: uppercase; color: rgba(212,149,106,0.8);
+  margin-bottom: 20px;
+}
+.truth-heading {
+  font-family: var(--serif); font-size: clamp(28px, 4vw, 52px);
+  font-weight: 300; color: var(--cream); line-height: 1.15;
+  max-width: 780px; margin-bottom: 40px;
+}
+.truth-heading em { font-style: italic; color: #d4956a; }
+.truth-heading strong { font-weight: 700; }
+.truth-grid {
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  gap: 0; border: 1px solid rgba(255,255,255,0.08); margin-top: 40px;
+}
+.truth-cell {
+  padding: 28px 24px;
+  border-right: 1px solid rgba(255,255,255,0.08);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.truth-cell:nth-child(3n) { border-right: none; }
+.truth-cell:nth-last-child(-n+3) { border-bottom: none; }
+.tc-title {
+  font-family: var(--serif); font-size: 20px; font-weight: 600;
+  color: #d4956a; margin-bottom: 8px; line-height: 1.2;
+}
+.tc-body { font-size: 14px; color: rgba(244,240,230,0.55); line-height: 1.65; }
+
+/* ─────────────────────── EXAMPLES ROW ─────────────────────── */
+.examples-row {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 0; margin: 40px 0; border: 1px solid var(--rule);
+}
+.ex-cell {
+  padding: 28px 24px; border-right: 1px solid var(--rule);
+  transition: background .2s;
+}
+.ex-cell:last-child { border-right: none; }
+.ex-cell:hover { background: var(--cream2); }
+.ex-field {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--copper); margin-bottom: 12px;
+}
+.ex-junior { font-size: 14px; color: var(--ink3); margin-bottom: 12px; line-height: 1.55; }
+.ex-expert { font-size: 15px; color: var(--ink); font-weight: 500; line-height: 1.55; }
+.ex-arrow {
+  font-family: var(--mono); font-size: 11px; color: var(--copper);
+  margin-bottom: 8px; letter-spacing: 1px;
+}
+
+/* ─────────────────────── FORMULA REVEAL ─────────────────────── */
+.formula-section {
+  background: var(--cream2);
+  border-top: 1px solid var(--rule);
+  border-bottom: 2px solid var(--ink);
+  padding: 80px 5vw; text-align: center;
+}
+.formula-section-inner { max-width: 900px; margin: 0 auto; }
+.fs-label {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--copper); margin-bottom: 20px;
+}
+.fs-heading {
+  font-family: var(--serif); font-size: clamp(28px, 4vw, 48px);
+  font-weight: 300; font-style: italic; color: var(--ink);
+  margin-bottom: 40px; line-height: 1.2;
+}
+.formula-visual {
+  display: flex; align-items: center; justify-content: center;
+  gap: 14px; flex-wrap: wrap; margin-bottom: 32px;
+}
+.fv-term {
+  background: var(--ink); color: var(--cream);
+  font-family: var(--serif); font-size: clamp(14px, 1.8vw, 20px);
+  font-weight: 600; padding: 12px 20px; border-radius: 2px;
+  letter-spacing: .2px;
+}
+.fv-term.dim { background: var(--cream3); color: var(--ink3); }
+.fv-op { font-family: var(--serif); font-size: 22px; color: var(--ink3); }
+.fv-eq { font-family: var(--serif); font-size: 26px; color: var(--ink3); font-weight: 300; }
+.fv-result {
+  font-family: var(--serif); font-size: clamp(18px, 2vw, 24px);
+  font-weight: 700; font-style: italic; color: var(--copper);
+  padding: 12px 22px; border: 2px solid var(--copper); border-radius: 2px;
+}
+.fs-note {
+  font-family: var(--serif); font-size: 18px; font-style: italic;
+  color: var(--ink3); line-height: 1.6;
+}
+.fs-note strong { font-style: normal; font-weight: 600; color: var(--ink); }
+
+/* ─────────────────────── CTA ─────────────────────── */
+.cta-section {
+  background: var(--ink); padding: 96px 5vw; text-align: center;
+  position: relative; overflow: hidden;
+}
+.cta-ghost {
+  position: absolute; bottom: -0.1em; left: 50%; transform: translateX(-50%);
+  font-family: var(--serif); font-size: clamp(100px, 22vw, 280px);
+  font-weight: 700; color: rgba(255,255,255,0.025);
+  white-space: nowrap; pointer-events: none; user-select: none;
+}
+.cta-inner { position: relative; z-index: 1; max-width: 780px; margin: 0 auto; }
+.cta-kicker {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 3px;
+  text-transform: uppercase; color: rgba(212,149,106,0.7); margin-bottom: 24px;
+}
+.cta-h2 {
+  font-family: var(--serif); font-size: clamp(36px, 5.5vw, 70px);
+  font-weight: 300; font-style: italic; line-height: 1.05;
+  color: var(--cream); margin-bottom: 28px; letter-spacing: -1px;
+}
+.cta-h2 strong { font-weight: 700; font-style: normal; }
+.cta-sub {
+  font-size: 17px; color: rgba(244,240,230,0.55); line-height: 1.7;
+  margin-bottom: 44px; max-width: 560px; margin-left: auto; margin-right: auto;
+}
+.cta-btn {
+  display: inline-block; background: #d4956a; color: var(--ink);
+  font-family: var(--mono); font-size: 13px; letter-spacing: 2px;
+  text-transform: uppercase; padding: 16px 36px; text-decoration: none;
+  transition: background .2s, letter-spacing .2s;
+}
+.cta-btn:hover { background: var(--copper2); letter-spacing: 2.8px; }
+
+/* ─────────────────────── FOOTER ─────────────────────── */
+footer {
+  background: var(--ink); border-top: 1px solid rgba(255,255,255,0.06);
+  padding: 24px 5vw;
+  display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+}
+.footer-mark {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 2px;
+  text-transform: uppercase; color: rgba(244,240,230,0.3);
+}
+.footer-mark span { color: #d4956a; }
+
+/* ─────────────────────── ANIMATIONS ─────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.reveal {
+  opacity: 0; transform: translateY(24px);
+  transition: opacity .7s ease, transform .7s ease;
+}
+.reveal.vis { opacity: 1; transform: translateY(0); }
+
+/* ─────────────────────── RESPONSIVE ─────────────────────── */
+@media (max-width: 900px) {
+  .hero-body { grid-template-columns: 1fr; }
+  .article-2col { grid-template-columns: 1fr; gap: 0; }
+  .article-2col > *:first-child { padding-bottom: 28px; margin-bottom: 0; }
+  .section-header { grid-template-columns: 56px 1fr; gap: 16px; }
+  .skills-grid { grid-template-columns: 1fr 1fr; }
+  .skill-cell:nth-child(4n) { border-right: 1px solid var(--rule); }
+  .skill-cell:nth-child(2n) { border-right: none; }
+  .truth-grid { grid-template-columns: 1fr; }
+  .truth-cell { border-right: none !important; }
+  .examples-row { grid-template-columns: 1fr; }
+  .ex-cell { border-right: none; border-bottom: 1px solid var(--rule); }
+  .ex-cell:last-child { border-bottom: none; }
+  .compare { grid-template-columns: 1fr; }
+  .compare-col + .compare-col { border-left: none; border-top: 1px solid var(--rule); }
+  .formula-visual { gap: 8px; }
+}
+@media (max-width: 600px) {
+  .skills-grid { grid-template-columns: 1fr; }
+  .skill-cell { border-right: none !important; }
+  nav { padding: 12px 5vw; }
+  .nav-right { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-mark">The Expert Advantage</div>
+  <div class="nav-right">An inquiry into value, skill &amp; leverage</div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-num">001 — The Nature of Expert Value</div>
+  <h1 class="hero-h1">
+    What separates<br>
+    an expert from<br>
+    a beginner is<br>
+    <em>rarely intelligence.</em>
+  </h1>
+  <div class="hero-rule"></div>
+  <div class="hero-body">
+    <div class="hero-lede">
+      It is the accumulation of pattern recognition, judgment, speed, trust, and communication. Experts are paid <strong>10x</strong> because they create outcomes that are <strong>disproportionately more valuable, reliable, and scalable.</strong>
+    </div>
+    <div class="hero-sidebar">
+      <div class="hero-sidebar-item">
+        <div class="si-label">The core gap</div>
+        <div class="si-val"><em>Time × Certainty</em></div>
+      </div>
+      <div class="hero-sidebar-item">
+        <div class="si-label">What businesses pay for</div>
+        <div class="si-val">Risk reduction</div>
+      </div>
+      <div class="hero-sidebar-item">
+        <div class="si-label">The formula</div>
+        <div class="si-val">Skill × Judgment × <em>Leverage</em></div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-ghost">EXPERT</div>
+</section>
+
+<!-- FORMULA BAND -->
+<div class="formula-band">
+  <div class="formula-inner">
+    <div class="f-label">The Expert Value Formula</div>
+    <div class="f-term">Skill</div>
+    <div class="f-op">×</div>
+    <div class="f-term">Judgment</div>
+    <div class="f-op">×</div>
+    <div class="f-term">Trust</div>
+    <div class="f-op">×</div>
+    <div class="f-term">Communication</div>
+    <div class="f-op">×</div>
+    <div class="f-term highlight">Leverage</div>
+    <div class="f-equals">=</div>
+    <div class="f-result">Expert Value</div>
+  </div>
+</div>
+
+<!-- SECTION 1: COMPRESS TIME -->
+<section class="section reveal">
+  <div class="section-header">
+    <div class="section-num">I</div>
+    <h2 class="section-title">They <em>Compress</em> Time</h2>
+  </div>
+  <div class="article-2col">
+    <div class="article-col">
+      <p>A beginner may take three weeks, make multiple mistakes, require several revisions, and still produce uncertain results. An expert solves the same problem in two hours, avoids hidden pitfalls, and delivers a dependable outcome immediately.</p>
+      <p>Companies are not paying for time. They are paying for <strong>certainty, reduced risk, and speed.</strong> The transaction is not hours-for-money. It is outcomes-for-money.</p>
+    </div>
+    <div class="article-col">
+      <p>A surgeon who prevents one catastrophic mistake is worth more than ten average surgeons. A senior engineer who prevents a system outage can save millions. The economic value of what they do is not proportional to effort — it is proportional to <strong>consequence avoided.</strong></p>
+      <p>This is the core misunderstanding beginners have about pricing: they price their time. Experts price their outcomes.</p>
+    </div>
+  </div>
+  <div class="compare reveal">
+    <div class="compare-col">
+      <div class="comp-label">The beginner</div>
+      <ul class="comp-list">
+        <li>Prices by the hour</li>
+        <li>3 weeks, multiple revisions</li>
+        <li>Uncertain output</li>
+        <li>Client carries all risk</li>
+        <li>Learns on the client's time</li>
+      </ul>
+    </div>
+    <div class="compare-col">
+      <div class="comp-label">The expert</div>
+      <ul class="comp-list">
+        <li>Prices by the outcome</li>
+        <li>2 hours, one version</li>
+        <li>Predictable, reliable delivery</li>
+        <li>Absorbs the risk entirely</li>
+        <li>Has already paid the tuition</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="rule-section"><hr class="rule-full"></div>
+
+<!-- SECTION 2: PATTERN RECOGNITION -->
+<section class="section reveal">
+  <div class="section-header">
+    <div class="section-num">II</div>
+    <h2 class="section-title">They Recognise <em>Patterns</em> Instantly</h2>
+  </div>
+  <div class="article-2col">
+    <div class="article-col">
+      <p>Beginners see many separate problems. Experts see: <em>"I've seen this exact shape before."</em> This comes from repetition, exposure, failures, and feedback loops accumulated over years.</p>
+      <p>A master chess player does not calculate every move from scratch. They recognise board structures — and entire sequences collapse into a single intuitive read.</p>
+    </div>
+    <div class="article-col">
+      <p>An expert marketer recognises emotional triggers, audience fatigue, buying psychology, and timing patterns. An expert founder recognises weak business models, hiring red flags, and scaling bottlenecks before they become disasters.</p>
+      <p>Experts develop what might be called <strong>compressed intuition</strong> — a lifetime of experience encoded into a single glance.</p>
+    </div>
+  </div>
+
+  <div class="pull-quote reveal">
+    "A beginner sees a maze. An expert sees a map they have already drawn — and <strong>knows exactly where the dead ends are.</strong>"
+  </div>
+
+  <div class="examples-row reveal">
+    <div class="ex-cell">
+      <div class="ex-field">Chess</div>
+      <div class="ex-junior">Calculates each move from scratch</div>
+      <div class="ex-arrow">→ Expert recognises</div>
+      <div class="ex-expert">Board structures, traps, endgame trajectories in seconds</div>
+    </div>
+    <div class="ex-cell">
+      <div class="ex-field">Marketing</div>
+      <div class="ex-junior">Tests every message without prior signal</div>
+      <div class="ex-arrow">→ Expert recognises</div>
+      <div class="ex-expert">Emotional triggers, fatigue cycles, audience psychology on first read</div>
+    </div>
+    <div class="ex-cell">
+      <div class="ex-field">Founding</div>
+      <div class="ex-junior">Excited by any new idea with apparent demand</div>
+      <div class="ex-arrow">→ Expert recognises</div>
+      <div class="ex-expert">Weak unit economics, hiring risk, and ceiling limits before a prototype exists</div>
+    </div>
+  </div>
+</section>
+
+<div class="rule-section"><hr class="rule-full"></div>
+
+<!-- SECTION 3: RISK REDUCTION -->
+<section class="section reveal">
+  <div class="section-header">
+    <div class="section-num">III</div>
+    <h2 class="section-title">They <em>Reduce</em> Risk</h2>
+  </div>
+  <div class="article-2col">
+    <div class="article-col">
+      <p>Businesses hate uncertainty above almost everything else. Experts are often hired because they avoid disasters, prevent expensive mistakes, navigate ambiguity, and make better decisions under pressure.</p>
+      <p>The difference between a junior lawyer and a senior one is not the volume of laws they know. The junior knows the law. The senior knows <strong>judges, negotiation psychology, loopholes, timing, and strategy.</strong></p>
+    </div>
+    <div class="article-col">
+      <p>This distinction — information versus judgment — is one of the most important in understanding expert pricing. Information has become cheap and abundant. Judgment remains scarce.</p>
+      <p>An expert's most valuable contribution is often <strong>what they prevent</strong>, not what they create. The mistakes never made. The crises that never materialised. The risks quietly avoided.</p>
+    </div>
+  </div>
+</section>
+
+<div class="rule-section"><hr class="rule-full"></div>
+
+<!-- SECTION 4: SYSTEMS THINKING -->
+<section class="section reveal">
+  <div class="section-header">
+    <div class="section-num">IV</div>
+    <h2 class="section-title">They Understand <em>Systems,</em> Not Just Tasks</h2>
+  </div>
+  <div class="article-2col">
+    <div class="article-col">
+      <p>Beginners think locally: <em>"What is my task?"</em> Experts think systemically: <em>"How does the whole machine work?"</em></p>
+      <p>A junior developer writes code. A senior engineer thinks about scalability, maintenance, team workflows, customer impact, infrastructure cost, and future technical debt — all before writing a single line.</p>
+    </div>
+    <div class="article-col">
+      <p>This is the essence of second-order thinking: understanding not just what will happen, but what will happen because of what happens. <strong>Experts see downstream consequences that beginners cannot even imagine yet.</strong></p>
+      <p>They ask not just "does this work?" but "what does this break three decisions from now?"</p>
+    </div>
+  </div>
+</section>
+
+<div class="rule-section"><hr class="rule-full"></div>
+
+<!-- SECTION 5: COMMUNICATION -->
+<section class="section reveal">
+  <div class="section-header">
+    <div class="section-num">V</div>
+    <h2 class="section-title">They <em>Communicate</em> Better</h2>
+  </div>
+  <p style="font-family:var(--serif);font-size:clamp(18px,2vw,22px);font-style:italic;color:var(--ink2);max-width:680px;margin-bottom:28px;line-height:1.55">This is massively underrated. The highest-paid experts are usually exceptional at explaining complexity simply, persuading stakeholders, aligning teams, negotiating, storytelling, and framing problems clearly.</p>
+  <div class="article-2col">
+    <div class="article-col">
+      <p>Two people may know the exact same thing. The one who communicates it clearly becomes the leader. Knowledge without communication has limited market value — it remains locked inside a single mind.</p>
+    </div>
+    <div class="article-col">
+      <p>At the highest levels, almost every elite expert becomes partly a teacher, partly a persuader, partly a storyteller. <strong>The ability to transfer understanding is itself a rare and valuable skill.</strong></p>
+    </div>
+  </div>
+
+  <div class="pull-quote reveal">
+    "Two people may know exactly the same thing. The one who can <strong>explain it clearly</strong> becomes the authority."
+  </div>
+</section>
+
+<div class="rule-section"><hr class="rule-full"></div>
+
+<!-- SECTION 6: OWNERSHIP -->
+<section class="section reveal">
+  <div class="section-header">
+    <div class="section-num">VI</div>
+    <h2 class="section-title">They Own <em>Responsibility</em></h2>
+  </div>
+  <div class="article-2col">
+    <div class="article-col">
+      <p>Beginners execute instructions. Experts absorb uncertainty. A CEO, lead architect, film director, senior surgeon, or litigation lawyer gets paid more because they make final decisions, carry accountability, and own consequences.</p>
+    </div>
+    <div class="article-col">
+      <p><strong>Responsibility itself is economically valuable.</strong> The willingness — and the ability — to stand behind an outcome, to be accountable when things go wrong, commands a significant premium in every market.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS GRID -->
+<div class="skills-section reveal">
+  <div class="skills-inner">
+    <div class="skills-label">Universal Expert Skills</div>
+    <h2 class="skills-title">The skills that appear <em>repeatedly</em> across every elite field</h2>
+    <div class="skills-grid">
+      <div class="skill-cell">
+        <div class="sk-roman">I</div>
+        <div class="sk-name">Pattern Recognition</div>
+        <div class="sk-body">Detect hidden similarities, recurring structures, likely outcomes, and anomalies. The biggest multiplier of raw experience.</div>
+      </div>
+      <div class="skill-cell">
+        <div class="sk-roman">II</div>
+        <div class="sk-name">Clear Thinking</div>
+        <div class="sk-body">Separate signal from noise. Identify root causes. Avoid emotional overreaction. Think probabilistically. Ask what actually matters.</div>
+      </div>
+      <div class="skill-cell">
+        <div class="sk-roman">III</div>
+        <div class="sk-name">Decision-Making</div>
+        <div class="sk-body">Make imperfect decisions under imperfect information. Estimate tradeoffs. Update beliefs quickly. Act despite ambiguity.</div>
+      </div>
+      <div class="skill-cell">
+        <div class="sk-roman">IV</div>
+        <div class="sk-name">Communication</div>
+        <div class="sk-body">Teach, persuade, tell stories. Knowledge without communication has limited market value.</div>
+      </div>
+      <div class="skill-cell">
+        <div class="sk-roman">V</div>
+        <div class="sk-name">Emotional Regulation</div>
+        <div class="sk-body">Stay functional under pressure, criticism, failure, uncertainty, deadlines, and conflict. Calmness is a competitive advantage.</div>
+      </div>
+      <div class="skill-cell">
+        <div class="sk-roman">VI</div>
+        <div class="sk-name">Prioritisation</div>
+        <div class="sk-body">Know what matters, what does not, what can wait, and what creates disproportionate impact. Senior people appear slower but produce better outcomes.</div>
+      </div>
+      <div class="skill-cell">
+        <div class="sk-roman">VII</div>
+        <div class="sk-name">Deep Practice</div>
+        <div class="sk-body">Thousands of feedback cycles. Deliberate repetition. Refinement and correction. Experience alone is not enough — repeated improvement is what creates expertise.</div>
+      </div>
+      <div class="skill-cell">
+        <div class="sk-roman">VIII</div>
+        <div class="sk-name">Mental Models</div>
+        <div class="sk-body">Engineers think in systems. Investors think in probabilities. Designers think in human behaviour. Stop memorising facts. Start using reusable frameworks.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TRUTH BAND -->
+<div class="truth-band reveal">
+  <div class="truth-inner">
+    <div class="truth-label">The Hidden Truth About Expertise</div>
+    <h2 class="truth-heading">At the highest levels, expertise becomes less about <em>technical skill</em> — and more about judgment, leverage, and <strong>decision quality.</strong></h2>
+    <div class="truth-grid">
+      <div class="truth-cell">
+        <div class="tc-title">Consultant vs Technician</div>
+        <div class="tc-body">A senior consultant can earn more than a highly skilled technician with deeper technical knowledge. The difference is judgment and communication — not craft.</div>
+      </div>
+      <div class="truth-cell">
+        <div class="tc-title">Founder vs Engineer</div>
+        <div class="tc-body">A startup founder can earn more than a senior engineer. The difference is leverage — the ability to multiply the value of others' work through systems and ownership.</div>
+      </div>
+      <div class="truth-cell">
+        <div class="tc-title">Salesperson vs Department</div>
+        <div class="tc-body">A top salesperson can out-earn entire departments. The market rewards impact, trust, and leverage — not effort, hours, or volume of work produced.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FORMULA SECTION -->
+<div class="formula-section reveal">
+  <div class="formula-section-inner">
+    <div class="fs-label">The Expert Value Formula</div>
+    <h2 class="fs-heading">A rough way to think about what experts are actually worth</h2>
+    <div class="formula-visual">
+      <div class="fv-term">Skill</div>
+      <div class="fv-op">×</div>
+      <div class="fv-term">Judgment</div>
+      <div class="fv-op">×</div>
+      <div class="fv-term">Trust</div>
+      <div class="fv-op">×</div>
+      <div class="fv-term">Communication</div>
+      <div class="fv-op">×</div>
+      <div class="fv-term">Leverage</div>
+      <div class="fv-eq">=</div>
+      <div class="fv-result">Expert Value</div>
+    </div>
+    <p class="fs-note">Most beginners focus only on <strong>Skill</strong>.<br>Elite professionals build all five.</p>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-section">
+  <div class="cta-ghost">10×</div>
+  <div class="cta-inner">
+    <div class="cta-kicker">The Market Rewards</div>
+    <h2 class="cta-h2">
+      Not effort.<br>
+      Not hours.<br>
+      <strong>Impact, trust, and leverage.</strong>
+    </h2>
+    <p class="cta-sub">The most dangerous illusion in any career is believing that working harder or knowing more is the path to disproportionate reward. Build all five.</p>
+    <a class="cta-btn" href="#">Start Building Expertise →</a>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-mark">The Expert <span>Advantage</span></div>
+  <div class="footer-mark">Value = Skill × Judgment × Trust × Communication × <span>Leverage</span></div>
+</footer>
+
+<script>
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting){ e.target.classList.add('vis'); obs.unobserve(e.target); }
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -32px 0px' });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+
+</body>
+</html>
