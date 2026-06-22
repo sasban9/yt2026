@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>10 Human Value-Creation Archetypes</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#09080A;
+  --bg2:#100F12;
+  --gold:#C9A84C;
+  --gold2:#E8C97A;
+  --golddim:rgba(201,168,76,0.12);
+  --fg:#EDE8DF;
+  --fg2:#9E9890;
+  --fg3:#4A4640;
+  --fg4:#2A2620;
+  --ruby:#B85450;
+  --teal:#5A9E96;
+  --ink:#1A1820;
+}
+html,body{height:100%;background:var(--bg);color:var(--fg);font-family:'DM Sans',sans-serif;overflow:hidden;cursor:default}
+
+/* GRAIN OVERLAY */
+body::before{
+  content:'';position:fixed;inset:0;z-index:1000;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity:0.35;mix-blend-mode:overlay;
+}
+
+#deck{width:100vw;height:100vh;position:relative}
+
+.slide{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  padding:6vw 9vw;
+  opacity:0;pointer-events:none;
+}
+.slide.active{opacity:1;pointer-events:all}
+.slide.entering .si{animation:sIn 0.65s cubic-bezier(0.16,1,0.3,1) forwards}
+.slide.exiting  .si{animation:sOut 0.4s cubic-bezier(0.7,0,1,1) forwards}
+
+@keyframes sIn{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+@keyframes sOut{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-22px)}}
+
+.si{width:100%;max-width:920px;position:relative;z-index:1}
+
+/* BACKGROUND GLYPH */
+.bgw{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:flex-end;
+  pointer-events:none;overflow:hidden;z-index:0;
+}
+.bgg{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(160px,28vw,340px);font-weight:300;
+  color:rgba(201,168,76,0.04);line-height:1;
+  user-select:none;white-space:nowrap;
+  animation:glow 5s ease-in-out infinite;
+}
+@keyframes glow{0%,100%{opacity:0.7}50%{opacity:1.3}}
+
+/* TYPE */
+.eyebrow{
+  font-size:clamp(10px,1.1vw,12px);letter-spacing:0.22em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:1.3rem;font-weight:500;
+  display:flex;align-items:center;gap:12px;
+}
+.eyebrow::before{content:'';display:block;width:28px;height:1px;background:var(--gold);flex-shrink:0}
+
+h1.hero{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(40px,8.5vw,100px);font-weight:300;line-height:1.02;
+  color:var(--fg);letter-spacing:-0.01em;
+}
+h1.hero em{color:var(--gold);font-style:italic}
+
+h2.title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(30px,5.5vw,70px);font-weight:300;line-height:1.08;
+  color:var(--fg);margin-bottom:1rem;
+}
+h2.title em{color:var(--gold);font-style:italic}
+
+.body{font-size:clamp(16px,1.7vw,19px);line-height:1.8;color:var(--fg2);font-weight:300;max-width:700px}
+.divider{width:44px;height:1px;background:var(--gold);margin:1.2rem 0}
+
+/* LINE REVEAL */
+.lr{overflow:hidden;display:block}
+.lr span{display:block;transform:translateY(105%);opacity:0;transition:transform 0.7s cubic-bezier(0.16,1,0.3,1),opacity 0.5s}
+.lr.show span{transform:translateY(0);opacity:1}
+
+/* ARCHETYPE CARD SLIDE */
+.arch-layout{display:grid;grid-template-columns:1fr 1.6fr;gap:4rem;align-items:start}
+@media(max-width:640px){.arch-layout{grid-template-columns:1fr;gap:2rem}}
+
+.arch-num{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(80px,15vw,180px);font-weight:300;
+  color:rgba(201,168,76,0.15);line-height:0.85;
+  opacity:0;transition:opacity 0.5s;
+}
+.arch-num.show{opacity:1}
+
+.arch-tagline{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(22px,3.5vw,42px);font-style:italic;font-weight:300;
+  color:var(--fg2);line-height:1.3;margin-bottom:1.4rem;
+  opacity:0;transform:translateY(14px);transition:opacity 0.6s,transform 0.6s;
+}
+.arch-tagline.show{opacity:1;transform:translateY(0)}
+
+.arch-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(36px,6.5vw,80px);font-weight:300;
+  color:var(--fg);line-height:1;margin-bottom:0.8rem;
+}
+
+.arch-motivation{
+  font-size:clamp(16px,1.5vw,18px);color:var(--gold2);
+  font-style:italic;padding:0.8rem 0 0.8rem 1.2rem;
+  border-left:1.5px solid var(--gold);margin:1.2rem 0;
+  opacity:0;transition:opacity 0.5s 0.3s;
+}
+.arch-motivation.show{opacity:1}
+
+.careers-label{font-size:clamp(10px,1.1vw,11px);letter-spacing:0.18em;text-transform:uppercase;color:var(--fg3);margin-bottom:0.7rem;font-weight:500}
+.careers-list{display:flex;flex-wrap:wrap;gap:8px}
+.career-tag{
+  font-size:clamp(12px,1.3vw,14px);color:var(--fg2);
+  padding:5px 12px;border:1px solid var(--fg3);
+  font-weight:300;
+  opacity:0;transform:translateY(8px);
+  transition:opacity 0.4s,transform 0.4s,border-color 0.3s;
+}
+.career-tag:hover{border-color:var(--gold);color:var(--gold2)}
+.career-tag.show{opacity:1;transform:translateY(0)}
+
+/* BEHAVIORS */
+.beh-list{margin:0.8rem 0 1.2rem}
+.beh-item{
+  font-size:clamp(14px,1.5vw,17px);color:var(--fg2);font-weight:300;
+  padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.04);
+  display:flex;align-items:center;gap:10px;
+  opacity:0;transform:translateX(-10px);transition:opacity 0.4s,transform 0.4s;
+}
+.beh-item::before{content:'·';color:var(--gold);font-size:1.3em;flex-shrink:0}
+.beh-item.show{opacity:1;transform:translateX(0)}
+
+/* CIVILIZATION TABLE */
+.civ-table{width:100%;border-collapse:collapse;margin-top:1.4rem}
+.civ-table th{
+  font-size:clamp(10px,1.1vw,11px);letter-spacing:0.16em;text-transform:uppercase;
+  color:var(--fg3);padding:8px 16px;border-bottom:1px solid var(--fg3);text-align:left;font-weight:500
+}
+.civ-table td{
+  font-size:clamp(14px,1.5vw,17px);padding:11px 16px;
+  border-bottom:1px solid rgba(255,255,255,0.04);
+  color:var(--fg2);font-weight:300;
+  opacity:0;transition:opacity 0.4s;
+}
+.civ-row.show td{opacity:1}
+.civ-arch{color:var(--gold2);font-family:'Cormorant Garamond',serif;font-size:clamp(16px,1.8vw,20px);font-weight:400}
+
+/* STACK GRID */
+.stacks-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-top:1.4rem}
+.stack-card{
+  padding:16px 18px;border:1px solid var(--fg3);
+  opacity:0;transform:translateY(16px);
+  transition:opacity 0.4s,transform 0.4s,border-color 0.3s;
+}
+.stack-card:hover{border-color:var(--gold)}
+.stack-card.show{opacity:1;transform:translateY(0)}
+.sc-career{font-family:'Cormorant Garamond',serif;font-size:clamp(16px,2vw,22px);font-weight:400;color:var(--fg);margin-bottom:6px}
+.sc-tags{display:flex;flex-wrap:wrap;gap:5px}
+.sc-tag{font-size:clamp(11px,1.2vw,13px);padding:3px 8px;border:1px solid;font-weight:300}
+.sc-tag.t0{border-color:var(--gold);color:var(--gold)}
+.sc-tag.t1{border-color:var(--teal);color:var(--teal)}
+.sc-tag.t2{border-color:var(--ruby);color:var(--ruby)}
+
+/* ALL 10 OVERVIEW GRID */
+.overview-grid{
+  display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:1.4rem;
+}
+@media(max-width:700px){.overview-grid{grid-template-columns:repeat(2,1fr)}}
+.ov-card{
+  padding:14px 12px;border:1px solid var(--fg3);text-align:center;
+  opacity:0;transform:translateY(12px);transition:opacity 0.35s,transform 0.35s,border-color 0.3s,background 0.3s;
+  cursor:default;
+}
+.ov-card:hover{border-color:var(--gold);background:var(--golddim)}
+.ov-card.show{opacity:1;transform:translateY(0)}
+.ov-n{font-family:'Cormorant Garamond',serif;font-size:clamp(26px,3.5vw,44px);font-weight:300;color:var(--gold);line-height:1;margin-bottom:4px}
+.ov-name{font-size:clamp(13px,1.4vw,15px);color:var(--fg);font-weight:400;letter-spacing:0.03em}
+.ov-q{font-size:clamp(11px,1.2vw,13px);color:var(--fg3);margin-top:4px;font-style:italic;line-height:1.3}
+
+/* FINALE */
+.fin-line{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(26px,5vw,60px);font-weight:300;line-height:1.2;
+  opacity:0;transform:translateY(18px);transition:opacity 0.6s,transform 0.6s;
+}
+.fin-line.show{opacity:1;transform:translateY(0)}
+.fin-line em{color:var(--gold);font-style:italic}
+
+/* NAV */
+#prog{position:fixed;bottom:0;left:0;right:0;height:2px;background:rgba(255,255,255,0.05);z-index:200}
+#progbar{height:100%;background:var(--gold);transition:width 0.5s ease}
+#ctr{position:fixed;bottom:20px;right:26px;font-size:12px;letter-spacing:0.12em;color:var(--fg3);z-index:200}
+
+/* ARCHETYPE COLOR ACCENTS */
+.c1{--ac:#C9A84C} /* Builders - gold */
+.c2{--ac:#8B7ED4} /* Analysts - violet */
+.c3{--ac:#D46F8B} /* Creators - rose */
+.c4{--ac:#5A9E96} /* Operators - teal */
+.c5{--ac:#D4956E} /* Closers - amber */
+.c6{--ac:#7EB87E} /* Distributors - green */
+.c7{--ac:#85B4D4} /* Educators - sky */
+.c8{--ac:#D48B8B} /* Caregivers - warm red */
+.c9{--ac:#A8896E} /* Industrialists - earth */
+.c10{--ac:#C9A84C} /* Leaders - gold */
+
+[class^="c"].arch-name em,.c1 .arch-name,.c2 .arch-name,.c3 .arch-name,.c4 .arch-name,
+.c5 .arch-name,.c6 .arch-name,.c7 .arch-name,.c8 .arch-name,.c9 .arch-name,.c10 .arch-name
+{color:var(--ac,var(--gold))}
+
+.accent-bar{width:32px;height:3px;background:var(--ac,var(--gold));margin-bottom:1rem;opacity:0;transition:opacity 0.4s}
+.accent-bar.show{opacity:1}
+
+</style>
+</head>
+<body>
+<div id="deck">
+
+<!-- ─── SLIDE 0: TITLE ─── -->
+<div class="slide" data-s="0">
+  <div class="bgw"><div class="bgg">10</div></div>
+  <div class="si">
+    <div class="eyebrow">Career Discovery · India</div>
+    <h1 class="hero">
+      <span class="lr"><span>10 Human</span></span>
+      <span class="lr"><span><em>Value-Creation</em></span></span>
+      <span class="lr"><span>Archetypes</span></span>
+    </h1>
+    <div class="divider"></div>
+    <p class="body" id="s0b" style="opacity:0;transition:opacity 0.6s 0.5s">
+      What kind of problems do you naturally enjoy solving?<br>
+      Not what degree should you pursue.
+    </p>
+  </div>
+</div>
+
+<!-- ─── SLIDE 1: OVERVIEW GRID ─── -->
+<div class="slide" data-s="1">
+  <div class="bgw"><div class="bgg">∞</div></div>
+  <div class="si">
+    <div class="eyebrow">The Full Set</div>
+    <h2 class="title">All <em>10</em> Archetypes</h2>
+    <div class="overview-grid" id="ovgrid">
+      <div class="ov-card"><div class="ov-n">01</div><div class="ov-name">Builders</div><div class="ov-q">"I like making things"</div></div>
+      <div class="ov-card"><div class="ov-n">02</div><div class="ov-name">Analysts</div><div class="ov-q">"I need to understand"</div></div>
+      <div class="ov-card"><div class="ov-n">03</div><div class="ov-name">Creators</div><div class="ov-q">"I want to express ideas"</div></div>
+      <div class="ov-card"><div class="ov-n">04</div><div class="ov-name">Operators</div><div class="ov-q">"I hate chaos"</div></div>
+      <div class="ov-card"><div class="ov-n">05</div><div class="ov-name">Closers</div><div class="ov-q">"I like influencing outcomes"</div></div>
+      <div class="ov-card"><div class="ov-n">06</div><div class="ov-name">Distributors</div><div class="ov-q">"I understand attention"</div></div>
+      <div class="ov-card"><div class="ov-n">07</div><div class="ov-name">Educators</div><div class="ov-q">"I enjoy explaining"</div></div>
+      <div class="ov-card"><div class="ov-n">08</div><div class="ov-name">Caregivers</div><div class="ov-q">"I want to improve lives"</div></div>
+      <div class="ov-card"><div class="ov-n">09</div><div class="ov-name">Industrialists</div><div class="ov-q">"I want to improve the world"</div></div>
+      <div class="ov-card"><div class="ov-n">10</div><div class="ov-name">Leaders</div><div class="ov-q">"I want to coordinate people"</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── SLIDES 2–11: EACH ARCHETYPE ─── -->
+<!-- Each: num, name, tagline, behaviors, careers, motivation -->
+
+<!-- SLIDE 2: BUILDERS -->
+<div class="slide c1" data-s="2">
+  <div class="bgw"><div class="bgg">01</div></div>
+  <div class="si">
+    <div class="eyebrow">Archetype 01</div>
+    <div class="arch-layout">
+      <div>
+        <div class="arch-num">01</div>
+      </div>
+      <div>
+        <div class="accent-bar"></div>
+        <div class="arch-name">Builders</div>
+        <div class="arch-tagline">"I like making things."</div>
+        <div class="beh-list">
+          <div class="beh-item">Codes for fun, builds Minecraft worlds</div>
+          <div class="beh-item">Tinkers with gadgets</div>
+          <div class="beh-item">Automates repetitive tasks</div>
+          <div class="beh-item">Creates from scratch</div>
+        </div>
+        <div class="arch-motivation">"I want to create."</div>
+        <div class="careers-label">Future Careers</div>
+        <div class="careers-list">
+          <div class="career-tag">AI Workflow Architect</div>
+          <div class="career-tag">Software Engineer</div>
+          <div class="career-tag">Robotics Engineer</div>
+          <div class="career-tag">SaaS Founder</div>
+          <div class="career-tag">Automation Consultant</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 3: ANALYSTS -->
+<div class="slide c2" data-s="3">
+  <div class="bgw"><div class="bgg">02</div></div>
+  <div class="si">
+    <div class="eyebrow">Archetype 02</div>
+    <div class="arch-layout">
+      <div><div class="arch-num">02</div></div>
+      <div>
+        <div class="accent-bar"></div>
+        <div class="arch-name">Analysts</div>
+        <div class="arch-tagline">"I need to understand how things work."</div>
+        <div class="beh-list">
+          <div class="beh-item">Asks endless questions</div>
+          <div class="beh-item">Loves research and puzzles</div>
+          <div class="beh-item">Fact-checks everything</div>
+          <div class="beh-item">Spots patterns others miss</div>
+        </div>
+        <div class="arch-motivation">"I want to understand."</div>
+        <div class="careers-label">Future Careers</div>
+        <div class="careers-list">
+          <div class="career-tag">Data Analyst</div>
+          <div class="career-tag">Financial Analyst</div>
+          <div class="career-tag">Intelligence Researcher</div>
+          <div class="career-tag">Market Researcher</div>
+          <div class="career-tag">AI Evaluator</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 4: CREATORS -->
+<div class="slide c3" data-s="4">
+  <div class="bgw"><div class="bgg">03</div></div>
+  <div class="si">
+    <div class="eyebrow">Archetype 03</div>
+    <div class="arch-layout">
+      <div><div class="arch-num">03</div></div>
+      <div>
+        <div class="accent-bar"></div>
+        <div class="arch-name">Creators</div>
+        <div class="arch-tagline">"I want to express ideas."</div>
+        <div class="beh-list">
+          <div class="beh-item">Drawing, video editing, storytelling</div>
+          <div class="beh-item">Designing and making content</div>
+          <div class="beh-item">Shapes perception</div>
+        </div>
+        <div class="arch-motivation">"I want to make people feel."</div>
+        <div class="careers-label">Future Careers</div>
+        <div class="careers-list">
+          <div class="career-tag">Designer</div>
+          <div class="career-tag">Filmmaker</div>
+          <div class="career-tag">Animator</div>
+          <div class="career-tag">Brand Strategist</div>
+          <div class="career-tag">Creative Director</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 5: OPERATORS -->
+<div class="slide c4" data-s="5">
+  <div class="bgw"><div class="bgg">04</div></div>
+  <div class="si">
+    <div class="eyebrow">Archetype 04</div>
+    <div class="arch-layout">
+      <div><div class="arch-num">04</div></div>
+      <div>
+        <div class="accent-bar"></div>
+        <div class="arch-name">Operators</div>
+        <div class="arch-tagline">"I hate chaos."</div>
+        <div class="beh-list">
+          <div class="beh-item">Organizes group projects</div>
+          <div class="beh-item">Creates spreadsheets, plans events</div>
+          <div class="beh-item">Improves processes</div>
+        </div>
+        <div class="arch-motivation">"I want things to work smoothly."</div>
+        <div class="careers-label">Future Careers</div>
+        <div class="careers-list">
+          <div class="career-tag">Operations Manager</div>
+          <div class="career-tag">Program Manager</div>
+          <div class="career-tag">Logistics Coordinator</div>
+          <div class="career-tag">Supply Chain Manager</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 6: CLOSERS -->
+<div class="slide c5" data-s="6">
+  <div class="bgw"><div class="bgg">05</div></div>
+  <div class="si">
+    <div class="eyebrow">Archetype 05</div>
+    <div class="arch-layout">
+      <div><div class="arch-num">05</div></div>
+      <div>
+        <div class="accent-bar"></div>
+        <div class="arch-name">Closers</div>
+        <div class="arch-tagline">"I like influencing outcomes."</div>
+        <div class="beh-list">
+          <div class="beh-item">Negotiates naturally</div>
+          <div class="beh-item">Persuades friends, sells ideas</div>
+          <div class="beh-item">Comfortable asking for things</div>
+        </div>
+        <div class="arch-motivation">"I want to make things happen."</div>
+        <div class="careers-label">Future Careers</div>
+        <div class="careers-list">
+          <div class="career-tag">Sales</div>
+          <div class="career-tag">Recruiting</div>
+          <div class="career-tag">Fundraising</div>
+          <div class="career-tag">Business Development</div>
+          <div class="career-tag">Partnerships</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 7: DISTRIBUTORS -->
+<div class="slide c6" data-s="7">
+  <div class="bgw"><div class="bgg">06</div></div>
+  <div class="si">
+    <div class="eyebrow">Archetype 06</div>
+    <div class="arch-layout">
+      <div><div class="arch-num">06</div></div>
+      <div>
+        <div class="accent-bar"></div>
+        <div class="arch-name">Distributors</div>
+        <div class="arch-tagline">"I understand attention."</div>
+        <div class="beh-list">
+          <div class="beh-item">Obsessed with YouTube algorithms</div>
+          <div class="beh-item">Grows social pages</div>
+          <div class="beh-item">Understands audiences deeply</div>
+        </div>
+        <div class="arch-motivation">"I want people to discover things."</div>
+        <div class="careers-label">Future Careers</div>
+        <div class="careers-list">
+          <div class="career-tag">Growth Marketing</div>
+          <div class="career-tag">SEO</div>
+          <div class="career-tag">Personal Branding</div>
+          <div class="career-tag">Media Buying</div>
+          <div class="career-tag">Community Building</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 8: EDUCATORS -->
+<div class="slide c7" data-s="8">
+  <div class="bgw"><div class="bgg">07</div></div>
+  <div class="si">
+    <div class="eyebrow">Archetype 07</div>
+    <div class="arch-layout">
+      <div><div class="arch-num">07</div></div>
+      <div>
+        <div class="accent-bar"></div>
+        <div class="arch-name">Educators</div>
+        <div class="arch-tagline">"I enjoy explaining."</div>
+        <div class="beh-list">
+          <div class="beh-item">Teaches classmates naturally</div>
+          <div class="beh-item">Explains complex things simply</div>
+          <div class="beh-item">Enjoys mentoring, creates tutorials</div>
+        </div>
+        <div class="arch-motivation">"I want others to understand."</div>
+        <div class="careers-label">Future Careers</div>
+        <div class="careers-list">
+          <div class="career-tag">Teacher</div>
+          <div class="career-tag">Trainer</div>
+          <div class="career-tag">Coach</div>
+          <div class="career-tag">Course Creator</div>
+          <div class="career-tag">Technical Writer</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 9: CAREGIVERS -->
+<div class="slide c8" data-s="9">
+  <div class="bgw"><div class="bgg">08</div></div>
+  <div class="si">
+    <div class="eyebrow">Archetype 08</div>
+    <div class="arch-layout">
+      <div><div class="arch-num">08</div></div>
+      <div>
+        <div class="accent-bar"></div>
+        <div class="arch-name">Caregivers</div>
+        <div class="arch-tagline">"I want to improve people's lives."</div>
+        <div class="beh-list">
+          <div class="beh-item">Helps friends emotionally</div>
+          <div class="beh-item">Cares for animals, patient listener</div>
+          <div class="beh-item">Interested in health and wellness</div>
+        </div>
+        <div class="arch-motivation">"I want to help people heal."</div>
+        <div class="careers-label">Future Careers</div>
+        <div class="careers-list">
+          <div class="career-tag">Doctor</div>
+          <div class="career-tag">Nurse</div>
+          <div class="career-tag">Therapist</div>
+          <div class="career-tag">Physiotherapist</div>
+          <div class="career-tag">Wellness Coach</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 10: INDUSTRIALISTS -->
+<div class="slide c9" data-s="10">
+  <div class="bgw"><div class="bgg">09</div></div>
+  <div class="si">
+    <div class="eyebrow">Archetype 09</div>
+    <div class="arch-layout">
+      <div><div class="arch-num">09</div></div>
+      <div>
+        <div class="accent-bar"></div>
+        <div class="arch-name">Industrialists</div>
+        <div class="arch-tagline">"I want to improve the physical world."</div>
+        <div class="beh-list">
+          <div class="beh-item">Fascinated by factories and machines</div>
+          <div class="beh-item">Notices inefficiencies</div>
+          <div class="beh-item">Likes smart farming and logistics</div>
+        </div>
+        <div class="arch-motivation">"I want to move atoms, not just bits."</div>
+        <div class="careers-label">Future Careers</div>
+        <div class="careers-list">
+          <div class="career-tag">Manufacturing</div>
+          <div class="career-tag">Renewable Energy</div>
+          <div class="career-tag">Smart Farming</div>
+          <div class="career-tag">Construction Technology</div>
+          <div class="career-tag">Logistics Networks</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 11: LEADERS -->
+<div class="slide c10" data-s="11">
+  <div class="bgw"><div class="bgg">10</div></div>
+  <div class="si">
+    <div class="eyebrow">Archetype 10</div>
+    <div class="arch-layout">
+      <div><div class="arch-num">10</div></div>
+      <div>
+        <div class="accent-bar"></div>
+        <div class="arch-name">Leaders</div>
+        <div class="arch-tagline">"I want to coordinate people toward a mission."</div>
+        <div class="beh-list">
+          <div class="beh-item">Naturally takes charge</div>
+          <div class="beh-item">Starts clubs, organizes movements</div>
+          <div class="beh-item">Rallies people around ideas</div>
+        </div>
+        <div class="arch-motivation">"I want to build something bigger than myself."</div>
+        <div class="careers-label">Future Careers</div>
+        <div class="careers-list">
+          <div class="career-tag">Founder</div>
+          <div class="career-tag">NGO Leader</div>
+          <div class="career-tag">CEO</div>
+          <div class="career-tag">Public Policy Leader</div>
+          <div class="career-tag">Community Builder</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 12: CIVILIZATION TABLE -->
+<div class="slide" data-s="12">
+  <div class="bgw"><div class="bgg">Σ</div></div>
+  <div class="si">
+    <div class="eyebrow">The Deeper Layer</div>
+    <h2 class="title">What <em>Civilization</em> Needs</h2>
+    <p class="body" style="margin-bottom:0.6rem;opacity:0;transition:opacity 0.5s" id="s12b">Every society ultimately requires all 10.</p>
+    <table class="civ-table" id="civtable">
+      <thead><tr><th>Archetype</th><th>Keeps Civilization Running By…</th></tr></thead>
+      <tbody>
+        <tr class="civ-row"><td class="civ-arch">Builders</td><td>Creating tools</td></tr>
+        <tr class="civ-row"><td class="civ-arch">Analysts</td><td>Understanding reality</td></tr>
+        <tr class="civ-row"><td class="civ-arch">Creators</td><td>Shaping culture</td></tr>
+        <tr class="civ-row"><td class="civ-arch">Operators</td><td>Organizing systems</td></tr>
+        <tr class="civ-row"><td class="civ-arch">Closers</td><td>Enabling transactions</td></tr>
+        <tr class="civ-row"><td class="civ-arch">Distributors</td><td>Spreading ideas</td></tr>
+        <tr class="civ-row"><td class="civ-arch">Educators</td><td>Transferring knowledge</td></tr>
+        <tr class="civ-row"><td class="civ-arch">Caregivers</td><td>Preserving human wellbeing</td></tr>
+        <tr class="civ-row"><td class="civ-arch">Industrialists</td><td>Managing physical infrastructure</td></tr>
+        <tr class="civ-row"><td class="civ-arch">Leaders</td><td>Coordinating collective action</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- SLIDE 13: STACKS -->
+<div class="slide" data-s="13">
+  <div class="bgw"><div class="bgg">+</div></div>
+  <div class="si">
+    <div class="eyebrow">The Most Important Insight</div>
+    <h2 class="title">Nobody is <em>purely one</em> archetype</h2>
+    <div class="stacks-grid" id="stacks">
+      <div class="stack-card">
+        <div class="sc-career">Doctor</div>
+        <div class="sc-tags"><span class="sc-tag t0">Caregiver</span><span class="sc-tag t1">Analyst</span></div>
+      </div>
+      <div class="stack-card">
+        <div class="sc-career">Startup Founder</div>
+        <div class="sc-tags"><span class="sc-tag t0">Builder</span><span class="sc-tag t1">Leader</span><span class="sc-tag t2">Closer</span></div>
+      </div>
+      <div class="stack-card">
+        <div class="sc-career">Product Manager</div>
+        <div class="sc-tags"><span class="sc-tag t0">Builder</span><span class="sc-tag t1">Operator</span><span class="sc-tag t2">Leader</span></div>
+      </div>
+      <div class="stack-card">
+        <div class="sc-career">YouTuber</div>
+        <div class="sc-tags"><span class="sc-tag t0">Creator</span><span class="sc-tag t1">Distributor</span></div>
+      </div>
+      <div class="stack-card">
+        <div class="sc-career">Teacher</div>
+        <div class="sc-tags"><span class="sc-tag t0">Educator</span><span class="sc-tag t1">Creator</span></div>
+      </div>
+      <div class="stack-card">
+        <div class="sc-career">AI Consultant</div>
+        <div class="sc-tags"><span class="sc-tag t0">Builder</span><span class="sc-tag t1">Analyst</span><span class="sc-tag t2">Closer</span></div>
+      </div>
+      <div class="stack-card">
+        <div class="sc-career">Politician</div>
+        <div class="sc-tags"><span class="sc-tag t0">Leader</span><span class="sc-tag t1">Closer</span><span class="sc-tag t2">Distributor</span></div>
+      </div>
+      <div class="stack-card">
+        <div class="sc-career">CTO</div>
+        <div class="sc-tags"><span class="sc-tag t0">Builder</span><span class="sc-tag t1">Operator</span><span class="sc-tag t2">Leader</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 14: FINALE -->
+<div class="slide" data-s="14">
+  <div class="bgw"><div class="bgg">∞</div></div>
+  <div class="si">
+    <div class="eyebrow">Your Identity</div>
+    <div style="margin-bottom:1.4rem">
+      <div class="fin-line">Find your <em>primary</em> archetype.</div>
+      <div class="fin-line" style="transition-delay:0.18s">Add <em>2–3 complements.</em></div>
+    </div>
+    <div class="divider"></div>
+    <div style="margin-top:1.2rem">
+      <div class="fin-line" style="transition-delay:0.4s">That becomes your</div>
+      <div class="fin-line" style="transition-delay:0.58s"><em>unique career identity</em></div>
+      <div class="fin-line" style="transition-delay:0.76s" id="finlast">— not merely your degree.</div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /deck -->
+
+<div id="prog"><div id="progbar" style="width:6.67%"></div></div>
+<div id="ctr">1 / 15</div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const total = slides.length;
+let cur = 0, busy = false;
+
+function animIn(i){
+  const s = slides[i];
+  s.classList.add('active','entering');
+
+  // Common stagger helpers
+  const stag = (sel, delay, step) => s.querySelectorAll(sel).forEach((el,j) => setTimeout(() => el.classList.add('show'), delay + j*step));
+
+  if(i===0){
+    stag('.lr',80,140);
+    setTimeout(()=>{ const b=document.getElementById('s0b'); if(b) b.style.opacity=1; },550);
+  }
+  if(i===1) stag('.ov-card',100,60);
+
+  // Archetype slides 2–11
+  if(i>=2 && i<=11){
+    setTimeout(()=>{ const ab=s.querySelector('.accent-bar'); if(ab) ab.classList.add('show'); },80);
+    setTimeout(()=>{ const an=s.querySelector('.arch-num'); if(an) an.classList.add('show'); },120);
+    setTimeout(()=>{ const at=s.querySelector('.arch-tagline'); if(at) at.classList.add('show'); },280);
+    stag('.beh-item',380,100);
+    setTimeout(()=>{ const am=s.querySelector('.arch-motivation'); if(am) am.classList.add('show'); },700);
+    stag('.career-tag',820,80);
+  }
+
+  if(i===12){
+    setTimeout(()=>{ const b=document.getElementById('s12b'); if(b) b.style.opacity=1; },150);
+    stag('.civ-row',250,80);
+  }
+  if(i===13) stag('.stack-card',150,70);
+  if(i===14) stag('.fin-line',100,1); // delays are inline via transition-delay
+
+  setTimeout(()=> s.classList.remove('entering'), 700);
+}
+
+function animOut(i, cb){
+  const s = slides[i];
+  s.classList.add('exiting');
+  setTimeout(()=>{ s.classList.remove('active','exiting'); cb&&cb(); }, 420);
+}
+
+function resetSlide(i){
+  const s = slides[i];
+  s.querySelectorAll('.lr,.ov-card,.beh-item,.career-tag,.civ-row,.stack-card,.fin-line,.accent-bar,.arch-num,.arch-tagline,.arch-motivation').forEach(el => el.classList.remove('show'));
+  const b0=document.getElementById('s0b'); if(b0) b0.style.opacity=0;
+  const b12=document.getElementById('s12b'); if(b12) b12.style.opacity=0;
+}
+
+function goTo(idx){
+  if(busy || idx===cur || idx<0 || idx>=total) return;
+  busy = true;
+  animOut(cur, ()=>{
+    resetSlide(cur);
+    cur = idx;
+    document.getElementById('ctr').textContent = `${cur+1} / ${total}`;
+    document.getElementById('progbar').style.width = `${((cur+1)/total)*100}%`;
+    animIn(cur);
+    setTimeout(()=> busy=false, 700);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if(e.key==='ArrowRight'||e.key==='ArrowDown') goTo(cur+1);
+  if(e.key==='ArrowLeft' ||e.key==='ArrowUp')   goTo(cur-1);
+});
+
+let tx=0;
+document.addEventListener('touchstart', e=>{ tx=e.touches[0].clientX; });
+document.addEventListener('touchend',   e=>{
+  const dx = e.changedTouches[0].clientX - tx;
+  if(dx < -40) goTo(cur+1);
+  if(dx >  40) goTo(cur-1);
+});
+
+animIn(0);
+</script>
+</body>
+</html>

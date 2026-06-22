@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Is chasing a 1% exam rational?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C97A;
+    --gold-dim: rgba(201,168,76,0.18);
+    --bg: #0D0B08;
+    --fg: #EDE8DF;
+    --fg2: #9E9890;
+    --fg3: #5A564F;
+    --red: #D9534F;
+    --teal: #6BA8A0;
+  }
+
+  html, body { height: 100%; background: var(--bg); color: var(--fg); font-family: 'DM Sans', sans-serif; overflow: hidden; }
+
+  #deck { width: 100vw; height: 100vh; position: relative; }
+
+  .slide {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    padding: 5vw 8vw;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.1s;
+  }
+  .slide.active { opacity: 1; pointer-events: all; }
+  .slide.entering .slide-inner { animation: slideIn 0.6s cubic-bezier(0.16,1,0.3,1) forwards; }
+  .slide.exiting .slide-inner { animation: slideOut 0.4s cubic-bezier(0.7,0,1,1) forwards; }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(32px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes slideOut {
+    from { opacity: 1; transform: translateY(0); }
+    to   { opacity: 0; transform: translateY(-24px); }
+  }
+
+  .eyebrow {
+    font-family: 'DM Sans', sans-serif;
+    font-size: clamp(10px, 1.2vw, 13px);
+    font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 1.4rem;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .eyebrow::before { content: ''; display: block; width: 32px; height: 1px; background: var(--gold); }
+
+  h1.hero {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(40px, 8vw, 96px);
+    font-weight: 300; line-height: 1.05; letter-spacing: -0.01em;
+    color: var(--fg); margin-bottom: 1.6rem;
+  }
+  h1.hero em { font-style: italic; color: var(--gold); }
+
+  h2.title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(30px, 5.5vw, 68px);
+    font-weight: 300; line-height: 1.1;
+    color: var(--fg); margin-bottom: 1.2rem;
+  }
+  h2.title em { color: var(--gold); font-style: italic; }
+
+  .body {
+    font-size: clamp(16px, 1.8vw, 20px);
+    line-height: 1.75; color: var(--fg2); font-weight: 300;
+    max-width: 680px;
+  }
+
+  .funnel { display: flex; flex-direction: column; align-items: center; margin: 1.8rem 0; }
+  .funnel-step {
+    display: flex; align-items: center; gap: 16px;
+    padding: 14px 28px; border: 1px solid var(--fg3);
+    min-width: min(480px, 88vw);
+    opacity: 0; transform: translateY(16px);
+    transition: opacity 0.5s, transform 0.5s, border-color 0.3s, background 0.3s;
+  }
+  .funnel-step.show { opacity: 1; transform: translateY(0); }
+  .funnel-step.highlight { border-color: var(--gold); background: var(--gold-dim); }
+  .funnel-step-label { font-family: 'Cormorant Garamond', serif; font-size: clamp(16px, 2.2vw, 26px); font-weight: 400; color: var(--fg); }
+  .funnel-step-num { font-family: 'Cormorant Garamond', serif; font-size: clamp(20px, 3vw, 38px); font-weight: 300; color: var(--gold); margin-left: auto; }
+  .funnel-arrow { width: 1px; height: 24px; background: var(--fg3); margin: 0 auto; opacity: 0; transition: opacity 0.4s; }
+  .funnel-arrow.show { opacity: 1; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; align-items: start; }
+  @media (max-width: 600px) { .two-col { grid-template-columns: 1fr; gap: 1.5rem; } }
+
+  .col-label { font-size: clamp(10px, 1.2vw, 12px); letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.8rem; font-weight: 500; }
+  .col-item {
+    font-size: clamp(16px, 1.8vw, 20px); color: var(--fg2);
+    padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-weight: 300;
+    opacity: 0; transform: translateX(-10px);
+    transition: opacity 0.4s, transform 0.4s;
+  }
+  .col-item.show { opacity: 1; transform: translateX(0); }
+  .col-item.known { color: var(--fg3); }
+  .col-item.new { color: var(--gold-light); }
+
+  .equation-block {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(18px, 2.5vw, 30px);
+    color: var(--fg2); padding: 1.4rem 2rem;
+    border-left: 2px solid var(--fg3);
+    margin: 1.2rem 0; opacity: 0;
+    transition: opacity 0.5s;
+  }
+  .equation-block.show { opacity: 1; }
+  .equation-block.wrong { border-color: var(--red); color: var(--red); text-decoration: line-through; text-decoration-color: var(--red); }
+  .equation-block.right { border-color: var(--gold); }
+  .equation-block .arrow { display: block; color: var(--fg3); font-size: 0.8em; margin: 4px 0; }
+
+  .reasons-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 1.6rem; }
+  .reason-card {
+    padding: 22px 20px; border: 1px solid var(--fg3);
+    opacity: 0; transform: translateY(20px);
+    transition: opacity 0.5s, transform 0.5s, border-color 0.3s;
+    cursor: default;
+  }
+  .reason-card:hover { border-color: var(--gold); }
+  .reason-card.show { opacity: 1; transform: translateY(0); }
+  .reason-num { font-family: 'Cormorant Garamond', serif; font-size: clamp(30px, 4vw, 52px); font-weight: 300; color: var(--gold); line-height: 1; margin-bottom: 10px; }
+  .reason-text { font-size: clamp(14px, 1.4vw, 17px); color: var(--fg2); line-height: 1.55; font-weight: 300; }
+
+  .table-wrap { width: 100%; margin-top: 1.6rem; overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; }
+  th { font-size: clamp(10px, 1.2vw, 12px); letter-spacing: 0.15em; text-transform: uppercase; color: var(--fg3); padding: 8px 16px; border-bottom: 1px solid var(--fg3); text-align: left; font-weight: 500; }
+  td { font-size: clamp(15px, 1.6vw, 18px); padding: 13px 16px; border-bottom: 1px solid rgba(255,255,255,0.05); color: var(--fg2); font-weight: 300; opacity: 0; transition: opacity 0.4s, background 0.3s; }
+  tr.show td { opacity: 1; }
+  tr.highlight-row td { background: var(--gold-dim); color: var(--gold-light); }
+  .prob-bar { display: inline-block; height: 3px; background: var(--gold); vertical-align: middle; margin-left: 8px; transition: width 0.8s ease; }
+
+  .portfolio-list { margin-top: 1.6rem; }
+  .port-item {
+    display: flex; align-items: flex-start; gap: 16px;
+    padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.06);
+    opacity: 0; transform: translateX(-16px);
+    transition: opacity 0.5s, transform 0.5s;
+  }
+  .port-item.show { opacity: 1; transform: translateX(0); }
+  .port-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); margin-top: 9px; flex-shrink: 0; }
+  .port-text { font-size: clamp(16px, 1.8vw, 20px); color: var(--fg2); font-weight: 300; line-height: 1.5; }
+  .port-text strong { color: var(--fg); font-weight: 400; }
+
+  .vs-block { display: flex; align-items: stretch; gap: 2rem; margin: 1.4rem 0; flex-wrap: wrap; }
+  .vs-item { flex: 1; min-width: 200px; padding: 22px 24px; border: 1px solid var(--fg3); opacity: 0; transition: opacity 0.5s; }
+  .vs-item.show { opacity: 1; }
+  .vs-item.bad { border-color: var(--red); }
+  .vs-item.good { border-color: var(--teal); }
+  .vs-label { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--fg3); margin-bottom: 10px; }
+  .vs-val { font-family: 'Cormorant Garamond', serif; font-size: clamp(18px, 2.2vw, 26px); font-weight: 300; line-height: 1.4; }
+  .vs-item.bad .vs-val { color: var(--red); }
+  .vs-item.good .vs-val { color: var(--teal); }
+
+  .finale-line {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(24px, 4.5vw, 56px); font-weight: 300; line-height: 1.25;
+    color: var(--fg); margin-bottom: 0.4rem;
+    opacity: 0; transform: translateY(20px);
+    transition: opacity 0.6s, transform 0.6s;
+  }
+  .finale-line.show { opacity: 1; transform: translateY(0); }
+  .finale-line em { color: var(--gold); font-style: italic; }
+
+  .divider { width: 48px; height: 1px; background: var(--gold); margin: 1.2rem 0; }
+
+  .line-anim { overflow: hidden; display: block; }
+  .line-anim span { display: block; transform: translateY(100%); opacity: 0; transition: transform 0.7s cubic-bezier(0.16,1,0.3,1), opacity 0.5s; }
+  .line-anim.show span { transform: translateY(0); opacity: 1; }
+
+  .bg-number {
+    position: absolute; right: -2vw; top: 50%; transform: translateY(-50%);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(120px, 22vw, 280px); font-weight: 300;
+    color: rgba(201,168,76,0.05); line-height: 1;
+    pointer-events: none; user-select: none; z-index: 0;
+    animation: shimmer 4s ease-in-out infinite;
+  }
+  @keyframes shimmer { 0%,100%{opacity:0.6} 50%{opacity:1} }
+
+  .slide-inner { position: relative; z-index: 1; width: 100%; max-width: 900px; }
+
+  #progress { position: fixed; bottom: 0; left: 0; right: 0; height: 2px; background: rgba(255,255,255,0.06); z-index: 100; }
+  #progress-bar { height: 100%; background: var(--gold); transition: width 0.5s ease; }
+  #slide-counter { position: fixed; bottom: 22px; right: 28px; font-size: 13px; letter-spacing: 0.12em; color: var(--fg3); z-index: 100; }
+
+  #nav-hint { position: fixed; bottom: 22px; left: 28px; font-size: 12px; letter-spacing: 0.1em; color: var(--fg3); opacity: 0.6; }
+</style>
+</head>
+<body>
+
+<div id="deck">
+
+  <!-- SLIDE 0 -->
+  <div class="slide" data-slide="0">
+    <div class="bg-number">99</div>
+    <div class="slide-inner">
+      <div class="eyebrow">Probability · Career · India</div>
+      <h1 class="hero">
+        <span class="line-anim"><span>Is chasing a</span></span>
+        <span class="line-anim"><span><em>1% exam</em></span></span>
+        <span class="line-anim"><span>rational?</span></span>
+      </h1>
+      <div class="divider"></div>
+      <p class="body" style="opacity:0;transition:opacity 0.6s 0.4s" id="s0body">
+        10 lakh students. 10,000 seats. The math is clear — but the question runs much deeper than probability.
+      </p>
+    </div>
+  </div>
+
+  <!-- SLIDE 1 -->
+  <div class="slide" data-slide="1">
+    <div class="bg-number">01</div>
+    <div class="slide-inner">
+      <div class="eyebrow">The Reality</div>
+      <h2 class="title">The <em>Winner-Take-Most</em> Funnel</h2>
+      <div class="funnel" id="funnel">
+        <div class="funnel-step"><div class="funnel-step-label">Exam Attempt</div><div class="funnel-step-num">10,00,000</div></div>
+        <div class="funnel-arrow"></div>
+        <div class="funnel-step"><div class="funnel-step-label">Small Elite Selection</div><div class="funnel-step-num">10,000</div></div>
+        <div class="funnel-arrow"></div>
+        <div class="funnel-step highlight"><div class="funnel-step-label">Large Redistribution</div><div class="funnel-step-num">9,90,000</div></div>
+        <div class="funnel-arrow"></div>
+        <div class="funnel-step"><div class="funnel-step-label">Actual Adult Career</div><div class="funnel-step-num">?</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2 -->
+  <div class="slide" data-slide="2">
+    <div class="bg-number">02</div>
+    <div class="slide-inner">
+      <div class="eyebrow">The Mental Model</div>
+      <h2 class="title">How students <em>actually</em> think</h2>
+      <div class="equation-block wrong" id="eq1">Exam Success = Career Success</div>
+      <div class="equation-block right" id="eq2">
+        Exam Attempt
+        <span class="arrow">↓</span>
+        Small Elite Selection
+        <span class="arrow">↓</span>
+        Large Redistribution Into Other Careers
+        <span class="arrow">↓</span>
+        <span style="color:var(--gold)">Actual Adult Career</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3 -->
+  <div class="slide" data-slide="3">
+    <div class="bg-number">03</div>
+    <div class="slide-inner">
+      <div class="eyebrow">The Core Problem</div>
+      <h2 class="title"><em>Information</em> Asymmetry</h2>
+      <p class="body" style="margin-bottom:1.2rem">You cannot choose paths you do not know exist.</p>
+      <div class="two-col">
+        <div>
+          <div class="col-label">Students know</div>
+          <div class="col-item known">JEE</div>
+          <div class="col-item known">NEET</div>
+          <div class="col-item known">UPSC</div>
+        </div>
+        <div>
+          <div class="col-label">Students rarely know</div>
+          <div class="col-item new">Product Management</div>
+          <div class="col-item new">Cybersecurity</div>
+          <div class="col-item new">AI Automation</div>
+          <div class="col-item new">UX Design</div>
+          <div class="col-item new">Creator Economy</div>
+          <div class="col-item new">Technical Writing</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 4 -->
+  <div class="slide" data-slide="4">
+    <div class="bg-number">04</div>
+    <div class="slide-inner">
+      <div class="eyebrow">Still Rational?</div>
+      <h2 class="title">Why students still <em>enter</em> the funnel</h2>
+      <div class="reasons-grid" id="reasons">
+        <div class="reason-card">
+          <div class="reason-num">01</div>
+          <div class="reason-text">The upside can be <strong style="color:var(--fg)">enormous</strong> — a single seat can change a family's trajectory for generations</div>
+        </div>
+        <div class="reason-card">
+          <div class="reason-num">02</div>
+          <div class="reason-text"><strong style="color:var(--fg)">Information asymmetry</strong> — unknown paths cannot be chosen</div>
+        </div>
+        <div class="reason-card">
+          <div class="reason-num">03</div>
+          <div class="reason-text"><strong style="color:var(--fg)">Social proof</strong> — parents trust visible examples of doctors and engineers</div>
+        </div>
+        <div class="reason-card">
+          <div class="reason-num">04</div>
+          <div class="reason-text"><strong style="color:var(--fg)">Safety bias</strong> — 1% at prestige feels safer than 30% in a poorly understood field</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5 -->
+  <div class="slide" data-slide="5">
+    <div class="bg-number">05</div>
+    <div class="slide-inner">
+      <div class="eyebrow">Expected Value</div>
+      <h2 class="title">Prestige vs <em>Probability</em></h2>
+      <p class="body" style="margin-bottom:1.4rem">Most students automatically choose the first row. Society talks about it the most.</p>
+      <div class="table-wrap">
+        <table id="probtable">
+          <thead>
+            <tr><th>Path</th><th>Success Probability</th><th>Outcome</th></tr>
+          </thead>
+          <tbody>
+            <tr class="highlight-row">
+              <td>Elite Exam</td>
+              <td>1% <span class="prob-bar" style="width:0" data-w="3px"></span></td>
+              <td>Very High</td>
+            </tr>
+            <tr>
+              <td>Emerging Skill Career</td>
+              <td>20% <span class="prob-bar" style="width:0" data-w="48px"></span></td>
+              <td>High</td>
+            </tr>
+            <tr>
+              <td>Niche Business</td>
+              <td>10% <span class="prob-bar" style="width:0" data-w="24px"></span></td>
+              <td>Very High</td>
+            </tr>
+            <tr>
+              <td>Specialized Trade</td>
+              <td>40% <span class="prob-bar" style="width:0" data-w="96px"></span></td>
+              <td>Moderate to High</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6 -->
+  <div class="slide" data-slide="6">
+    <div class="bg-number">06</div>
+    <div class="slide-inner">
+      <div class="eyebrow">The Better Strategy</div>
+      <h2 class="title">A <em>Portfolio</em> Approach</h2>
+      <div class="portfolio-list" id="portfolio">
+        <div class="port-item">
+          <div class="port-dot"></div>
+          <div class="port-text"><strong>Attempt the exam</strong> — if you genuinely want it, go for it</div>
+        </div>
+        <div class="port-item">
+          <div class="port-dot"></div>
+          <div class="port-text"><strong>Simultaneously build</strong> marketable skills in parallel</div>
+        </div>
+        <div class="port-item">
+          <div class="port-dot"></div>
+          <div class="port-text"><strong>Build proof of work</strong> — projects, portfolios, evidence</div>
+        </div>
+        <div class="port-item">
+          <div class="port-dot"></div>
+          <div class="port-text"><strong>Explore adjacent careers</strong> — stay curious and open</div>
+        </div>
+        <div class="port-item">
+          <div class="port-dot"></div>
+          <div class="port-text"><strong>Keep multiple doors open</strong> — so if you're in the 99%, you are not starting from zero</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 7 -->
+  <div class="slide" data-slide="7">
+    <div class="bg-number">07</div>
+    <div class="slide-inner">
+      <div class="eyebrow">Reframe</div>
+      <h2 class="title">Ask a <em>better</em> question</h2>
+      <div class="vs-block">
+        <div class="vs-item bad" id="vs1">
+          <div class="vs-label">Most students ask</div>
+          <div class="vs-val">"What is everyone else attempting?"</div>
+        </div>
+        <div class="vs-item good" id="vs2">
+          <div class="vs-label">Better question</div>
+          <div class="vs-val">"Given my strengths, where do I have an unusually good chance?"</div>
+        </div>
+      </div>
+      <p class="body" style="margin-top:1.2rem;opacity:0;transition:opacity 0.5s 0.5s" id="s7body">
+        This is why <em style="color:var(--gold)">capability vs compatibility</em> matters. A student may be capable of competing — but may have much better odds and a happier life in a different domain.
+      </p>
+    </div>
+  </div>
+
+  <!-- SLIDE 8 -->
+  <div class="slide" data-slide="8">
+    <div class="bg-number">08</div>
+    <div class="slide-inner">
+      <div class="eyebrow">The Actual Risk</div>
+      <div style="margin-bottom:1rem">
+        <div class="finale-line">The bigger mistake is</div>
+        <div class="finale-line"><em>not</em> taking a competitive exam.</div>
+      </div>
+      <div class="divider"></div>
+      <div style="margin-top:1.2rem">
+        <div class="finale-line" style="transition-delay:0.15s">The bigger mistake is spending</div>
+        <div class="finale-line" style="transition-delay:0.3s"><em>2–5 years</em> at 1% odds</div>
+        <div class="finale-line" style="transition-delay:0.45s">with no alternative plan.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div id="progress"><div id="progress-bar" style="width:11.11%"></div></div>
+<div id="slide-counter">1 / 9</div>
+<div id="nav-hint">← → to navigate</div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const total = slides.length;
+let current = 0;
+let animating = false;
+
+function animateIn(idx) {
+  const s = slides[idx];
+  s.classList.add('active','entering');
+
+  if (idx === 0) {
+    s.querySelectorAll('.line-anim').forEach((el,i) => setTimeout(() => el.classList.add('show'), 100+i*150));
+    setTimeout(() => { const b=document.getElementById('s0body'); if(b) b.style.opacity=1; }, 600);
+  }
+  if (idx === 1) {
+    const steps = s.querySelectorAll('.funnel-step');
+    const arrows = s.querySelectorAll('.funnel-arrow');
+    steps.forEach((el,i) => setTimeout(() => { el.classList.add('show'); if(arrows[i]) setTimeout(()=>arrows[i].classList.add('show'),220); }, 200+i*360));
+  }
+  if (idx === 2) {
+    setTimeout(() => document.getElementById('eq1').classList.add('show'), 200);
+    setTimeout(() => document.getElementById('eq2').classList.add('show'), 650);
+  }
+  if (idx === 3) {
+    s.querySelectorAll('.col-item').forEach((el,i) => setTimeout(() => el.classList.add('show'), 200+i*90));
+  }
+  if (idx === 4) {
+    s.querySelectorAll('.reason-card').forEach((el,i) => setTimeout(() => el.classList.add('show'), 150+i*190));
+  }
+  if (idx === 5) {
+    const rows = s.querySelectorAll('tbody tr');
+    rows.forEach((row,i) => setTimeout(() => {
+      row.classList.add('show');
+      const bar = row.querySelector('.prob-bar');
+      if(bar) setTimeout(() => { bar.style.width = bar.dataset.w; }, 150);
+    }, 200+i*260));
+  }
+  if (idx === 6) {
+    s.querySelectorAll('.port-item').forEach((el,i) => setTimeout(() => el.classList.add('show'), 150+i*190));
+  }
+  if (idx === 7) {
+    setTimeout(() => document.getElementById('vs1').classList.add('show'), 200);
+    setTimeout(() => document.getElementById('vs2').classList.add('show'), 520);
+    setTimeout(() => { const b=document.getElementById('s7body'); if(b) b.style.opacity=1; }, 950);
+  }
+  if (idx === 8) {
+    s.querySelectorAll('.finale-line').forEach((el,i) => setTimeout(() => el.classList.add('show'), 150+i*230));
+  }
+
+  setTimeout(() => s.classList.remove('entering'), 700);
+}
+
+function animateOut(idx, cb) {
+  const s = slides[idx];
+  s.classList.add('exiting');
+  setTimeout(() => { s.classList.remove('active','exiting'); cb&&cb(); }, 420);
+}
+
+function reset(idx) {
+  const s = slides[idx];
+  s.querySelectorAll('.line-anim').forEach(el => el.classList.remove('show'));
+  s.querySelectorAll('.funnel-step,.funnel-arrow').forEach(el => el.classList.remove('show'));
+  s.querySelectorAll('.equation-block').forEach(el => el.classList.remove('show'));
+  s.querySelectorAll('.col-item,.reason-card,.port-item,.finale-line').forEach(el => el.classList.remove('show'));
+  s.querySelectorAll('.vs-item').forEach(el => el.classList.remove('show'));
+  s.querySelectorAll('tbody tr').forEach(el => el.classList.remove('show'));
+  s.querySelectorAll('.prob-bar').forEach(el => el.style.width='0');
+  const b0=document.getElementById('s0body'); if(b0) b0.style.opacity=0;
+  const b7=document.getElementById('s7body'); if(b7) b7.style.opacity=0;
+}
+
+function goTo(idx) {
+  if (animating || idx===current || idx<0 || idx>=total) return;
+  animating = true;
+  animateOut(current, () => {
+    reset(current);
+    current = idx;
+    document.getElementById('slide-counter').textContent = `${current+1} / ${total}`;
+    document.getElementById('progress-bar').style.width = `${((current+1)/total)*100}%`;
+    animateIn(current);
+    setTimeout(() => animating=false, 700);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key==='ArrowRight'||e.key==='ArrowDown') goTo(current+1);
+  if (e.key==='ArrowLeft' ||e.key==='ArrowUp')   goTo(current-1);
+});
+
+let tx=0;
+document.addEventListener('touchstart', e => { tx=e.touches[0].clientX; });
+document.addEventListener('touchend',   e => {
+  const dx = e.changedTouches[0].clientX - tx;
+  if (dx < -40) goTo(current+1);
+  if (dx >  40) goTo(current-1);
+});
+
+animateIn(0);
+</script>
+</body>
+</html>
