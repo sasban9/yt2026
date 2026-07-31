@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Career Wealth Calculator · 1 Cr → 100 Cr</title>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/recharts@2.12.7/umd/Recharts.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+  :root{
+    --bg:#1a1d2e; --fg:#f6f1e1; --card:#23263a; --muted:#2c2f44;
+    --muted-fg:#a8a59a; --border:#363a52; --input:#2e3147;
+    --primary:#e8c46b; --accent:#5dc3d6;
+    --phase-1:#e8a85a; --phase-2:#5dc3d6; --phase-3:#7dd3a8;
+    --destructive:#e85a5a;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--fg);
+    font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;}
+  h1,h2,h3{margin:0}
+  input{font:inherit;color:var(--fg);background:transparent;border:1px solid var(--border);
+    border-radius:6px;padding:6px 10px;width:100%}
+  input:focus{outline:1px solid var(--primary)}
+  button{font:inherit;cursor:pointer;border:1px solid transparent;border-radius:6px;
+    background:transparent;color:var(--fg);padding:6px 10px;display:inline-flex;
+    align-items:center;gap:6px;transition:background .15s}
+  button:hover{background:var(--muted)}
+  button.outline{border-color:var(--border)}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px}
+  .muted{color:var(--muted-fg)}
+  .label{font-size:12px;color:var(--muted-fg);display:block;margin-bottom:4px}
+  .grid{display:grid;gap:12px}
+  .row{display:flex;gap:8px;align-items:center}
+  .icon-btn{padding:6px;width:32px;height:32px;justify-content:center}
+  .pill{display:inline-block;width:10px;height:10px;border-radius:2px}
+  .badge{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--primary)}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" data-presets="react">
+const { useState, useMemo } = React;
+const { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } = Recharts;
+
+const CRORE = 1e7, LAKH = 1e5;
+function formatInr(v){
+  if(!isFinite(v)) return "—";
+  const a=Math.abs(v);
+  if(a>=CRORE){const x=v/CRORE;return "₹"+x.toLocaleString("en-IN",{maximumFractionDigits:x>=100?0:x>=10?1:2})+" Cr";}
+  if(a>=LAKH){const x=v/LAKH;return "₹"+x.toLocaleString("en-IN",{maximumFractionDigits:x>=10?1:2})+" L";}
+  return "₹"+Math.round(v).toLocaleString("en-IN");
+}
+function formatInrShort(v){
+  const a=Math.abs(v);
+  if(a>=CRORE) return (v/CRORE).toFixed(v/CRORE>=10?0:1)+"Cr";
+  if(a>=LAKH) return (v/LAKH).toFixed(v/LAKH>=10?0:1)+"L";
+  return ""+Math.round(v);
+}
+
+const DEFAULTS = [
+  {name:"Phase 1 · Explore",tagline:"Years 1–10 · See the world",totalCr:1,growth:20,expenses:50,travel:35,savings:15,color:"var(--phase-1)"},
+  {name:"Phase 2 · Build",tagline:"Years 11–20 · Stack the chips",totalCr:10,growth:10,expenses:50,travel:10,savings:40,color:"var(--phase-2)"},
+  {name:"Phase 3 · Compound",tagline:"Years 21–30 · Grow the net worth",totalCr:100,growth:8,expenses:50,travel:5,savings:45,color:"var(--phase-3)"},
+];
+
+function buildBars(totalCr, growthPct, seed){
+  const total = totalCr*CRORE;
+  const r = 1+growthPct/100;
+  const base = Math.abs(r-1)<1e-9 ? total/10 : (total*(r-1))/(Math.pow(r,10)-1);
+  const bars = Array.from({length:10},(_,i)=>base*Math.pow(r,i));
+  if(seed){
+    const j = bars.map((b,i)=>b*(0.65+seed[i]*0.7));
+    const jt = j.reduce((a,b)=>a+b,0);
+    return j.map(b=>b*total/jt);
+  }
+  return bars;
+}
+
+function AllocInput({label,value,onChange}){
+  return (
+    <div style={{flex:1}}>
+      <span className="label" style={{fontSize:10}}>{label}</span>
+      <input type="number" min={0} max={100} value={value}
+        onChange={e=>onChange(Math.max(0,Math.min(100,Number(e.target.value)||0)))} />
+    </div>
+  );
+}
+
+function Allocation({phase,onChange}){
+  const sum = phase.expenses+phase.travel+phase.savings;
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:8}}>
+      <div style={{display:"flex",justifyContent:"space-between",fontSize:12,color:"var(--muted-fg)"}}>
+        <span>Allocation %</span>
+        <span style={{color:sum===100?"var(--muted-fg)":"var(--destructive)"}}>sum: {sum}%</span>
+      </div>
+      <div style={{display:"flex",gap:8}}>
+        <AllocInput label="Exp" value={phase.expenses} onChange={v=>onChange({expenses:v})}/>
+        <AllocInput label="Trv" value={phase.travel} onChange={v=>onChange({travel:v})}/>
+        <AllocInput label="Sav" value={phase.savings} onChange={v=>onChange({savings:v})}/>
+      </div>
+      <div style={{display:"flex",height:8,borderRadius:99,overflow:"hidden",background:"var(--muted)"}}>
+        <div style={{width:`${phase.expenses}%`,background:"var(--muted-fg)"}}/>
+        <div style={{width:`${phase.travel}%`,background:"var(--accent)"}}/>
+        <div style={{width:`${phase.savings}%`,background:"var(--primary)"}}/>
+      </div>
+    </div>
+  );
+}
+
+function Bucket({label,value,pct,tone}){
+  const color = tone==="primary"?"var(--primary)":tone==="accent"?"var(--accent)":"var(--muted-fg)";
+  return (
+    <div style={{border:"1px solid var(--border)",borderRadius:8,padding:8,textAlign:"center"}}>
+      <div style={{fontSize:11,color}}>{label}</div>
+      <div style={{fontWeight:600,fontSize:14,marginTop:2}}>{formatInr(value)}</div>
+      <div style={{fontSize:10,color:"var(--muted-fg)"}}>{pct}%</div>
+    </div>
+  );
+}
+
+function PhaseCard({phase,index,bars,onChange,onRandomize,onReset}){
+  const total = bars.reduce((a,b)=>a+b,0);
+  const data = bars.map((v,i)=>({year:`Y${index*10+i+1}`,income:Math.round(v)}));
+  const expenses=total*phase.expenses/100, travel=total*phase.travel/100, savings=total*phase.savings/100;
+  return (
+    <div className="card" style={{display:"flex",flexDirection:"column",gap:14}}>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:12}}>
+        <div>
+          <h3 style={{fontSize:17,color:phase.color}}>{phase.name}</h3>
+          <p style={{margin:"4px 0 0",fontSize:12,color:"var(--muted-fg)"}}>{phase.tagline}</p>
+        </div>
+        <div style={{display:"flex",gap:4}}>
+          <button className="icon-btn" title="Randomize" onClick={onRandomize}>🎲</button>
+          <button className="icon-btn" title="Reset" onClick={onReset}>↺</button>
+        </div>
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+        <div>
+          <span className="label">10-year total (Cr)</span>
+          <input type="number" min={0} step={0.5} value={phase.totalCr}
+            onChange={e=>onChange({totalCr:Math.max(0,Number(e.target.value)||0)})}/>
+        </div>
+        <div>
+          <span className="label">Growth / yr (%)</span>
+          <input type="number" min={0} step={1} value={phase.growth}
+            onChange={e=>onChange({growth:Math.max(0,Number(e.target.value)||0)})}/>
+        </div>
+      </div>
+      <div style={{height:180}}>
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={data} margin={{top:8,right:8,left:0,bottom:0}}>
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false}/>
+            <XAxis dataKey="year" stroke="var(--muted-fg)" fontSize={10} tickLine={false}/>
+            <YAxis stroke="var(--muted-fg)" fontSize={10} width={48} tickLine={false} axisLine={false}
+              tickFormatter={formatInrShort}/>
+            <Tooltip cursor={{fill:"var(--muted)",opacity:0.4}}
+              contentStyle={{background:"var(--card)",border:"1px solid var(--border)",borderRadius:8,fontSize:12}}
+              formatter={v=>[formatInr(v),"Income"]}/>
+            <Bar dataKey="income" radius={[4,4,0,0]}>
+              {data.map((_,i)=><Cell key={i} fill={phase.color}/>)}
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+      <div style={{background:"var(--muted)",borderRadius:8,padding:10,fontSize:14,
+        display:"flex",justifyContent:"space-between"}}>
+        <span className="muted">10-year total</span>
+        <strong>{formatInr(total)}</strong>
+      </div>
+      <Allocation phase={phase} onChange={onChange}/>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8}}>
+        <Bucket label="Expenses" value={expenses} pct={phase.expenses} tone="muted"/>
+        <Bucket label="Travel" value={travel} pct={phase.travel} tone="accent"/>
+        <Bucket label="Savings" value={savings} pct={phase.savings} tone="primary"/>
+      </div>
+    </div>
+  );
+}
+
+function SummaryStat({label,value,accent,highlight}){
+  const color = accent==="primary"?"var(--primary)":accent==="accent"?"var(--accent)":"var(--fg)";
+  return (
+    <div className="card" style={{padding:16,borderColor:highlight?"var(--primary)":"var(--border)",
+      background:highlight?"rgba(232,196,107,0.06)":"var(--card)"}}>
+      <div style={{fontSize:11,letterSpacing:".1em",textTransform:"uppercase",color:"var(--muted-fg)"}}>{label}</div>
+      <div style={{fontSize:24,fontWeight:700,marginTop:4,color}}>{formatInr(value)}</div>
+    </div>
+  );
+}
+
+function ThesisRow({label,value,sub,highlight}){
+  return (
+    <div style={{borderRadius:10,padding:14,border:"1px solid var(--border)",
+      background:highlight?"rgba(232,196,107,0.06)":"transparent"}}>
+      <div style={{fontSize:12,color:"var(--muted-fg)"}}>{label}</div>
+      <div style={{fontSize:20,fontWeight:600,marginTop:4,color:highlight?"var(--primary)":"var(--fg)"}}>{formatInr(value)}</div>
+      <div style={{fontSize:11,color:"var(--muted-fg)",marginTop:2}}>{sub}</div>
+    </div>
+  );
+}
+
+function App(){
+  const [phases,setPhases]=useState(DEFAULTS);
+  const [seeds,setSeeds]=useState([undefined,undefined,undefined]);
+  const allBars = useMemo(()=>phases.map((p,i)=>buildBars(p.totalCr,p.growth,seeds[i])),[phases,seeds]);
+  const totals = useMemo(()=>{
+    let income=0,expenses=0,travel=0,savings=0;
+    phases.forEach((p,i)=>{const t=allBars[i].reduce((a,b)=>a+b,0);
+      income+=t;expenses+=t*p.expenses/100;travel+=t*p.travel/100;savings+=t*p.savings/100;});
+    return {income,expenses,travel,savings};
+  },[phases,allBars]);
+  const updatePhase=(i,patch)=>setPhases(prev=>prev.map((p,idx)=>idx===i?{...p,...patch}:p));
+  const randomize=i=>setSeeds(prev=>{const n=[...prev];n[i]=Array.from({length:10},()=>Math.random());return n;});
+  const reset=i=>setSeeds(prev=>{const n=[...prev];n[i]=undefined;return n;});
+  const randomizeAll=()=>setSeeds(phases.map(()=>Array.from({length:10},()=>Math.random())));
+
+  const combined = phases.flatMap((p,pi)=>allBars[pi].map((v,yi)=>({year:pi*10+yi+1,income:Math.round(v),fill:p.color})));
+
+  return (
+    <div style={{maxWidth:1280,margin:"0 auto",padding:"40px 24px"}}>
+      <header style={{display:"flex",justifyContent:"space-between",alignItems:"flex-end",
+        flexWrap:"wrap",gap:16,marginBottom:36}}>
+        <div>
+          <p className="badge">30-year career plan</p>
+          <h1 style={{fontSize:42,marginTop:8,letterSpacing:"-0.02em"}}>
+            From <span style={{color:"var(--primary)"}}>1 Cr</span> to{" "}
+            <span style={{color:"var(--accent)"}}>100 Cr</span>, in three acts.
+          </h1>
+          <p style={{maxWidth:600,fontSize:14,color:"var(--muted-fg)",marginTop:8}}>
+            Income is never a smooth curve. Plan the targets, then shuffle the bars to see how
+            you'd still spend half, travel early, and compound the rest.
+          </p>
+        </div>
+        <button className="outline" onClick={randomizeAll}>🎲 Shuffle all phases</button>
+      </header>
+
+      <section style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(180px,1fr))",gap:12,marginBottom:28}}>
+        <SummaryStat label="Total income · 30y" value={totals.income} accent="primary"/>
+        <SummaryStat label="Living expenses (50%)" value={totals.expenses} accent="muted"/>
+        <SummaryStat label="World travel fund" value={totals.travel} accent="accent"/>
+        <SummaryStat label="Saved & invested" value={totals.savings} accent="primary" highlight/>
+      </section>
+
+      <div className="card" style={{marginBottom:28}}>
+        <div style={{display:"flex",justifyContent:"space-between",marginBottom:12,flexWrap:"wrap",gap:12}}>
+          <div>
+            <h2 style={{fontSize:13,textTransform:"uppercase",letterSpacing:".15em",color:"var(--muted-fg)"}}>
+              Income across 30 years</h2>
+            <p style={{fontSize:12,color:"var(--muted-fg)",marginTop:4}}>Each color = one phase. Hover for the exact number.</p>
+          </div>
+          <div style={{display:"flex",gap:14,fontSize:12,alignItems:"center"}}>
+            {phases.map(p=>(
+              <div key={p.name} style={{display:"flex",alignItems:"center",gap:6}}>
+                <span className="pill" style={{background:p.color}}/>
+                <span className="muted">{p.name.split(" · ")[1]}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div style={{height:290}}>
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={combined} margin={{top:8,right:8,left:8,bottom:0}}>
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false}/>
+              <XAxis dataKey="year" stroke="var(--muted-fg)" fontSize={11} tickLine={false}
+                tickFormatter={v=>"Y"+v}/>
+              <YAxis stroke="var(--muted-fg)" fontSize={11} width={56} tickLine={false} axisLine={false}
+                tickFormatter={formatInrShort}/>
+              <Tooltip cursor={{fill:"var(--muted)",opacity:0.4}}
+                contentStyle={{background:"var(--card)",border:"1px solid var(--border)",borderRadius:8,fontSize:12}}
+                formatter={v=>[formatInr(v),"Income"]} labelFormatter={l=>"Year "+l}/>
+              <Bar dataKey="income" radius={[4,4,0,0]}>
+                {combined.map((d,i)=><Cell key={i} fill={d.fill}/>)}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
+      <section style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(320px,1fr))",gap:18}}>
+        {phases.map((p,i)=>(
+          <PhaseCard key={i} phase={p} index={i} bars={allBars[i]}
+            onChange={patch=>updatePhase(i,patch)}
+            onRandomize={()=>randomize(i)} onReset={()=>reset(i)}/>
+        ))}
+      </section>
+
+      <div className="card" style={{marginTop:28}}>
+        <h2 style={{fontSize:13,textTransform:"uppercase",letterSpacing:".15em",color:"var(--muted-fg)"}}>
+          The half-and-half thesis</h2>
+        <p style={{maxWidth:780,fontSize:15,lineHeight:1.6,marginTop:8}}>
+          Across 30 years, you can keep <strong>50% for life</strong> — rent, food, the people you love — and still
+          set aside the other half. Travel hard while you're young; let the later phases stack savings.
+          The bars wobble, life wobbles, the totals still work.
+        </p>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(220px,1fr))",gap:12,marginTop:18}}>
+          <ThesisRow label="If you only spent on living" value={totals.expenses} sub="50% across all phases"/>
+          <ThesisRow label="Memories from Phase 1 travel"
+            value={allBars[0].reduce((a,b)=>a+b,0)*phases[0].travel/100}
+            sub={`${phases[0].travel}% of Phase 1 income`}/>
+          <ThesisRow label="Investable corpus by year 30" value={totals.savings}
+            sub="Before any compounding returns" highlight/>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body>
+</html>

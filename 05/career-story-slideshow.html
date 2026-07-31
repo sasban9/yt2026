@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1 · 10 · 100 Crore — Your Career in Three Acts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#090b11;
+  --surface:#10131c;
+  --surface2:#161a26;
+  --border:rgba(255,255,255,0.07);
+  --text:#e8e4f0;
+  --muted:rgba(232,228,240,0.45);
+  --dim:rgba(232,228,240,0.18);
+  --amber:#f0a830;
+  --amber-glow:rgba(240,168,48,0.2);
+  --cyan:#3dd6f5;
+  --cyan-glow:rgba(61,214,245,0.2);
+  --green:#3de87a;
+  --green-glow:rgba(61,232,122,0.2);
+  --red:#e85050;
+}
+html,body{height:100%;overflow:hidden}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:16px}
+
+/* ─── STAGE ─── */
+.stage{width:100vw;height:100vh;position:relative;overflow:hidden}
+
+/* grain */
+.stage::after{content:'';position:fixed;inset:0;z-index:999;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  mix-blend-mode:overlay;opacity:0.5}
+
+/* ─── SLIDE BASE ─── */
+.slide{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  padding:48px 6vw;
+  opacity:0;visibility:hidden;
+  transition:opacity 0.5s ease,transform 0.5s ease;
+  transform:translateX(60px);
+  overflow:hidden;text-align:center;
+}
+.slide.active{opacity:1;visibility:visible;transform:translateX(0)}
+.slide.exit-left{opacity:0;transform:translateX(-60px);visibility:visible}
+.slide.exit-right{opacity:0;transform:translateX(60px);visibility:visible}
+
+/* ─── CONTROLS ─── */
+.controls{
+  position:fixed;bottom:0;left:0;right:0;z-index:100;
+  background:rgba(9,11,17,0.92);backdrop-filter:blur(12px);
+  border-top:1px solid var(--border);
+  padding:14px 28px;
+  display:flex;align-items:center;gap:16px;
+}
+.ctrl-btn{
+  width:40px;height:40px;border-radius:50%;
+  border:1px solid var(--border);background:transparent;
+  color:rgba(255,255,255,0.5);font-size:16px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .2s;
+}
+.ctrl-btn:hover{background:rgba(255,255,255,0.07);color:var(--text)}
+.ctrl-btn:disabled{opacity:.2;cursor:default;pointer-events:none}
+.prog-track{flex:1;display:flex;gap:4px;align-items:center}
+.prog-dot{height:3px;flex:1;border-radius:2px;background:rgba(255,255,255,0.08);cursor:pointer;transition:background .3s}
+.prog-dot.done{background:rgba(255,255,255,0.25)}
+.prog-dot.current{background:var(--amber)}
+.slide-ctr{font-family:'DM Mono',monospace;font-size:11px;color:rgba(255,255,255,0.25);min-width:42px;text-align:right}
+.key-hint{font-family:'DM Mono',monospace;font-size:11px;color:rgba(255,255,255,0.15);display:none}
+@media(min-width:768px){.key-hint{display:block}}
+
+/* ─── TYPE ─── */
+.eyebrow{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(52px,10vw,110px);line-height:0.95;letter-spacing:2px;color:var(--text)}
+h1 .a{color:var(--amber)}
+h1 .c{color:var(--cyan)}
+h1 .g{color:var(--green)}
+h2{font-family:'Syne',sans-serif;font-size:clamp(26px,4vw,52px);font-weight:800;line-height:1.08;letter-spacing:-0.5px;color:var(--text);max-width:900px}
+h2 .a{color:var(--amber)}
+h2 .c{color:var(--cyan)}
+h2 .g{color:var(--green)}
+h3{font-family:'Syne',sans-serif;font-size:clamp(18px,2.5vw,28px);font-weight:700;color:var(--text)}
+.body-text{font-size:clamp(15px,1.6vw,18px);color:var(--muted);line-height:1.72;max-width:640px;margin-top:16px}
+.body-text strong{color:var(--text);font-weight:500}
+em{font-style:italic}
+
+/* ─── BLOB BACKGROUNDS ─── */
+.blob{position:absolute;border-radius:50%;filter:blur(100px);pointer-events:none;z-index:0}
+.slide>*{position:relative;z-index:1}
+
+/* ─── PILL ─── */
+.pill{display:inline-flex;align-items:center;gap:8px;padding:7px 18px;border-radius:100px;border:1px solid;font-family:'DM Mono',monospace;font-size:12px;font-weight:500;letter-spacing:1px;text-transform:uppercase}
+.pill-a{background:var(--amber-glow);color:var(--amber);border-color:rgba(240,168,48,0.3)}
+.pill-c{background:var(--cyan-glow);color:var(--cyan);border-color:rgba(61,214,245,0.3)}
+.pill-g{background:var(--green-glow);color:var(--green);border-color:rgba(61,232,122,0.3)}
+
+/* ─── BIG NUMBER ─── */
+.big-num{font-family:'Bebas Neue',sans-serif;font-size:clamp(70px,14vw,160px);line-height:1;letter-spacing:2px}
+
+/* ─── YEAR BAR CHART ─── */
+.bar-scene{width:100%;max-width:900px;position:relative}
+.bar-svg{width:100%;overflow:visible}
+.bar-row{display:flex;align-items:flex-end;gap:4px;height:160px;width:100%;max-width:860px}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.bar-block{width:100%;border-radius:3px 3px 0 0;transform-origin:bottom;transform:scaleY(0);transition:transform 0.6s cubic-bezier(0.34,1.56,0.64,1)}
+.bar-block.show{transform:scaleY(1)}
+.bar-label{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);margin-top:4px}
+.bar-val{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);margin-bottom:2px;opacity:0;transition:opacity .3s .4s}
+.bar-block.show~.bar-val{opacity:1}
+
+/* ─── PILE GRAPHIC ─── */
+.pile-scene{display:flex;align-items:flex-end;justify-content:center;gap:32px;margin-top:24px;width:100%;max-width:800px}
+.pile-col{display:flex;flex-direction:column;align-items:center;gap:10px;width:200px}
+.pile-label{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+.pile-amount{font-family:'Syne',sans-serif;font-size:clamp(20px,2.5vw,28px);font-weight:800}
+.pile-bar-wrap{width:100%;background:rgba(255,255,255,0.04);border-radius:6px;overflow:hidden;height:220px;display:flex;flex-direction:column;justify-content:flex-end}
+.pile-bar{width:100%;border-radius:6px 6px 0 0;transform-origin:bottom;transform:scaleY(0);transition:transform 1s cubic-bezier(0.34,1.3,0.64,1)}
+.pile-bar.grow{transform:scaleY(1)}
+.pile-icon{font-size:28px}
+.pile-pct{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)}
+
+/* ─── FLOW ARROWS ─── */
+.flow-row{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:20px;flex-wrap:wrap}
+.flow-box{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 22px;min-width:140px;text-align:center;transition:transform .3s,box-shadow .3s}
+.flow-box:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,0.3)}
+.flow-box .fb-icon{font-size:24px;margin-bottom:6px}
+.flow-box .fb-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.flow-box .fb-val{font-family:'Syne',sans-serif;font-size:18px;font-weight:700}
+.flow-arrow{font-size:20px;color:var(--dim);flex-shrink:0}
+
+/* ─── 3-COLUMN LAYOUT ─── */
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;width:100%;max-width:960px;margin-top:20px}
+.phase-box{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;text-align:left;position:relative;overflow:hidden}
+.phase-box.p1{border-color:rgba(240,168,48,0.25);background:rgba(240,168,48,0.04)}
+.phase-box.p2{border-color:rgba(61,214,245,0.25);background:rgba(61,214,245,0.04)}
+.phase-box.p3{border-color:rgba(61,232,122,0.25);background:rgba(61,232,122,0.04)}
+.pb-eyebrow{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+.pb-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px}
+.pb-meta{font-size:13px;color:var(--muted);margin-bottom:14px}
+.pb-total{font-family:'Bebas Neue',sans-serif;font-size:44px;line-height:1}
+.pb-rows{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+.pb-row{display:flex;justify-content:space-between;align-items:center;font-size:13px}
+.pb-row span:first-child{color:var(--muted)}
+.pb-row span:last-child{font-weight:600}
+
+/* ─── DONUT ─── */
+.donut-scene{display:flex;align-items:center;gap:40px;flex-wrap:wrap;justify-content:center;margin-top:16px}
+.donut-legend{display:flex;flex-direction:column;gap:10px}
+.dleg{display:flex;align-items:center;gap:10px;font-size:14px}
+.dleg-dot{width:12px;height:12px;border-radius:3px;flex-shrink:0}
+
+/* ─── TIMELINE ─── */
+.timeline{display:flex;align-items:center;width:100%;max-width:900px;margin-top:20px;position:relative}
+.tl-track{flex:1;height:3px;background:var(--border);position:relative;border-radius:2px}
+.tl-fill{height:100%;border-radius:2px;transition:width 1.5s cubic-bezier(0.4,0,0.2,1)}
+.tl-dots{position:absolute;top:50%;transform:translateY(-50%);width:100%;display:flex;justify-content:space-between}
+.tl-dot{width:12px;height:12px;border-radius:50%;border:2px solid;background:var(--bg);transform:scale(0);transition:transform .4s cubic-bezier(0.34,1.56,0.64,1)}
+.tl-dot.pop{transform:scale(1)}
+.tl-labels{display:flex;justify-content:space-between;width:100%;margin-top:10px}
+.tl-lbl{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);text-align:center;width:80px;transform:translateX(-50%)}
+
+/* ─── COUNTER ─── */
+.counter-display{font-family:'Bebas Neue',sans-serif;font-size:clamp(60px,12vw,130px);line-height:1;letter-spacing:2px}
+
+/* ─── STAGGER ANIMATIONS ─── */
+.stagger>*{opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .5s ease}
+.stagger.go>*:nth-child(1){opacity:1;transform:none;transition-delay:.05s}
+.stagger.go>*:nth-child(2){opacity:1;transform:none;transition-delay:.15s}
+.stagger.go>*:nth-child(3){opacity:1;transform:none;transition-delay:.25s}
+.stagger.go>*:nth-child(4){opacity:1;transform:none;transition-delay:.35s}
+.stagger.go>*:nth-child(5){opacity:1;transform:none;transition-delay:.45s}
+.stagger.go>*:nth-child(6){opacity:1;transform:none;transition-delay:.55s}
+
+/* ─── INCOME RIVER ─── */
+.river-scene{width:100%;max-width:880px;position:relative;margin-top:16px}
+
+/* ─── QUOTE ─── */
+.quote{font-family:'Syne',sans-serif;font-size:clamp(20px,3vw,36px);font-style:italic;font-weight:600;line-height:1.35;max-width:760px;color:rgba(232,228,240,0.88)}
+.quote-attr{font-family:'DM Mono',monospace;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:16px}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:640px){
+  .slide{padding:28px 5vw}
+  .three-col{grid-template-columns:1fr}
+  .pile-scene{gap:14px}
+  .pile-col{width:100px}
+  .controls{padding:10px 14px}
+}
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+
+<!-- ═══ SLIDE 01 — TITLE ══════════════════════════════════════════════ -->
+<div class="slide" id="s1">
+  <div class="blob" style="width:600px;height:600px;top:-150px;right:-180px;background:radial-gradient(circle,rgba(240,168,48,0.12),transparent 65%)"></div>
+  <div class="blob" style="width:400px;height:400px;bottom:-100px;left:-120px;background:radial-gradient(circle,rgba(61,214,245,0.08),transparent 65%)"></div>
+  <div class="stagger" id="s1-st">
+    <div class="eyebrow">A 30-Year Career Story</div>
+    <h1><span class="a">1</span> · <span class="c">10</span> · <span style="color:var(--green)">100</span><br>Crore</h1>
+    <p class="body-text">Your career is not a straight line.<br>It is <strong>three distinct acts</strong> — each a decade, each building on the last.</p>
+    <div style="display:flex;gap:12px;justify-content:center;margin-top:20px;flex-wrap:wrap">
+      <div class="pill pill-a">₹1 Cr · Explore</div>
+      <div class="pill pill-c">₹10 Cr · Build</div>
+      <div class="pill pill-g">₹100 Cr · Compound</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 02 — THE PROBLEM ═══════════════════════════════════════ -->
+<div class="slide" id="s2">
+  <div class="blob" style="width:500px;height:500px;top:-100px;left:-150px;background:radial-gradient(circle,rgba(232,80,80,0.1),transparent 65%)"></div>
+  <div class="stagger" id="s2-st">
+    <div class="eyebrow">The Trap</div>
+    <h2>Most people think about<br>income as a <em>straight line.</em></h2>
+    <p class="body-text">Year 1 to Year 30, they assume income will simply grow steadily. So they spend steadily. Save a little. Never travel. <strong>And arrive at retirement with regret — not wealth.</strong></p>
+    <div id="s2-line" style="width:100%;max-width:700px;height:60px;margin-top:20px;position:relative">
+      <svg width="100%" height="60" viewBox="0 0 700 60">
+        <line id="straight-line" x1="0" y1="30" x2="0" y2="30" stroke="rgba(232,80,80,0.6)" stroke-width="2.5" stroke-dasharray="5,3">
+          <animate attributeName="x2" from="0" to="700" dur="1.5s" begin="0.3s" fill="freeze"/>
+        </line>
+        <text x="10" y="20" fill="rgba(255,255,255,0.3)" font-size="11" font-family="DM Mono,monospace">Year 1</text>
+        <text x="620" y="20" fill="rgba(255,255,255,0.3)" font-size="11" font-family="DM Mono,monospace">Year 30</text>
+        <text x="330" y="52" fill="rgba(232,80,80,0.7)" font-size="11" font-family="DM Mono,monospace" text-anchor="middle">the myth of linear growth</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 03 — THE REAL SHAPE ════════════════════════════════════ -->
+<div class="slide" id="s3">
+  <div class="blob" style="width:500px;height:500px;bottom:-100px;right:-150px;background:radial-gradient(circle,rgba(61,232,122,0.1),transparent 65%)"></div>
+  <div class="stagger" id="s3-st">
+    <div class="eyebrow">The Reality</div>
+    <h2>Real income is <em>slow, then fast,<br>then explosive.</em></h2>
+    <p class="body-text">The truth is — income doesn't move in a straight line. It moves in <strong>phases</strong>. Slow while you learn. Faster once you build. Explosive when you compound.</p>
+    <svg width="100%" viewBox="0 0 700 120" style="max-width:700px;margin-top:20px;overflow:visible">
+      <defs>
+        <linearGradient id="curveGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#f0a830"/>
+          <stop offset="33%" stop-color="#3dd6f5"/>
+          <stop offset="100%" stop-color="#3de87a"/>
+        </linearGradient>
+      </defs>
+      <path id="curve-path" d="M 0 110 C 80 108 150 106 233 100 C 310 94 320 60 400 42 C 480 24 540 14 700 4"
+        stroke="url(#curveGrad)" stroke-width="3" fill="none" stroke-dasharray="900" stroke-dashoffset="900">
+        <animate attributeName="stroke-dashoffset" from="900" to="0" dur="1.8s" begin="0.2s" fill="freeze"/>
+      </path>
+      <text x="70" y="98" fill="rgba(240,168,48,0.7)" font-size="11" font-family="DM Mono" text-anchor="middle">Explore</text>
+      <text x="370" y="38" fill="rgba(61,214,245,0.7)" font-size="11" font-family="DM Mono" text-anchor="middle">Build</text>
+      <text x="620" y="14" fill="rgba(61,232,122,0.7)" font-size="11" font-family="DM Mono" text-anchor="middle">Compound</text>
+    </svg>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 04 — THE FRAMEWORK ═════════════════════════════════════ -->
+<div class="slide" id="s4">
+  <div class="blob" style="width:500px;height:500px;top:-100px;right:-100px;background:radial-gradient(circle,rgba(240,168,48,0.1),transparent 65%)"></div>
+  <div class="stagger" id="s4-st">
+    <div class="eyebrow">The Framework</div>
+    <h2>Three decades.<br>Three completely different<br><span class="a">financial identities.</span></h2>
+    <div class="three-col" style="margin-top:28px">
+      <div class="phase-box p1 stagger-item">
+        <div class="pb-eyebrow" style="color:var(--amber)">Phase 1 · Years 1–10</div>
+        <div class="pb-title" style="color:var(--amber)">Explore</div>
+        <div class="pb-meta">See the world. Plant seeds.</div>
+        <div class="pb-total" style="color:var(--amber)">₹1 Cr</div>
+        <div class="pb-rows">
+          <div class="pb-row"><span>Live well</span><span style="color:var(--amber)">50%</span></div>
+          <div class="pb-row"><span>Travel hard</span><span style="color:var(--cyan)">35%</span></div>
+          <div class="pb-row"><span>Save &amp; invest</span><span style="color:var(--green)">15%</span></div>
+        </div>
+      </div>
+      <div class="phase-box p2 stagger-item">
+        <div class="pb-eyebrow" style="color:var(--cyan)">Phase 2 · Years 11–20</div>
+        <div class="pb-title" style="color:var(--cyan)">Build</div>
+        <div class="pb-meta">Stack chips. Get serious.</div>
+        <div class="pb-total" style="color:var(--cyan)">₹10 Cr</div>
+        <div class="pb-rows">
+          <div class="pb-row"><span>Live well</span><span style="color:var(--amber)">50%</span></div>
+          <div class="pb-row"><span>Travel some</span><span style="color:var(--cyan)">10%</span></div>
+          <div class="pb-row"><span>Save hard</span><span style="color:var(--green)">40%</span></div>
+        </div>
+      </div>
+      <div class="phase-box p3 stagger-item">
+        <div class="pb-eyebrow" style="color:var(--green)">Phase 3 · Years 21–30</div>
+        <div class="pb-title" style="color:var(--green)">Compound</div>
+        <div class="pb-meta">Grow net worth. Build legacy.</div>
+        <div class="pb-total" style="color:var(--green)">₹100 Cr</div>
+        <div class="pb-rows">
+          <div class="pb-row"><span>Live well</span><span style="color:var(--amber)">50%</span></div>
+          <div class="pb-row"><span>Travel a little</span><span style="color:var(--cyan)">5%</span></div>
+          <div class="pb-row"><span>Save maximally</span><span style="color:var(--green)">45%</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 05 — PHASE 1 INTRO ═════════════════════════════════════ -->
+<div class="slide" id="s5" style="background:radial-gradient(ellipse 80% 60% at 50% 100%,rgba(240,168,48,0.06),transparent)">
+  <div class="blob" style="width:600px;height:600px;bottom:-200px;left:50%;transform:translateX(-50%);background:radial-gradient(circle,rgba(240,168,48,0.1),transparent 65%)"></div>
+  <div class="stagger" id="s5-st">
+    <div class="eyebrow" style="color:var(--amber)">Phase 1 · Years 1 to 10</div>
+    <h1 style="color:var(--amber)">Explore</h1>
+    <p class="body-text">Your 20s and early 30s. You earn modestly. You grow at <strong>20% per year</strong>. The total across 10 years adds up to just <span style="color:var(--amber);font-weight:600">₹1 Crore.</span><br><br>This is not a failure. This is foundation-building.</p>
+    <div style="margin-top:24px">
+      <div class="big-num" style="color:var(--amber)">₹1 Cr</div>
+      <div style="font-family:'DM Mono',monospace;font-size:13px;color:var(--muted);margin-top:8px">Total earned across Decade 1</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 06 — PHASE 1 YEARS GROWING ════════════════════════════ -->
+<div class="slide" id="s6">
+  <div class="stagger" id="s6-st">
+    <div class="eyebrow" style="color:var(--amber)">Phase 1 · Year by Year</div>
+    <h2>Watch income <span class="a">grow from ₹3L to ₹24L</span><br>across 10 years</h2>
+    <p class="body-text" style="margin-bottom:20px">Starting at just ₹3L/year, growing <strong>20% annually</strong></p>
+  </div>
+  <div class="bar-scene" id="s6-bars">
+    <div class="bar-row" id="s6-bar-row"></div>
+    <svg width="100%" height="20" viewBox="0 0 860 20" style="margin-top:4px;max-width:860px">
+      <text x="43" y="14" font-size="10" fill="rgba(255,255,255,0.25)" font-family="DM Mono" text-anchor="middle">Y1</text>
+      <text x="129" y="14" font-size="10" fill="rgba(255,255,255,0.25)" font-family="DM Mono" text-anchor="middle">Y2</text>
+      <text x="215" y="14" font-size="10" fill="rgba(255,255,255,0.25)" font-family="DM Mono" text-anchor="middle">Y3</text>
+      <text x="301" y="14" font-size="10" fill="rgba(255,255,255,0.25)" font-family="DM Mono" text-anchor="middle">Y4</text>
+      <text x="387" y="14" font-size="10" fill="rgba(255,255,255,0.25)" font-family="DM Mono" text-anchor="middle">Y5</text>
+      <text x="473" y="14" font-size="10" fill="rgba(255,255,255,0.25)" font-family="DM Mono" text-anchor="middle">Y6</text>
+      <text x="559" y="14" font-size="10" fill="rgba(255,255,255,0.25)" font-family="DM Mono" text-anchor="middle">Y7</text>
+      <text x="645" y="14" font-size="10" fill="rgba(255,255,255,0.25)" font-family="DM Mono" text-anchor="middle">Y8</text>
+      <text x="731" y="14" font-size="10" fill="rgba(255,255,255,0.25)" font-family="DM Mono" text-anchor="middle">Y9</text>
+      <text x="817" y="14" font-size="10" fill="rgba(255,255,255,0.25)" font-family="DM Mono" text-anchor="middle">Y10</text>
+    </svg>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 07 — INCOME SPLITTING phase 1 ═════════════════════════ -->
+<div class="slide" id="s7">
+  <div class="blob" style="width:500px;height:500px;top:-100px;right:-120px;background:radial-gradient(circle,rgba(240,168,48,0.1),transparent 65%)"></div>
+  <div class="stagger" id="s7-st">
+    <div class="eyebrow" style="color:var(--amber)">Phase 1 · Where It Goes</div>
+    <h2>₹1 Crore earned.<br>Split <span class="a">three ways.</span></h2>
+  </div>
+  <div class="pile-scene" id="s7-piles" style="margin-top:32px">
+    <div class="pile-col">
+      <div class="pile-label">Expenses</div>
+      <div class="pile-bar-wrap">
+        <div class="pile-bar" id="p7-exp" style="background:var(--muted);height:50%"></div>
+      </div>
+      <div class="pile-icon">🏠</div>
+      <div class="pile-amount" style="color:var(--text)">₹50 L</div>
+      <div class="pile-pct">50% of ₹1 Cr</div>
+    </div>
+    <div class="pile-col">
+      <div class="pile-label">Travel</div>
+      <div class="pile-bar-wrap">
+        <div class="pile-bar" id="p7-trv" style="background:var(--cyan);height:35%"></div>
+      </div>
+      <div class="pile-icon">✈️</div>
+      <div class="pile-amount" style="color:var(--cyan)">₹35 L</div>
+      <div class="pile-pct">35% — see the world</div>
+    </div>
+    <div class="pile-col">
+      <div class="pile-label">Savings</div>
+      <div class="pile-bar-wrap">
+        <div class="pile-bar" id="p7-sav" style="background:var(--amber);height:15%"></div>
+      </div>
+      <div class="pile-icon">📈</div>
+      <div class="pile-amount" style="color:var(--amber)">₹15 L</div>
+      <div class="pile-pct">15% — first seeds</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 08 — THE TRAVEL ARGUMENT ══════════════════════════════ -->
+<div class="slide" id="s8">
+  <div class="blob" style="width:500px;height:500px;bottom:-150px;left:-120px;background:radial-gradient(circle,rgba(61,214,245,0.1),transparent 65%)"></div>
+  <div class="stagger" id="s8-st">
+    <div class="eyebrow">Why 35% on Travel in Phase 1?</div>
+    <h2>Travel is not <em>spending.</em><br>It is <span class="c">investing in perspective.</span></h2>
+    <p class="body-text">In Phase 1 you have the most important asset: <strong>energy and time</strong>. You can sleep on a bus. You can eat street food. <strong>₹35 Lakhs buys experiences that ₹35 Crore cannot replace at 50.</strong></p>
+    <div class="flow-row stagger" style="margin-top:24px">
+      <div class="flow-box">
+        <div class="fb-icon">🌍</div>
+        <div class="fb-label">Countries visited</div>
+        <div class="fb-val" style="color:var(--cyan)">30+</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">
+        <div class="fb-icon">🧠</div>
+        <div class="fb-label">Mental models</div>
+        <div class="fb-val" style="color:var(--cyan)">Priceless</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">
+        <div class="fb-icon">🤝</div>
+        <div class="fb-label">Network formed</div>
+        <div class="fb-val" style="color:var(--cyan)">Global</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 09 — THE HALF-AND-HALF RULE ═══════════════════════════ -->
+<div class="slide" id="s9">
+  <div class="blob" style="width:600px;height:600px;top:-150px;left:50%;transform:translateX(-50%);background:radial-gradient(circle,rgba(240,168,48,0.08),transparent 65%)"></div>
+  <div class="stagger" id="s9-st">
+    <div class="eyebrow">The One Rule</div>
+    <h2>Always keep<br><span class="a">50% for life.</span><br>Always.</h2>
+    <p class="body-text">Rent, food, family, health — no matter what phase you are in, <strong>50% of income stays for life</strong>. The other 50% splits between travel and savings, shifting across decades.</p>
+    <div style="width:100%;max-width:600px;margin-top:24px">
+      <div style="height:28px;border-radius:6px;overflow:hidden;display:flex">
+        <div style="background:var(--muted);flex:1;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:11px;color:var(--bg)">LIFE · 50%</div>
+        <div style="background:var(--cyan);flex:0.35;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:10px;color:var(--bg)">TRV</div>
+        <div style="background:var(--amber);flex:0.15;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:10px;color:var(--bg)">SAV</div>
+      </div>
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);margin-top:8px;text-align:center">Phase 1 allocation · ₹1 Cr</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 10 — PHASE 1 END SUMMARY ══════════════════════════════ -->
+<div class="slide" id="s10">
+  <div class="stagger" id="s10-st">
+    <div class="eyebrow" style="color:var(--amber)">End of Decade 1</div>
+    <h2>You've earned <span class="a">₹1 Crore.</span><br>Here's the scorecard.</h2>
+    <div class="three-col" style="max-width:700px;margin-top:24px">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px;text-align:center">
+        <div style="font-size:28px;margin-bottom:8px">🏠</div>
+        <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Lived Well</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--text)">₹50 L</div>
+      </div>
+      <div style="background:var(--surface);border:1px solid rgba(61,214,245,0.2);border-radius:10px;padding:20px;text-align:center;background:rgba(61,214,245,0.04)">
+        <div style="font-size:28px;margin-bottom:8px">✈️</div>
+        <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Memories Made</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--cyan)">₹35 L</div>
+      </div>
+      <div style="background:var(--surface);border:1px solid rgba(240,168,48,0.2);border-radius:10px;padding:20px;text-align:center;background:rgba(240,168,48,0.04)">
+        <div style="font-size:28px;margin-bottom:8px">📈</div>
+        <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Seeds Planted</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--amber)">₹15 L</div>
+      </div>
+    </div>
+    <p class="body-text" style="margin-top:16px;max-width:560px">₹15 Lakhs invested. At 12% CAGR over the next 20 years, this alone becomes <strong style="color:var(--amber)">₹1.45 Crore</strong>. The seed is planted.</p>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 11 — TRANSITION TO PHASE 2 ════════════════════════════ -->
+<div class="slide" id="s11">
+  <div class="blob" style="width:600px;height:600px;top:-200px;right:-200px;background:radial-gradient(circle,rgba(61,214,245,0.1),transparent 65%)"></div>
+  <div class="stagger" id="s11-st">
+    <div class="eyebrow">The Transition</div>
+    <h2>Year 11.<br>Something <span class="c">fundamental shifts.</span></h2>
+    <p class="body-text">You know your craft now. Your reputation precedes you. Your network opens doors that were closed 10 years ago. <strong>Income stops being linear and starts accelerating.</strong></p>
+    <div style="display:flex;align-items:center;gap:20px;margin-top:24px;justify-content:center">
+      <div style="text-align:center">
+        <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)">End of Y10</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:44px;color:var(--amber)">₹24L/yr</div>
+      </div>
+      <div style="font-size:32px;color:var(--border)">→</div>
+      <div style="text-align:center">
+        <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)">Start of Y11</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:44px;color:var(--cyan)">₹40L/yr</div>
+      </div>
+      <div style="font-size:32px;color:var(--border)">→</div>
+      <div style="text-align:center">
+        <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)">End of Y20</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:44px;color:var(--cyan)">₹1.6Cr/yr</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 12 — PHASE 2 INTRO ═════════════════════════════════════ -->
+<div class="slide" id="s12" style="background:radial-gradient(ellipse 80% 60% at 50% 100%,rgba(61,214,245,0.05),transparent)">
+  <div class="blob" style="width:600px;height:600px;bottom:-200px;left:50%;transform:translateX(-50%);background:radial-gradient(circle,rgba(61,214,245,0.1),transparent 65%)"></div>
+  <div class="stagger" id="s12-st">
+    <div class="eyebrow" style="color:var(--cyan)">Phase 2 · Years 11 to 20</div>
+    <h1 style="color:var(--cyan)">Build</h1>
+    <p class="body-text">A full decade of stacking chips. <strong>10x more total income than Phase 1.</strong> Travel shrinks to 10%. Savings jump to 40%. This is where wealth actually begins.</p>
+    <div style="margin-top:24px">
+      <div class="big-num" style="color:var(--cyan)">₹10 Cr</div>
+      <div style="font-family:'DM Mono',monospace;font-size:13px;color:var(--muted);margin-top:8px">Total earned across Decade 2</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 13 — PHASE 2 BAR CHART ════════════════════════════════ -->
+<div class="slide" id="s13">
+  <div class="stagger" id="s13-st">
+    <div class="eyebrow" style="color:var(--cyan)">Phase 2 · Year by Year</div>
+    <h2>Watch income <span class="c">grow from ₹40L to ₹1.6Cr</span></h2>
+    <p class="body-text" style="margin-bottom:20px">Starting at ₹40L/year, growing <strong>10% annually for 10 years</strong></p>
+  </div>
+  <div class="bar-scene" id="s13-bars">
+    <div class="bar-row" id="s13-bar-row"></div>
+    <svg width="100%" height="20" viewBox="0 0 860 20" style="margin-top:4px;max-width:860px">
+      <text x="43"  y="14" font-size="10" fill="rgba(255,255,255,0.25)" font-family="DM Mono" text-anchor="middle">Y11</text>
+      <text x="129" y="14" font-size="10" fill="rgba(255,255,255,0.25)" font-family="DM Mono" text-anchor="middle">Y12</text>
+      <text x="215" y="14" font-size="10" fill="rgba(255,255,255,0.25)" font-family="DM Mono" text-anchor="middle">Y13</text>
+      <text x="301" y="14" font-size="10" fill="rgba(255,255,255,0.25)" font-family="DM Mono" text-anchor="middle">Y14</text>
+      <text x="387" y="14" font-size="10" fill="rgba(255,255,255,0.25)" font-family="DM Mono" text-anchor="middle">Y15</text>
+      <text x="473" y="14" font-size="10" fill="rgba(255,255,255,0.25)" font-family="DM Mono" text-anchor="middle">Y16</text>
+      <text x="559" y="14" font-size="10" fill="rgba(255,255,255,0.25)" font-family="DM Mono" text-anchor="middle">Y17</text>
+      <text x="645" y="14" font-size="10" fill="rgba(255,255,255,0.25)" font-family="DM Mono" text-anchor="middle">Y18</text>
+      <text x="731" y="14" font-size="10" fill="rgba(255,255,255,0.25)" font-family="DM Mono" text-anchor="middle">Y19</text>
+      <text x="817" y="14" font-size="10" fill="rgba(255,255,255,0.25)" font-family="DM Mono" text-anchor="middle">Y20</text>
+    </svg>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 14 — PHASE 2 SPLIT ═════════════════════════════════════ -->
+<div class="slide" id="s14">
+  <div class="blob" style="width:500px;height:500px;top:-100px;left:-120px;background:radial-gradient(circle,rgba(61,214,245,0.1),transparent 65%)"></div>
+  <div class="stagger" id="s14-st">
+    <div class="eyebrow" style="color:var(--cyan)">Phase 2 · Where It Goes</div>
+    <h2>₹10 Crore earned.<br>The balance <span class="c">shifts to saving.</span></h2>
+  </div>
+  <div class="pile-scene" id="s14-piles" style="margin-top:32px">
+    <div class="pile-col">
+      <div class="pile-label">Expenses</div>
+      <div class="pile-bar-wrap">
+        <div class="pile-bar" id="p14-exp" style="background:var(--muted);height:50%"></div>
+      </div>
+      <div class="pile-icon">🏠</div>
+      <div class="pile-amount" style="color:var(--text)">₹5 Cr</div>
+      <div class="pile-pct">50%</div>
+    </div>
+    <div class="pile-col">
+      <div class="pile-label">Travel</div>
+      <div class="pile-bar-wrap">
+        <div class="pile-bar" id="p14-trv" style="background:var(--cyan);height:10%"></div>
+      </div>
+      <div class="pile-icon">✈️</div>
+      <div class="pile-amount" style="color:var(--cyan)">₹1 Cr</div>
+      <div class="pile-pct">10% — quality over qty</div>
+    </div>
+    <div class="pile-col">
+      <div class="pile-label">Savings</div>
+      <div class="pile-bar-wrap">
+        <div class="pile-bar" id="p14-sav" style="background:var(--cyan);height:40%"></div>
+      </div>
+      <div class="pile-icon">📈</div>
+      <div class="pile-amount" style="color:var(--cyan)">₹4 Cr</div>
+      <div class="pile-pct">40% — the engine starts</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 15 — CUMULATIVE AFTER PHASE 2 ══════════════════════════ -->
+<div class="slide" id="s15">
+  <div class="stagger" id="s15-st">
+    <div class="eyebrow">End of Decade 2 · Cumulative Picture</div>
+    <h2>₹11 Cr earned total.<br><span class="a">₹4.15 Cr</span> saved and invested.</h2>
+    <p class="body-text">Phase 1 seeds (₹15L) + Phase 2 savings (₹4Cr) = <strong>₹4.15 Crore in investments</strong>. Growing at 12%, this compounds to <span style="color:var(--amber);font-weight:600">₹12.8 Crore</span> by Year 30.</p>
+    <div style="display:flex;gap:20px;margin-top:24px;flex-wrap:wrap;justify-content:center">
+      <div style="background:rgba(240,168,48,0.08);border:1px solid rgba(240,168,48,0.2);border-radius:10px;padding:20px 28px;text-align:center">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--amber);margin-bottom:8px">Phase 1 Saved</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:40px;color:var(--amber)">₹15 L</div>
+      </div>
+      <div style="font-size:28px;color:var(--dim);display:flex;align-items:center">+</div>
+      <div style="background:rgba(61,214,245,0.08);border:1px solid rgba(61,214,245,0.2);border-radius:10px;padding:20px 28px;text-align:center">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--cyan);margin-bottom:8px">Phase 2 Saved</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:40px;color:var(--cyan)">₹4 Cr</div>
+      </div>
+      <div style="font-size:28px;color:var(--dim);display:flex;align-items:center">=</div>
+      <div style="background:rgba(61,232,122,0.08);border:1px solid rgba(61,232,122,0.2);border-radius:10px;padding:20px 28px;text-align:center">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--green);margin-bottom:8px">Total Invested</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:40px;color:var(--green)">₹4.15 Cr</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 16 — THE MULTIPLIER ════════════════════════════════════ -->
+<div class="slide" id="s16">
+  <div class="blob" style="width:600px;height:600px;bottom:-200px;right:-200px;background:radial-gradient(circle,rgba(61,232,122,0.1),transparent 65%)"></div>
+  <div class="stagger" id="s16-st">
+    <div class="eyebrow">Why Phase 3 Is Different</div>
+    <h2>In Phase 3, income doesn't<br>just grow — it <span class="g">explodes.</span></h2>
+    <p class="body-text">You have 20 years of reputation. A network that calls you. A track record that speaks. <strong>The difference between Phase 1 and Phase 3 income is not effort — it is leverage.</strong></p>
+    <div style="display:flex;align-items:center;gap:14px;margin-top:24px;justify-content:center;flex-wrap:wrap">
+      <div style="text-align:center;padding:16px 20px;background:var(--surface);border:1px solid var(--border);border-radius:10px">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)">Phase 1 avg/yr</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--amber)">₹10 L</div>
+      </div>
+      <div style="font-size:28px;color:var(--dim)">×</div>
+      <div style="text-align:center;padding:16px 20px;background:var(--surface);border:1px solid var(--border);border-radius:10px">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)">Phase 2 avg/yr</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--cyan)">₹1 Cr</div>
+      </div>
+      <div style="font-size:28px;color:var(--dim)">×</div>
+      <div style="text-align:center;padding:16px 20px;background:rgba(61,232,122,0.06);border:1px solid rgba(61,232,122,0.2);border-radius:10px">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)">Phase 3 avg/yr</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--green)">₹10 Cr</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 17 — PHASE 3 INTRO ═════════════════════════════════════ -->
+<div class="slide" id="s17" style="background:radial-gradient(ellipse 80% 60% at 50% 100%,rgba(61,232,122,0.05),transparent)">
+  <div class="blob" style="width:600px;height:600px;bottom:-200px;left:50%;transform:translateX(-50%);background:radial-gradient(circle,rgba(61,232,122,0.1),transparent 65%)"></div>
+  <div class="stagger" id="s17-st">
+    <div class="eyebrow" style="color:var(--green)">Phase 3 · Years 21 to 30</div>
+    <h1 style="color:var(--green)">Compound</h1>
+    <p class="body-text">The machine runs itself now. Your money makes money. Your name makes money. Your network makes money. <strong>₹100 Crore in 10 years</strong> — not fantasy. Compounding math at scale.</p>
+    <div style="margin-top:24px">
+      <div class="big-num" style="color:var(--green)">₹100 Cr</div>
+      <div style="font-family:'DM Mono',monospace;font-size:13px;color:var(--muted);margin-top:8px">Total earned across Decade 3</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 18 — PHASE 3 BAR CHART ════════════════════════════════ -->
+<div class="slide" id="s18">
+  <div class="stagger" id="s18-st">
+    <div class="eyebrow" style="color:var(--green)">Phase 3 · Year by Year</div>
+    <h2>Watch income <span class="g">grow from ₹7Cr to ₹14Cr</span></h2>
+    <p class="body-text" style="margin-bottom:20px">Starting at ₹7Cr/year, growing <strong>8% annually</strong></p>
+  </div>
+  <div class="bar-scene" id="s18-bars">
+    <div class="bar-row" id="s18-bar-row"></div>
+    <svg width="100%" height="20" viewBox="0 0 860 20" style="margin-top:4px;max-width:860px">
+      <text x="43"  y="14" font-size="10" fill="rgba(255,255,255,0.25)" font-family="DM Mono" text-anchor="middle">Y21</text>
+      <text x="129" y="14" font-size="10" fill="rgba(255,255,255,0.25)" font-family="DM Mono" text-anchor="middle">Y22</text>
+      <text x="215" y="14" font-size="10" fill="rgba(255,255,255,0.25)" font-family="DM Mono" text-anchor="middle">Y23</text>
+      <text x="301" y="14" font-size="10" fill="rgba(255,255,255,0.25)" font-family="DM Mono" text-anchor="middle">Y24</text>
+      <text x="387" y="14" font-size="10" fill="rgba(255,255,255,0.25)" font-family="DM Mono" text-anchor="middle">Y25</text>
+      <text x="473" y="14" font-size="10" fill="rgba(255,255,255,0.25)" font-family="DM Mono" text-anchor="middle">Y26</text>
+      <text x="559" y="14" font-size="10" fill="rgba(255,255,255,0.25)" font-family="DM Mono" text-anchor="middle">Y27</text>
+      <text x="645" y="14" font-size="10" fill="rgba(255,255,255,0.25)" font-family="DM Mono" text-anchor="middle">Y28</text>
+      <text x="731" y="14" font-size="10" fill="rgba(255,255,255,0.25)" font-family="DM Mono" text-anchor="middle">Y29</text>
+      <text x="817" y="14" font-size="10" fill="rgba(255,255,255,0.25)" font-family="DM Mono" text-anchor="middle">Y30</text>
+    </svg>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 19 — PHASE 3 SPLIT ═════════════════════════════════════ -->
+<div class="slide" id="s19">
+  <div class="blob" style="width:500px;height:500px;top:-100px;right:-120px;background:radial-gradient(circle,rgba(61,232,122,0.1),transparent 65%)"></div>
+  <div class="stagger" id="s19-st">
+    <div class="eyebrow" style="color:var(--green)">Phase 3 · Where It Goes</div>
+    <h2>₹100 Crore earned.<br><span class="g">Maximum savings mode.</span></h2>
+  </div>
+  <div class="pile-scene" id="s19-piles" style="margin-top:24px">
+    <div class="pile-col">
+      <div class="pile-label">Expenses</div>
+      <div class="pile-bar-wrap">
+        <div class="pile-bar" id="p19-exp" style="background:var(--muted);height:50%"></div>
+      </div>
+      <div class="pile-icon">🏠</div>
+      <div class="pile-amount" style="color:var(--text)">₹50.2 Cr</div>
+      <div class="pile-pct">50%</div>
+    </div>
+    <div class="pile-col">
+      <div class="pile-label">Travel</div>
+      <div class="pile-bar-wrap">
+        <div class="pile-bar" id="p19-trv" style="background:var(--cyan);height:5%"></div>
+      </div>
+      <div class="pile-icon">✈️</div>
+      <div class="pile-amount" style="color:var(--cyan)">₹5.02 Cr</div>
+      <div class="pile-pct">5% — only the best now</div>
+    </div>
+    <div class="pile-col">
+      <div class="pile-label">Savings</div>
+      <div class="pile-bar-wrap">
+        <div class="pile-bar" id="p19-sav" style="background:var(--green);height:45%"></div>
+      </div>
+      <div class="pile-icon">📈</div>
+      <div class="pile-amount" style="color:var(--green)">₹45.2 Cr</div>
+      <div class="pile-pct">45% — building legacy</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 20 — THE 30-YEAR CHART ════════════════════════════════ -->
+<div class="slide" id="s20">
+  <div class="stagger" id="s20-st">
+    <div class="eyebrow">All 30 Years Together</div>
+    <h2>The complete income<br><span class="a">story in one chart.</span></h2>
+  </div>
+  <div style="width:100%;max-width:940px;margin-top:18px">
+    <div id="s20-bar-row" style="display:flex;align-items:flex-end;gap:2px;height:180px;width:100%"></div>
+    <div style="display:flex;width:100%;margin-top:6px">
+      <div style="flex:10;text-align:center;font-family:'DM Mono',monospace;font-size:10px;color:var(--amber)">Phase 1 · Years 1–10</div>
+      <div style="flex:10;text-align:center;font-family:'DM Mono',monospace;font-size:10px;color:var(--cyan)">Phase 2 · Years 11–20</div>
+      <div style="flex:10;text-align:center;font-family:'DM Mono',monospace;font-size:10px;color:var(--green)">Phase 3 · Years 21–30</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 21 — GROWING SAVINGS PILES ════════════════════════════ -->
+<div class="slide" id="s21">
+  <div class="blob" style="width:600px;height:600px;top:-150px;right:-150px;background:radial-gradient(circle,rgba(61,232,122,0.1),transparent 65%)"></div>
+  <div class="stagger" id="s21-st">
+    <div class="eyebrow">The Savings Journey</div>
+    <h2>Watch the savings pile<br><span class="g">grow across 3 decades</span></h2>
+  </div>
+  <div style="display:flex;align-items:flex-end;justify-content:center;gap:20px;width:100%;max-width:860px;margin-top:24px">
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:10px">
+      <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--amber)">After Year 10</div>
+      <div style="width:100%;background:rgba(255,255,255,0.04);border-radius:6px;overflow:hidden;height:220px;display:flex;flex-direction:column;justify-content:flex-end">
+        <div id="s21-p1" style="width:100%;background:var(--amber);border-radius:4px 4px 0 0;transform:scaleY(0);transform-origin:bottom;transition:transform 1s cubic-bezier(0.34,1.3,0.64,1);height:3%"></div>
+      </div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--amber)">₹15 L</div>
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)">saved</div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:10px">
+      <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--cyan)">After Year 20</div>
+      <div style="width:100%;background:rgba(255,255,255,0.04);border-radius:6px;overflow:hidden;height:220px;display:flex;flex-direction:column;justify-content:flex-end">
+        <div id="s21-p2" style="width:100%;background:linear-gradient(to top,var(--cyan),var(--amber));border-radius:4px 4px 0 0;transform:scaleY(0);transform-origin:bottom;transition:transform 1s .2s cubic-bezier(0.34,1.3,0.64,1);height:30%"></div>
+      </div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--cyan)">₹4.15 Cr</div>
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)">cumulative saved</div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:10px">
+      <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--green)">After Year 30</div>
+      <div style="width:100%;background:rgba(255,255,255,0.04);border-radius:6px;overflow:hidden;height:220px;display:flex;flex-direction:column;justify-content:flex-end">
+        <div id="s21-p3" style="width:100%;background:linear-gradient(to top,var(--green),var(--cyan),var(--amber));border-radius:4px 4px 0 0;transform:scaleY(0);transform-origin:bottom;transition:transform 1s .4s cubic-bezier(0.34,1.3,0.64,1);height:100%"></div>
+      </div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--green)">₹49.4 Cr</div>
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)">cumulative saved</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 22 — THE ALLOCATION SHIFT ═════════════════════════════ -->
+<div class="slide" id="s22">
+  <div class="stagger" id="s22-st">
+    <div class="eyebrow">The Allocation Shift</div>
+    <h2>Same 50% life rule.<br>Travel <em>shrinks.</em> Savings <em>explodes.</em></h2>
+    <p class="body-text" style="margin-bottom:20px">The beauty of the system: <strong>you never sacrifice quality of life</strong>. You always spend 50% on living. But as income scales, 50% of ₹100Cr is very different from 50% of ₹1Cr.</p>
+  </div>
+  <div style="width:100%;max-width:760px;display:flex;flex-direction:column;gap:16px">
+    <div>
+      <div style="display:flex;justify-content:space-between;font-family:'DM Mono',monospace;font-size:11px;color:var(--amber);margin-bottom:6px"><span>Phase 1 · ₹1 Cr</span><span>Exp 50% · Trv 35% · Sav 15%</span></div>
+      <div style="height:24px;border-radius:4px;overflow:hidden;display:flex">
+        <div style="background:rgba(232,228,240,0.25);flex:50;transition:flex 1s"></div>
+        <div style="background:var(--cyan);flex:35;transition:flex 1s"></div>
+        <div style="background:var(--amber);flex:15;transition:flex 1s"></div>
+      </div>
+    </div>
+    <div>
+      <div style="display:flex;justify-content:space-between;font-family:'DM Mono',monospace;font-size:11px;color:var(--cyan);margin-bottom:6px"><span>Phase 2 · ₹10 Cr</span><span>Exp 50% · Trv 10% · Sav 40%</span></div>
+      <div style="height:24px;border-radius:4px;overflow:hidden;display:flex">
+        <div style="background:rgba(232,228,240,0.25);flex:50"></div>
+        <div style="background:var(--cyan);flex:10"></div>
+        <div style="background:var(--cyan);opacity:.6;flex:40"></div>
+      </div>
+    </div>
+    <div>
+      <div style="display:flex;justify-content:space-between;font-family:'DM Mono',monospace;font-size:11px;color:var(--green);margin-bottom:6px"><span>Phase 3 · ₹100 Cr</span><span>Exp 50% · Trv 5% · Sav 45%</span></div>
+      <div style="height:24px;border-radius:4px;overflow:hidden;display:flex">
+        <div style="background:rgba(232,228,240,0.25);flex:50"></div>
+        <div style="background:var(--cyan);flex:5"></div>
+        <div style="background:var(--green);flex:45"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 23 — TRAVEL THROUGH THE LENS OF DECADES ════════════════ -->
+<div class="slide" id="s23">
+  <div class="stagger" id="s23-st">
+    <div class="eyebrow">The Travel Fund Story</div>
+    <h2>Travel is<br>front-loaded <span class="c">on purpose.</span></h2>
+    <p class="body-text">Phase 1 travel = adventure. Phase 2 = business travel and meaningful experiences. Phase 3 = premium, purposeful, and rare. <strong>The total travel spend across 30 years: ₹6.37 Crore.</strong></p>
+  </div>
+  <div style="display:flex;align-items:flex-end;justify-content:center;gap:20px;width:100%;max-width:700px;margin-top:24px">
+    <div style="flex:1;text-align:center">
+      <div style="font-size:28px;margin-bottom:8px">🎒</div>
+      <div style="width:100%;background:rgba(255,255,255,0.04);border-radius:4px;overflow:hidden;height:160px;display:flex;flex-direction:column;justify-content:flex-end;margin-bottom:10px">
+        <div id="trv1" style="width:100%;background:var(--cyan);height:0%;transition:height 1s .1s cubic-bezier(0.4,0,0.2,1);border-radius:4px 4px 0 0"></div>
+      </div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--cyan)">₹35 L</div>
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)">Phase 1 · 35%</div>
+    </div>
+    <div style="flex:1;text-align:center">
+      <div style="font-size:28px;margin-bottom:8px">✈️</div>
+      <div style="width:100%;background:rgba(255,255,255,0.04);border-radius:4px;overflow:hidden;height:160px;display:flex;flex-direction:column;justify-content:flex-end;margin-bottom:10px">
+        <div id="trv2" style="width:100%;background:var(--cyan);height:0%;transition:height 1s .3s cubic-bezier(0.4,0,0.2,1);border-radius:4px 4px 0 0"></div>
+      </div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--cyan)">₹1 Cr</div>
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)">Phase 2 · 10%</div>
+    </div>
+    <div style="flex:1;text-align:center">
+      <div style="font-size:28px;margin-bottom:8px">🛥️</div>
+      <div style="width:100%;background:rgba(255,255,255,0.04);border-radius:4px;overflow:hidden;height:160px;display:flex;flex-direction:column;justify-content:flex-end;margin-bottom:10px">
+        <div id="trv3" style="width:100%;background:var(--cyan);height:0%;transition:height 1s .5s cubic-bezier(0.4,0,0.2,1);border-radius:4px 4px 0 0"></div>
+      </div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--cyan)">₹5.02 Cr</div>
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)">Phase 3 · 5%</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 24 — WHY THIS WORKS ════════════════════════════════════ -->
+<div class="slide" id="s24">
+  <div class="blob" style="width:600px;height:600px;top:-150px;left:-150px;background:radial-gradient(circle,rgba(240,168,48,0.08),transparent 65%)"></div>
+  <div class="stagger" id="s24-st">
+    <div class="eyebrow">The Psychology</div>
+    <h2>Why this system<br>actually <span class="a">works for humans.</span></h2>
+    <div class="flow-row stagger" style="margin-top:24px">
+      <div class="flow-box">
+        <div class="fb-icon">🧩</div>
+        <div class="fb-label">Clear phases</div>
+        <div class="fb-val" style="font-size:14px;color:var(--text)">Removes decision fatigue every year</div>
+      </div>
+      <div class="flow-box">
+        <div class="fb-icon">⚖️</div>
+        <div class="fb-label">50% floor</div>
+        <div class="fb-val" style="font-size:14px;color:var(--text)">Life never suffers. Ever.</div>
+      </div>
+      <div class="flow-box">
+        <div class="fb-icon">📅</div>
+        <div class="fb-label">Travel first</div>
+        <div class="fb-val" style="font-size:14px;color:var(--text)">Energy matches intent</div>
+      </div>
+    </div>
+    <div class="flow-row stagger" style="margin-top:10px">
+      <div class="flow-box">
+        <div class="fb-icon">📈</div>
+        <div class="fb-label">Momentum builds</div>
+        <div class="fb-val" style="font-size:14px;color:var(--text)">Each phase earns 10x the last</div>
+      </div>
+      <div class="flow-box">
+        <div class="fb-icon">🔁</div>
+        <div class="fb-label">Compounding</div>
+        <div class="fb-val" style="font-size:14px;color:var(--text)">Early savings multiply over time</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 25 — THE TOTAL INCOME ═════════════════════════════════ -->
+<div class="slide" id="s25">
+  <div class="blob" style="width:700px;height:700px;top:50%;left:50%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(240,168,48,0.07),transparent 65%)"></div>
+  <div class="stagger" id="s25-st">
+    <div class="eyebrow">30-Year Total</div>
+    <h2>₹1 Cr + ₹10 Cr + ₹100 Cr</h2>
+    <div style="display:flex;align-items:center;gap:20px;margin-top:16px;justify-content:center;flex-wrap:wrap">
+      <div style="text-align:center">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,6vw,72px);color:var(--amber);line-height:1">₹1 Cr</div>
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)">Explore</div>
+      </div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:40px;color:var(--dim)">+</div>
+      <div style="text-align:center">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,6vw,72px);color:var(--cyan);line-height:1">₹10 Cr</div>
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)">Build</div>
+      </div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:40px;color:var(--dim)">+</div>
+      <div style="text-align:center">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,6vw,72px);color:var(--green);line-height:1">₹100 Cr</div>
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)">Compound</div>
+      </div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:40px;color:var(--dim)">=</div>
+      <div style="text-align:center">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,8vw,100px);color:var(--text);line-height:1" id="s25-counter">₹111 Cr</div>
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)">30-year total income</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 26 — THE THREE PILES ══════════════════════════════════ -->
+<div class="slide" id="s26">
+  <div class="stagger" id="s26-st">
+    <div class="eyebrow">The Final Split</div>
+    <h2>₹111 Cr total.<br>Three <em>permanent</em> destinations.</h2>
+  </div>
+  <div class="pile-scene" style="margin-top:28px;max-width:860px">
+    <div class="pile-col">
+      <div class="pile-label">Total Lived</div>
+      <div class="pile-bar-wrap">
+        <div class="pile-bar" id="fp-exp" style="background:rgba(232,228,240,0.2);height:50%"></div>
+      </div>
+      <div class="pile-icon">🏠</div>
+      <div class="pile-amount" style="color:var(--text)">₹55.7 Cr</div>
+      <div class="pile-pct">50% · life across 30 years</div>
+    </div>
+    <div class="pile-col">
+      <div class="pile-label">Memories Made</div>
+      <div class="pile-bar-wrap">
+        <div class="pile-bar" id="fp-trv" style="background:var(--cyan);height:6%"></div>
+      </div>
+      <div class="pile-icon">✈️</div>
+      <div class="pile-amount" style="color:var(--cyan)">₹6.37 Cr</div>
+      <div class="pile-pct">5.7% · all the travel</div>
+    </div>
+    <div class="pile-col">
+      <div class="pile-label">Saved &amp; Invested</div>
+      <div class="pile-bar-wrap">
+        <div class="pile-bar" id="fp-sav" style="background:linear-gradient(to top,var(--green),var(--cyan),var(--amber));height:44%"></div>
+      </div>
+      <div class="pile-icon">📈</div>
+      <div class="pile-amount" style="color:var(--green)">₹49.4 Cr</div>
+      <div class="pile-pct">44.4% · the war chest</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 27 — COMPOUNDING RETURNS ══════════════════════════════ -->
+<div class="slide" id="s27">
+  <div class="blob" style="width:600px;height:600px;bottom:-200px;left:50%;transform:translateX(-50%);background:radial-gradient(circle,rgba(61,232,122,0.12),transparent 65%)"></div>
+  <div class="stagger" id="s27-st">
+    <div class="eyebrow">But Wait — There's More</div>
+    <h2>₹49.4 Cr saved is just<br><span class="g">the beginning of the story.</span></h2>
+    <p class="body-text">That ₹49.4 Cr was invested across 30 years. At a conservative <strong>12% CAGR</strong>, the compounded value of these investments by Year 30 is not ₹49.4 Cr. It is much, much more.</p>
+    <div style="display:flex;gap:20px;margin-top:24px;justify-content:center;flex-wrap:wrap;align-items:center">
+      <div style="text-align:center;padding:16px 28px;background:rgba(61,232,122,0.06);border:1px solid rgba(61,232,122,0.2);border-radius:10px">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:8px">Saved (cash in)</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:44px;color:var(--text)">₹49.4 Cr</div>
+      </div>
+      <div style="font-size:28px;color:var(--dim)">→</div>
+      <div style="text-align:center;padding:16px 28px;background:rgba(61,232,122,0.1);border:1px solid rgba(61,232,122,0.3);border-radius:10px">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--green);margin-bottom:8px">@12% CAGR over avg 15yrs</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:44px;color:var(--green)">₹270+ Cr</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 28 — THE QUOTE ═════════════════════════════════════════ -->
+<div class="slide" id="s28">
+  <div class="blob" style="width:700px;height:700px;top:50%;left:50%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(240,168,48,0.07),transparent 65%)"></div>
+  <div class="stagger" id="s28-st">
+    <div class="eyebrow">The Thesis</div>
+    <div class="quote">"The bars will wobble. Life will wobble. You will underearn in some years, overspend in others. None of that matters — because the <em>structure</em> holds."</div>
+    <div class="quote-attr">The 1 · 10 · 100 Framework</div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 29 — IS THIS POSSIBLE? ════════════════════════════════ -->
+<div class="slide" id="s29">
+  <div class="blob" style="width:500px;height:500px;top:-100px;right:-120px;background:radial-gradient(circle,rgba(61,232,122,0.1),transparent 65%)"></div>
+  <div class="stagger" id="s29-st">
+    <div class="eyebrow">The Reality Check</div>
+    <h2>Is ₹100 Crore in Phase 3<br><em>actually</em> <span class="g">possible?</span></h2>
+    <p class="body-text">For a freelancer, consultant, or founder — earning ₹7–14 Cr/year in their 40s and 50s is not fantasy. That is ₹60–120 lakh/month. <strong>One premium client. One small fund. One SaaS product. One consulting retainer.</strong></p>
+    <div class="flow-row" style="margin-top:20px">
+      <div class="flow-box">
+        <div class="fb-label">Consultant</div>
+        <div class="fb-val" style="color:var(--green);font-size:16px">10 clients × ₹60L</div>
+      </div>
+      <div class="flow-box">
+        <div class="fb-label">Fund Manager</div>
+        <div class="fb-val" style="color:var(--green);font-size:16px">2% of ₹350Cr AUM</div>
+      </div>
+      <div class="flow-box">
+        <div class="fb-label">Founder Exit</div>
+        <div class="fb-val" style="color:var(--green);font-size:16px">One acquisition</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 30 — THE CLOSE ═════════════════════════════════════════ -->
+<div class="slide" id="s30">
+  <div class="blob" style="width:700px;height:700px;top:50%;left:50%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(240,168,48,0.08),rgba(61,214,245,0.05),transparent 70%)"></div>
+  <div class="stagger" id="s30-st">
+    <div class="eyebrow">Start Here</div>
+    <h1 style="line-height:1.0"><span class="a">1</span> · <span class="c">10</span> · <span class="g">100</span></h1>
+    <h2 style="margin-top:8px;font-size:clamp(20px,3vw,36px)">Three decades. Three identities.<br>One consistent rule.</h2>
+    <div style="display:flex;gap:12px;justify-content:center;margin-top:24px;flex-wrap:wrap">
+      <div class="pill pill-a">Decade 1 · Explore · ₹1 Cr</div>
+      <div class="pill pill-c">Decade 2 · Build · ₹10 Cr</div>
+      <div class="pill pill-g">Decade 3 · Compound · ₹100 Cr</div>
+    </div>
+    <p class="body-text" style="margin-top:20px;max-width:560px">Always spend 50% on life. Travel hard when you're young. Save more as income scales. <strong>Let compounding do what compounding does.</strong></p>
+    <div style="margin-top:28px;font-family:'DM Mono',monospace;font-size:12px;color:var(--dim)">← → keys or arrows to navigate · 30 slides</div>
+  </div>
+</div>
+
+</div><!-- /stage -->
+
+<!-- ─── CONTROLS ─── -->
+<div class="controls">
+  <button class="ctrl-btn" id="prevBtn" disabled>←</button>
+  <div class="prog-track" id="progTrack"></div>
+  <div class="slide-ctr" id="counter">1 / 30</div>
+  <span class="key-hint">← → keys</span>
+  <button class="ctrl-btn" id="nextBtn">→</button>
+</div>
+
+<script>
+// ─── DATA ───
+const TOTAL = 30;
+let current = 0, animating = false;
+const slides = document.querySelectorAll('.slide');
+
+// Phase year data
+function makeYears(totalCr, growth, n=10){
+  const g=growth/100, r=1+g;
+  let a = Math.abs(g)<0.0001 ? totalCr/n : totalCr*(r-1)/(Math.pow(r,n)-1);
+  return Array.from({length:n},(_,i)=>a*Math.pow(r,i));
+}
+const y1 = makeYears(1,20);
+const y2 = makeYears(10,10);
+const y3 = makeYears(100,8);
+
+function fmtL(cr){
+  if(cr>=1) return `₹${cr.toFixed(cr>=10?0:1)}Cr`;
+  const l=cr*100;
+  return `₹${l.toFixed(l>=10?0:1)}L`;
+}
+
+// ─── PROGRESS DOTS ───
+const track = document.getElementById('progTrack');
+for(let i=0;i<TOTAL;i++){
+  const d=document.createElement('div');
+  d.className='prog-dot'+(i===0?' current':'');
+  d.addEventListener('click',()=>goTo(i));
+  track.appendChild(d);
+}
+function updateDots(){
+  track.querySelectorAll('.prog-dot').forEach((d,i)=>{
+    d.className='prog-dot'+(i<current?' done':i===current?' current':'');
+  });
+}
+
+// ─── NAVIGATION ───
+const prevBtn=document.getElementById('prevBtn');
+const nextBtn=document.getElementById('nextBtn');
+const counter=document.getElementById('counter');
+
+function goTo(n){
+  if(animating||n===current) return;
+  animating=true;
+  const dir=n>current?1:-1;
+  const old=current; current=n;
+  slides[old].classList.add(dir>0?'exit-left':'exit-right');
+  slides[old].classList.remove('active');
+  slides[current].style.transform=`translateX(${dir>0?60:-60}px)`;
+  slides[current].style.transition='none';
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    slides[current].style.transition='';
+    slides[current].classList.add('active');
+  }));
+  setTimeout(()=>{
+    slides[old].classList.remove('exit-left','exit-right');
+    animating=false;
+  },550);
+  counter.textContent=`${current+1} / ${TOTAL}`;
+  prevBtn.disabled=current===0;
+  nextBtn.disabled=current===TOTAL-1;
+  updateDots();
+  onSlideEnter(current);
+}
+
+prevBtn.addEventListener('click',()=>goTo(current-1));
+nextBtn.addEventListener('click',()=>goTo(current+1));
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key==='ArrowDown') goTo(Math.min(current+1,TOTAL-1));
+  if(e.key==='ArrowLeft' ||e.key==='ArrowUp')   goTo(Math.max(current-1,0));
+});
+let tx=0;
+document.getElementById('stage').addEventListener('touchstart',e=>{tx=e.touches[0].clientX},{passive:true});
+document.getElementById('stage').addEventListener('touchend',e=>{
+  const dx=e.changedTouches[0].clientX-tx;
+  if(Math.abs(dx)>50) goTo(dx<0?Math.min(current+1,TOTAL-1):Math.max(current-1,0));
+});
+
+// ─── STAGGER TRIGGERS ───
+function triggerStagger(id){
+  const el=document.getElementById(id);
+  if(el){el.classList.remove('go');requestAnimationFrame(()=>requestAnimationFrame(()=>el.classList.add('go')));}
+}
+
+// ─── BAR CHART BUILDERS ───
+function buildBars(rowId, years, color){
+  const row = document.getElementById(rowId);
+  if(!row) return;
+  row.innerHTML='';
+  const max=Math.max(...years);
+  years.forEach((v,i)=>{
+    const pct=Math.max((v/max)*100,2);
+    const col=document.createElement('div');
+    col.style.cssText=`flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%`;
+    const valEl=document.createElement('div');
+    valEl.style.cssText=`font-family:'DM Mono',monospace;font-size:9px;color:${color};margin-bottom:3px;opacity:0;transition:opacity .4s .5s;text-align:center`;
+    valEl.textContent=fmtL(v);
+    const bar=document.createElement('div');
+    bar.style.cssText=`width:85%;background:${color};border-radius:3px 3px 0 0;height:${pct}%;transform:scaleY(0);transform-origin:bottom;transition:transform .5s cubic-bezier(0.34,1.4,0.64,1);transition-delay:${i*0.05}s`;
+    col.appendChild(valEl);
+    col.appendChild(bar);
+    row.appendChild(col);
+    setTimeout(()=>{
+      bar.style.transform='scaleY(1)';
+      valEl.style.opacity='1';
+    },100+i*60);
+  });
+}
+
+function buildBig(){
+  const row=document.getElementById('s20-bar-row');
+  if(!row) return;
+  row.innerHTML='';
+  const allYears=[...y1,...y2,...y3];
+  const colors=[...y1.map(()=>'#f0a830'),...y2.map(()=>'#3dd6f5'),...y3.map(()=>'#3de87a')];
+  const max=Math.max(...allYears);
+  allYears.forEach((v,i)=>{
+    const pct=Math.max((v/max)*100,1);
+    const bar=document.createElement('div');
+    bar.style.cssText=`flex:1;background:${colors[i]};border-radius:2px 2px 0 0;height:${pct}%;transform:scaleY(0);transform-origin:bottom;transition:transform .4s cubic-bezier(0.34,1.2,0.64,1);transition-delay:${i*0.025}s;align-self:flex-end`;
+    row.appendChild(bar);
+    setTimeout(()=>bar.style.transform='scaleY(1)',100+i*30);
+  });
+}
+
+// ─── PILE ANIMATORS ───
+function animatePile(id){
+  const el=document.getElementById(id);
+  if(el){setTimeout(()=>el.classList.add('grow'),100);}
+}
+function resetPile(id){
+  const el=document.getElementById(id);
+  if(el) el.classList.remove('grow');
+}
+
+// ─── HEIGHT ANIMATORS ───
+function animateHeight(id,targetPct,delay=100){
+  const el=document.getElementById(id);
+  if(el){
+    el.style.height='0%';
+    setTimeout(()=>{
+      el.style.transition='height 1s cubic-bezier(0.34,1.2,0.64,1)';
+      el.style.height=targetPct+'%';
+    },delay);
+  }
+}
+
+// ─── SLIDE ENTER ACTIONS ───
+function onSlideEnter(n){
+  const id=`s${n+1}-st`;
+  triggerStagger(id);
+
+  // reset/trigger specific slide animations
+  if(n===5){ // slide 6 - phase 1 bars
+    buildBars('s6-bar-row',y1,'#f0a830');
+  }
+  if(n===6){ // slide 7 - phase 1 piles
+    ['p7-exp','p7-trv','p7-sav'].forEach(id=>resetPile(id));
+    setTimeout(()=>{animatePile('p7-exp');animatePile('p7-trv');animatePile('p7-sav');},200);
+  }
+  if(n===12){ // slide 13 - phase 2 bars
+    buildBars('s13-bar-row',y2,'#3dd6f5');
+  }
+  if(n===13){ // slide 14 - phase 2 piles
+    ['p14-exp','p14-trv','p14-sav'].forEach(id=>resetPile(id));
+    setTimeout(()=>{animatePile('p14-exp');animatePile('p14-trv');animatePile('p14-sav');},200);
+  }
+  if(n===17){ // slide 18 - phase 3 bars
+    buildBars('s18-bar-row',y3,'#3de87a');
+  }
+  if(n===18){ // slide 19 - phase 3 piles
+    ['p19-exp','p19-trv','p19-sav'].forEach(id=>resetPile(id));
+    setTimeout(()=>{animatePile('p19-exp');animatePile('p19-trv');animatePile('p19-sav');},200);
+  }
+  if(n===19){ // slide 20 - big chart
+    buildBig();
+  }
+  if(n===20){ // slide 21 - savings piles
+    ['s21-p1','s21-p2','s21-p3'].forEach(id=>resetPile(id));
+    setTimeout(()=>{animatePile('s21-p1');animatePile('s21-p2');animatePile('s21-p3');},200);
+  }
+  if(n===22){ // slide 23 - travel bars
+    animateHeight('trv1',22,200);
+    animateHeight('trv2',65,400);
+    animateHeight('trv3',100,600);
+  }
+  if(n===25){ // slide 26 - final piles
+    ['fp-exp','fp-trv','fp-sav'].forEach(id=>resetPile(id));
+    setTimeout(()=>{animatePile('fp-exp');animatePile('fp-trv');animatePile('fp-sav');},200);
+  }
+}
+
+// ─── INIT FIRST SLIDE ───
+slides[0].classList.add('active');
+onSlideEnter(0);
+</script>
+</body>
+</html>
