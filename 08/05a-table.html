@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consistency is Key</title>
+    <style>
+        *{margin: 0;box-sizing: border-box;}
+        html{scrollbar-width: none;}
+        body{font-family: cursive;font-size: 1.5rem;background: #111;}
+        h1,h2,h3{font-family: sans-serif;}
+        h1{color: orange;}
+        main{height: 100vh;display: flex;flex-direction: row;color: grey;gap:0;align-items: center;}
+        div{height: 80vh;min-width: 33vw;gap: 1rem;padding:3rem; display: flex;flex-direction: column; justify-content: center;text-align: center;background: #230423;transform: rotateX(4deg);color: #fff;opacity: 0.1;filter: blur(0px);}
+        div:nth-of-type(3n+2){filter: invert(1);}
+        img{max-height: 30vh;max-width: 100%;}
+        div:hover{opacity: 1;animation: showblur 20s infinite;z-index: 9999;}
+        h2{border-bottom: solid 6px #fff;}
+        @keyframes showblur {
+            0%{filter: blur(10px);transform: translateY(20px);}
+            2%,100%{filter: blur(0px);transform: translateY(0px) rotateX(0deg) scale(1.5);}
+        }
+    </style>
+    <script>
+// Target your main container element
+const mainContainer = document.querySelector('main') || document.getElementById('main');
+
+window.addEventListener('keydown', (event) => {
+  if (!mainContainer) return; // Exit if the container isn't found
+
+  if (event.key === 'ArrowRight') {
+    mainContainer.scrollBy({ left: 400, top: 0, behavior: 'smooth' });
+  } else if (event.key === 'ArrowLeft') {
+    mainContainer.scrollBy({ left: -400, top: 0, behavior: 'smooth' });
+  }
+});
+
+    </script>
+</head>
+<body>
+    <main>
+        <div>
+            <p><img src="https://sasban.online/sasban.jpg" height="200" alt=""><br>@sasban</p>
+
+        </div>
+        <div>
+            <h3>On Earning Online</h3>
+            <h1>Consistency is the compounding machine.</h1>
+        </div>
+        <div>
+            <p><img src="https://media.licdn.com/dms/image/v2/D4E22AQFMaCQhAtU4kA/feedshare-shrink_800/B4EZuEH7EWIgAk-/0/1767448229359?e=2147483647&v=beta&t=OY6JukFawt3heruEM8cXmDhb76PG0aihtqkdoRCLbQA" alt=""></p>
+            <p>Why a small sliver of creators, founders, and freelancers earn nearly all the money online — and what actually separates them from everyone else.</p>
+        </div>
+        <div>
+            <h3>The Starting Fact</h3>
+            <h2>Online income follows a power law.</h2>
+            <p><img src="https://public-images.interaction-design.org/tags/td-pareto-principle-diagram.png" alt=""></p>
+        </div>
+        <div>
+            <p>In almost every revenue model, the top 1–5% of creators, founders, and freelancers capture 80–90%+ of total earnings — a Pareto distribution, not a bell curve.</p>
+        </div>
+        <div>
+            <h2>The Filter</h2> 
+            <p>The line between high earners and everyone else isn't talent — it's consistency, sustained long enough to trigger compounding.</p>
+        </div>
+        <div>
+            <h2>The Mechanics</h2>
+            <p><img src="https://media.tenor.com/YIOyqkJRgRgAAAAM/loud-house-loud-house-gifs.gif" alt=""></p>
+            <p>Platform algorithms, SEO indexing, subscriber retention, and domain authority all reward the same behaviour: showing up on schedule.</p>
+        </div>
+        <div>
+            <h3>Content Creation & Algorithmic Media</h3>
+            <h1>The Library Effect</h1>
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsCY-BdNPqxvIfiVEA9WG0aIHseZLn9tVgrMpNnKfdsZP4lhg6PsLKLq0&s=10" alt="">
+        </div>
+        <div>
+            <p>Watch-time algorithms favour predictable uploads and a dense back-catalog — each video becomes a perpetual asset pulling traffic to every other video.</p>
+            <p><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRq5zfG96gpH9vet2ePplLv-_egrenmYvLp_GGfjcFbSuQnqNBV3Ttryfny&s=10" alt=""></p>
+        </div>
+        <div>
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0LaHNqngBnv9IvlNw3qflII0q5OmSQRsbiKRfn-pixQ&s=10" alt="">
+            <h2>Compounding mechanism</h2>
+            <p>Algorithmic trust and viewer-retention loops, built video by video.</p>
+        </div>
+        <div>
+            <h2>How top earners win</h2>
+            <p><img src="https://i.pinimg.com/originals/4f/74/86/4f7486cce0554d43faee8265c548d622.gif" alt=""></p>
+            <p>By video #200, one viral hit sends viewers binge-watching 10–20 back-catalog videos; sponsors pay for stable impressions, not one-off spikes.</p>
+        </div>
+        <div>
+            <h3>Paid Newsletters & Niche Media</h3>
+            <h1>Habit Formation</h1>
+            <p>Inactive lists decay 15–25% a year. Showing up the same day, same time builds subscriber LTV and near-zero churn.</p>
+        </div>
+        <div>        
+            <h2>Compounding mechanism</h2>
+            <b>Subscriber lifetime value and zero-churn organic growth.</b>
+        </div>
+        <div>
+            <h2>The revenue math</h2>
+            <p>10 net paid subs a week at $10/month, held for 3 years, builds a $36,000/year recurring stream — sporadic writers never cross that tipping point.</p>
+        </div>
+        <div>
+            <h3>Digital Products & Micro-Assets</h3>
+            <h1>Catalog Surface Area</h1>
+        </div>
+        <div>
+            <p>Marketplaces like Etsy, Gumroad, and Amazon KDP reward active shops with large inventories and steady reviews.</p>
+        </div>
+        <div>
+<h2>Compounding mechanism</h2>
+Search-marketplace ranking algorithms plus catalog breadth.
+        </div>
+        <div>
+<h2>How top earners win</h2>
+1–2 new assets a week signals an active storefront, lifting the whole shop's search visibility and unlocking cross-sells across the ecosystem.
+        </div>
+        <div>
+            <h3>SEO-Driven Publishing & Affiliate Marketing</h3>
+            <h1>Topical Authority</h1>
+            <p>Search engines judge topical authority by regular publishing and link accumulation across months and years, not a single burst.</p>
+        </div>
+        <div>
+            <h2>Compounding mechanism</h2>
+            Domain authority and escalation out of Google's sandbox.
+        </div>
+        <div>
+            <h2>Long-tail yield</h2>
+            <p>A Year-1 article can still generate high-margin affiliate income in Year 4 — funding expansion into fresh content clusters.</p>
+        </div>
+        <div>
+            <h3>High-Ticket Freelancing & Productized Agencies</h3>
+            <h1>The Referral Flywheel</h1>
+        </div>
+        <div>
+            <p>Early freelancers spend 80% of their time pitching, 20% working. Consistent outreach and delivery flip that ratio over time.</p>
+        </div>
+        <div>
+            <h2>Compounding mechanism</h2>
+            <p>Retainers, referrals, and portfolio authority.</p>
+        </div>
+        <div>
+            <h2>Productization</h2>
+            <p>Daily prospecting becomes a habit, not a reaction to slow weeks — the same standardized offer scales into a multi-six-figure agency.</p>
+        </div>
+        <div>
+            <h3>The Mathematical Advantage</h3>
+            <h1>Three phases, one behaviour.</h1>
+        </div>
+        <div>
+<h4>Months 1–6</h4>
+<h2>High effort, low return</h2>
+The filtering stage. Roughly 90% quit here, before compounding ever begins.
+
+        </div>
+        <div>
+<h4>Months 6–18</h4>
+<h2>Equal effort, moderate return</h2>
+Systems stabilize. Algorithms, lists, and catalogs start recognizing the pattern.
+
+        </div>
+        <div>
+<h4>Months 18+</h4>
+<h2>Standard effort, exponential return</h2>
+Top-tier status. The same daily habit now moves a much larger machine.
+        </div>
+        <div>
+<h3>The Uncopyable Moat</h3>
+<h1>Trust, authority, and time</h1>
+<h2> — no one can shortcut them.</h2>
+        </div>
+        <div>
+<p>In every online revenue vector, consistency builds a moat made of accumulated trust, domain authority, and procedural efficiency. It can only be earned in order — never bought, never skipped.</p>
+        </div>
+
+
+
+        <div>
+            <p><img src="https://sasban.online/sasban.jpg" height="200" alt=""></p>
+            <p>@sasban</p>
+        </div>
+    </main>
+</body>
+</html>

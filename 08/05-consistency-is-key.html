@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Consistency — The Compounding Machine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Sorts+Mill+Goudy&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper: #f7f0e4;
+    --paper-2: #f1e7d6;
+    --ink: #2e2a24;
+    --ink-soft: #5a5346;
+    --wash-a: #c98a6b;   /* terracotta */
+    --wash-b: #7a9e8f;   /* sage */
+    --wash-c: #d1a83d;   /* ochre gold */
+    --wash-d: #8a6f9e;   /* plum */
+    --wash-e: #4d8fa6;   /* teal blue */
+    --wash-f: #b6543f;   /* rust */
+    --accent: var(--wash-a);
+    --font-display: 'Fraunces', serif;
+    --font-body: 'Sorts Mill Goudy', serif;
+    --fs-base: clamp(16px, 1.4vw, 19px);
+  }
+
+  *{margin:0; padding:0; box-sizing:border-box;}
+
+  html,body{
+    width:100%; height:100%;
+    background: var(--paper);
+    overflow:hidden;
+    font-family: var(--font-body);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body{
+    font-size: var(--fs-base);
+  }
+
+  /* ---------- paper texture ---------- */
+  #paper-texture{
+    position:fixed; inset:0; z-index:1;
+    pointer-events:none;
+    opacity:0.5;
+    mix-blend-mode: multiply;
+  }
+
+  #grain{
+    position:fixed; inset:0; z-index:60;
+    pointer-events:none;
+    opacity:0.05;
+    mix-blend-mode: multiply;
+  }
+
+  /* ---------- watercolor wash blobs ---------- */
+  #wash-layer{
+    position:fixed; inset:0; z-index:0; overflow:hidden;
+  }
+  .blob{
+    position:absolute;
+    filter: url(#watercolor) blur(2px);
+    opacity:0.55;
+    transform-origin:center;
+    transition: fill 1.6s ease, opacity 1.2s ease;
+    will-change: transform;
+  }
+  .blob.drift-a{ animation: driftA 34s ease-in-out infinite; }
+  .blob.drift-b{ animation: driftB 41s ease-in-out infinite; }
+  .blob.drift-c{ animation: driftC 27s ease-in-out infinite; }
+  .blob.drift-d{ animation: driftD 46s ease-in-out infinite; }
+
+  @keyframes driftA{
+    0%,100%{ transform: translate(0,0) scale(1) rotate(0deg); }
+    33%{ transform: translate(3vw,-2vh) scale(1.08) rotate(4deg); }
+    66%{ transform: translate(-2vw,3vh) scale(0.96) rotate(-3deg); }
+  }
+  @keyframes driftB{
+    0%,100%{ transform: translate(0,0) scale(1) rotate(0deg); }
+    50%{ transform: translate(-4vw,2vh) scale(1.1) rotate(-5deg); }
+  }
+  @keyframes driftC{
+    0%,100%{ transform: translate(0,0) scale(1) rotate(0deg); }
+    40%{ transform: translate(2vw,3vh) scale(0.94) rotate(3deg); }
+    75%{ transform: translate(-3vw,-1vh) scale(1.05) rotate(-2deg); }
+  }
+  @keyframes driftD{
+    0%,100%{ transform: translate(0,0) scale(1) rotate(0deg); }
+    50%{ transform: translate(3vw,-3vh) scale(1.06) rotate(6deg); }
+  }
+
+  /* ---------- stage / deck ---------- */
+  #deck{
+    position:relative; z-index:5;
+    width:100%; height:100%;
+  }
+
+  .slide{
+    position:absolute; inset:0;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:flex-start;
+    padding: clamp(28px, 7vw, 110px) clamp(28px, 9vw, 140px);
+    opacity:0;
+    visibility:hidden;
+    pointer-events:none;
+    transform: translateY(24px);
+    transition: opacity .9s cubic-bezier(.22,.61,.36,1), transform .9s cubic-bezier(.22,.61,.36,1);
+  }
+  .slide.active{
+    opacity:1;
+    visibility:visible;
+    pointer-events:auto;
+    transform: translateY(0);
+  }
+
+  .eyebrow{
+    font-family: var(--font-body);
+    font-style: italic;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-size: clamp(15px, 1vw, 17px);
+    color: var(--accent);
+    opacity:0;
+    margin-bottom: clamp(10px, 1.4vh, 18px);
+  }
+  .slide.active .eyebrow{ animation: rise .8s cubic-bezier(.22,.61,.36,1) .15s forwards; }
+
+  h1,h2{
+    font-family: var(--font-display);
+    font-weight: 500;
+    line-height: 1.04;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    opacity:0;
+  }
+  .slide h1{ font-size: clamp(38px, 6.2vw, 92px); font-weight: 500; }
+  .slide h2{ font-size: clamp(26px, 4vw, 54px); font-weight: 500; }
+  .slide.active h1, .slide.active h2{ animation: rise .95s cubic-bezier(.22,.61,.36,1) .3s forwards; }
+
+  .lede{
+    font-family: var(--font-body);
+    font-size: clamp(17px, 1.6vw, 24px);
+    line-height: 1.55;
+    color: var(--ink-soft);
+    max-width: 46ch;
+    margin-top: clamp(14px, 2vh, 24px);
+    opacity:0;
+  }
+  .slide.active .lede{ animation: rise .95s cubic-bezier(.22,.61,.36,1) .5s forwards; }
+
+  @keyframes rise{
+    from{ opacity:0; transform: translateY(22px); }
+    to{ opacity:1; transform: translateY(0); }
+  }
+
+  /* mechanism / why-consistency block */
+  .mech-row{
+    display:flex; flex-wrap:wrap; gap: clamp(20px, 3vw, 48px);
+    margin-top: clamp(20px, 3.4vh, 40px);
+    max-width: 980px;
+  }
+  .mech-card{
+    flex:1 1 260px;
+    background: rgba(255,255,255,0.38);
+    border: 1px solid rgba(46,42,36,0.12);
+    border-radius: 18px 22px 20px 24px;
+    padding: clamp(16px, 2vw, 26px);
+    opacity:0;
+    transform: translateY(18px);
+    backdrop-filter: blur(2px);
+  }
+  .slide.active .mech-card{ animation: rise .8s cubic-bezier(.22,.61,.36,1) forwards; }
+  .slide.active .mech-card:nth-child(1){ animation-delay: .55s; }
+  .slide.active .mech-card:nth-child(2){ animation-delay: .72s; }
+  .mech-card .label{
+    font-family: var(--font-body); font-style:italic;
+    font-size: clamp(14px, 0.95vw, 16px);
+    color: var(--accent);
+    text-transform:uppercase; letter-spacing:0.08em;
+    display:block; margin-bottom:8px;
+  }
+  .mech-card p{
+    font-size: clamp(15px, 1.15vw, 18px);
+    line-height:1.5;
+    color: var(--ink-soft);
+  }
+
+  /* number badge for method slides */
+  .num-badge{
+    position:absolute;
+    top: clamp(24px, 5vh, 60px);
+    right: clamp(24px, 6vw, 100px);
+    font-family: var(--font-display);
+    font-size: clamp(70px, 10vw, 150px);
+    color: var(--accent);
+    opacity: 0.16;
+    line-height:1;
+    user-select:none;
+    transform: rotate(-4deg) scale(0.9);
+  }
+  .slide.active .num-badge{ animation: badgeIn 1.1s cubic-bezier(.22,.61,.36,1) .2s forwards; }
+  @keyframes badgeIn{ from{opacity:0; transform: rotate(-4deg) scale(0.7);} to{opacity:0.16; transform: rotate(-4deg) scale(0.9);} }
+
+  /* underline flourish */
+  .flourish{
+    width: clamp(60px, 8vw, 120px);
+    height: 10px;
+    margin-top: clamp(10px, 1.6vh, 18px);
+    opacity:0;
+  }
+  .slide.active .flourish{ animation: growLine 1.1s cubic-bezier(.22,.61,.36,1) .35s forwards; }
+  @keyframes growLine{
+    from{ opacity:0; transform: scaleX(0); }
+    to{ opacity:1; transform: scaleX(1); }
+  }
+  .flourish svg{ display:block; width:100%; height:100%; transform-origin:left; }
+
+  /* summary phase diagram */
+  .phase-track{
+    display:flex; gap: clamp(10px, 2vw, 22px);
+    margin-top: clamp(24px, 4vh, 44px);
+    width:100%; max-width: 980px;
+    flex-wrap:wrap;
+  }
+  .phase{
+    flex:1 1 220px;
+    padding: clamp(16px, 2vw, 24px);
+    border-radius: 16px;
+    background: rgba(255,255,255,0.4);
+    border: 1px solid rgba(46,42,36,0.12);
+    opacity:0; transform: translateY(16px) scale(0.97);
+  }
+  .slide.active .phase:nth-child(1){ animation: rise .8s cubic-bezier(.22,.61,.36,1) .5s forwards; }
+  .slide.active .phase:nth-child(2){ animation: rise .8s cubic-bezier(.22,.61,.36,1) .68s forwards; }
+  .slide.active .phase:nth-child(3){ animation: rise .8s cubic-bezier(.22,.61,.36,1) .86s forwards; }
+  .phase .ph-title{
+    font-family: var(--font-display); font-size: clamp(18px, 1.6vw, 24px);
+    color: var(--ink); margin-bottom:6px;
+  }
+  .phase .ph-sub{
+    font-size: clamp(14px, 1vw, 16px); color: var(--accent);
+    font-style:italic; margin-bottom:10px; display:block;
+  }
+  .phase p{ font-size: clamp(14px, 1vw, 16px); color: var(--ink-soft); line-height:1.5; }
+
+  /* closing statement styling */
+  .closing-word{
+    font-family: var(--font-display);
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  /* ---------- minimal nav: dots only ---------- */
+  #dots{
+    position:fixed;
+    bottom: clamp(18px, 3vh, 34px);
+    left:50%; transform: translateX(-50%);
+    z-index:50;
+    display:flex; gap:10px;
+    padding: 8px 10px;
+  }
+  .dot{
+    width:7px; height:7px; border-radius:50%;
+    background: var(--ink);
+    opacity:0.22;
+    cursor:pointer;
+    transition: opacity .4s ease, transform .4s ease, width .4s ease;
+  }
+  .dot.active{
+    opacity:0.85;
+    width:22px;
+    border-radius:5px;
+    background: var(--accent);
+  }
+
+  #hint{
+    position:fixed;
+    top: clamp(18px, 3vh, 30px);
+    right: clamp(20px, 4vw, 50px);
+    z-index:50;
+    font-family: var(--font-body); font-style:italic;
+    font-size: clamp(14px, 0.9vw, 15px);
+    color: var(--ink-soft);
+    opacity:0.55;
+    letter-spacing:0.03em;
+    transition: opacity 1.2s ease;
+  }
+  #hint.fade{ opacity:0; }
+
+  @media (max-width: 640px){
+    :root{ --fs-base: clamp(14.5px, 4vw, 17px); }
+    .slide{ align-items:flex-start; padding: 22px 22px; }
+    .lede{ max-width: 60ch; }
+    .num-badge{ font-size: clamp(50px, 20vw, 90px); top:16px; right:18px; }
+    .mech-row{ gap:14px; }
+    #hint{ display:none; }
+  }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <filter id="watercolor" x="-40%" y="-40%" width="180%" height="180%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.012 0.018" numOctaves="3" seed="7" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="60" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="paperNoise">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="3" result="n"/>
+      <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.6 0"/>
+    </filter>
+  </defs>
+</svg>
+
+<svg id="paper-texture" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100%" height="100%" filter="url(#paperNoise)"/>
+</svg>
+
+<div id="wash-layer">
+  <svg id="wash-svg" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"></svg>
+</div>
+
+<svg id="grain"><rect width="100%" height="100%" filter="url(#paperNoise)"/></svg>
+
+<div id="hint">use ← → to move through</div>
+
+<div id="deck">
+
+  <!-- 0: TITLE -->
+  <section class="slide" data-wash="a">
+    <span class="eyebrow">On Earning Online</span>
+    <h1>Consistency is the<br>compounding machine.</h1>
+    <div class="flourish">
+      <svg viewBox="0 0 120 10" preserveAspectRatio="none"><path d="M2,6 C20,2 40,9 60,5 C80,1 100,8 118,4" stroke="var(--accent)" stroke-width="3" fill="none" stroke-linecap="round"/></svg>
+    </div>
+    <p class="lede">Why a small sliver of creators, founders, and freelancers earn nearly all the money online — and what actually separates them from everyone else.</p>
+  </section>
+
+  <!-- 1: PARETO -->
+  <section class="slide" data-wash="f">
+    <span class="eyebrow">The Starting Fact</span>
+    <h2>Online income follows a power law.</h2>
+    <div class="flourish"><svg viewBox="0 0 120 10" preserveAspectRatio="none"><path d="M2,6 C20,2 40,9 60,5 C80,1 100,8 118,4" stroke="var(--accent)" stroke-width="3" fill="none" stroke-linecap="round"/></svg></div>
+    <p class="lede">In almost every revenue model, the top 1–5% of creators, founders, and freelancers capture 80–90%+ of total earnings — a Pareto distribution, not a bell curve.</p>
+    <div class="mech-row">
+      <div class="mech-card">
+        <span class="label">The Filter</span>
+        <p>The line between high earners and everyone else isn't talent — it's consistency, sustained long enough to trigger compounding.</p>
+      </div>
+      <div class="mech-card">
+        <span class="label">The Mechanics</span>
+        <p>Platform algorithms, SEO indexing, subscriber retention, and domain authority all reward the same behaviour: showing up on schedule.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2: Content Creation -->
+  <section class="slide" data-wash="b">
+    <div class="num-badge">01</div>
+    <span class="eyebrow">Content Creation &amp; Algorithmic Media</span>
+    <h2>The Library Effect</h2>
+    <div class="flourish"><svg viewBox="0 0 120 10" preserveAspectRatio="none"><path d="M2,6 C20,2 40,9 60,5 C80,1 100,8 118,4" stroke="var(--accent)" stroke-width="3" fill="none" stroke-linecap="round"/></svg></div>
+    <p class="lede">Watch-time algorithms favour predictable uploads and a dense back-catalog — each video becomes a perpetual asset pulling traffic to every other video.</p>
+    <div class="mech-row">
+      <div class="mech-card">
+        <span class="label">Compounding mechanism</span>
+        <p>Algorithmic trust and viewer-retention loops, built video by video.</p>
+      </div>
+      <div class="mech-card">
+        <span class="label">How top earners win</span>
+        <p>By video #200, one viral hit sends viewers binge-watching 10–20 back-catalog videos; sponsors pay for stable impressions, not one-off spikes.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3: Newsletters -->
+  <section class="slide" data-wash="e">
+    <div class="num-badge">02</div>
+    <span class="eyebrow">Paid Newsletters &amp; Niche Media</span>
+    <h2>Habit Formation</h2>
+    <div class="flourish"><svg viewBox="0 0 120 10" preserveAspectRatio="none"><path d="M2,6 C20,2 40,9 60,5 C80,1 100,8 118,4" stroke="var(--accent)" stroke-width="3" fill="none" stroke-linecap="round"/></svg></div>
+    <p class="lede">Inactive lists decay 15–25% a year. Showing up the same day, same time builds subscriber LTV and near-zero churn.</p>
+    <div class="mech-row">
+      <div class="mech-card">
+        <span class="label">Compounding mechanism</span>
+        <p>Subscriber lifetime value and zero-churn organic growth.</p>
+      </div>
+      <div class="mech-card">
+        <span class="label">The revenue math</span>
+        <p>10 net paid subs a week at $10/month, held for 3 years, builds a $36,000/year recurring stream — sporadic writers never cross that tipping point.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4: Digital Products -->
+  <section class="slide" data-wash="c">
+    <div class="num-badge">03</div>
+    <span class="eyebrow">Digital Products &amp; Micro-Assets</span>
+    <h2>Catalog Surface Area</h2>
+    <div class="flourish"><svg viewBox="0 0 120 10" preserveAspectRatio="none"><path d="M2,6 C20,2 40,9 60,5 C80,1 100,8 118,4" stroke="var(--accent)" stroke-width="3" fill="none" stroke-linecap="round"/></svg></div>
+    <p class="lede">Marketplaces like Etsy, Gumroad, and Amazon KDP reward active shops with large inventories and steady reviews.</p>
+    <div class="mech-row">
+      <div class="mech-card">
+        <span class="label">Compounding mechanism</span>
+        <p>Search-marketplace ranking algorithms plus catalog breadth.</p>
+      </div>
+      <div class="mech-card">
+        <span class="label">How top earners win</span>
+        <p>1–2 new assets a week signals an active storefront, lifting the whole shop's search visibility and unlocking cross-sells across the ecosystem.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5: SEO / Affiliate -->
+  <section class="slide" data-wash="f">
+    <div class="num-badge">04</div>
+    <span class="eyebrow">SEO-Driven Publishing &amp; Affiliate Marketing</span>
+    <h2>Topical Authority</h2>
+    <div class="flourish"><svg viewBox="0 0 120 10" preserveAspectRatio="none"><path d="M2,6 C20,2 40,9 60,5 C80,1 100,8 118,4" stroke="var(--accent)" stroke-width="3" fill="none" stroke-linecap="round"/></svg></div>
+    <p class="lede">Search engines judge topical authority by regular publishing and link accumulation across months and years, not a single burst.</p>
+    <div class="mech-row">
+      <div class="mech-card">
+        <span class="label">Compounding mechanism</span>
+        <p>Domain authority and escalation out of Google's sandbox.</p>
+      </div>
+      <div class="mech-card">
+        <span class="label">Long-tail yield</span>
+        <p>A Year-1 article can still generate high-margin affiliate income in Year 4 — funding expansion into fresh content clusters.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6: Freelancing -->
+  <section class="slide" data-wash="d">
+    <div class="num-badge">05</div>
+    <span class="eyebrow">High-Ticket Freelancing &amp; Productized Agencies</span>
+    <h2>The Referral Flywheel</h2>
+    <div class="flourish"><svg viewBox="0 0 120 10" preserveAspectRatio="none"><path d="M2,6 C20,2 40,9 60,5 C80,1 100,8 118,4" stroke="var(--accent)" stroke-width="3" fill="none" stroke-linecap="round"/></svg></div>
+    <p class="lede">Early freelancers spend 80% of their time pitching, 20% working. Consistent outreach and delivery flip that ratio over time.</p>
+    <div class="mech-row">
+      <div class="mech-card">
+        <span class="label">Compounding mechanism</span>
+        <p>Retainers, referrals, and portfolio authority.</p>
+      </div>
+      <div class="mech-card">
+        <span class="label">Productization</span>
+        <p>Daily prospecting becomes a habit, not a reaction to slow weeks — the same standardized offer scales into a multi-six-figure agency.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7: Summary phases -->
+  <section class="slide" data-wash="a">
+    <span class="eyebrow">The Mathematical Advantage</span>
+    <h2>Three phases, one behaviour.</h2>
+    <div class="flourish"><svg viewBox="0 0 120 10" preserveAspectRatio="none"><path d="M2,6 C20,2 40,9 60,5 C80,1 100,8 118,4" stroke="var(--accent)" stroke-width="3" fill="none" stroke-linecap="round"/></svg></div>
+    <div class="phase-track">
+      <div class="phase">
+        <span class="ph-sub">Months 1–6</span>
+        <div class="ph-title">High effort,<br>low return</div>
+        <p>The filtering stage. Roughly 90% quit here, before compounding ever begins.</p>
+      </div>
+      <div class="phase">
+        <span class="ph-sub">Months 6–18</span>
+        <div class="ph-title">Equal effort,<br>moderate return</div>
+        <p>Systems stabilize. Algorithms, lists, and catalogs start recognizing the pattern.</p>
+      </div>
+      <div class="phase">
+        <span class="ph-sub">Months 18+</span>
+        <div class="ph-title">Standard effort,<br>exponential return</div>
+        <p>Top-tier status. The same daily habit now moves a much larger machine.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8: Closing -->
+  <section class="slide" data-wash="e">
+    <span class="eyebrow">The Uncopyable Moat</span>
+    <h1>Trust, authority, <span class="closing-word">and time</span> —<br>no one can shortcut them.</h1>
+    <div class="flourish"><svg viewBox="0 0 120 10" preserveAspectRatio="none"><path d="M2,6 C20,2 40,9 60,5 C80,1 100,8 118,4" stroke="var(--accent)" stroke-width="3" fill="none" stroke-linecap="round"/></svg></div>
+    <p class="lede">In every online revenue vector, consistency builds a moat made of accumulated trust, domain authority, and procedural efficiency. It can only be earned in order — never bought, never skipped.</p>
+  </section>
+
+</div>
+
+<div id="dots"></div>
+
+<script>
+(function(){
+  const washColors = {
+    a: 'var(--wash-a)', b: 'var(--wash-b)', c: 'var(--wash-c)',
+    d: 'var(--wash-d)', e: 'var(--wash-e)', f: 'var(--wash-f)'
+  };
+  const rawColors = {
+    a: '#c98a6b', b: '#7a9e8f', c: '#d1a83d', d: '#8a6f9e', e: '#4d8fa6', f: '#b6543f'
+  };
+
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const dotsWrap = document.getElementById('dots');
+  const hint = document.getElementById('hint');
+  let current = 0;
+  let animating = false;
+
+  slides.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.addEventListener('click', () => goTo(i));
+    dotsWrap.appendChild(d);
+  });
+  const dots = Array.from(dotsWrap.children);
+
+  // ---- watercolor blob field ----
+  const washSvg = document.getElementById('wash-svg');
+  const blobPaths = [
+    "M120,30 C220,-10 340,40 360,140 C380,240 300,320 190,330 C80,340 -20,270 0,170 C20,70 20,70 120,30 Z",
+    "M60,10 C160,-20 260,30 270,120 C280,210 200,270 110,260 C20,250 -40,180 -20,100 C0,20 -40,40 60,10 Z",
+    "M100,0 C210,10 300,80 290,170 C280,260 180,300 90,280 C0,260 -50,190 -30,110 C-10,30 -10,-10 100,0 Z"
+  ];
+
+  function rand(min, max){ return Math.random() * (max - min) + min; }
+
+  function makeBlob(colorKey, cls, x, y, scale){
+    const ns = 'http://www.w3.org/2000/svg';
+    const g = document.createElementNS(ns, 'g');
+    g.setAttribute('class', 'blob ' + cls);
+    g.setAttribute('transform', `translate(${x} ${y}) scale(${scale})`);
+    const path = document.createElementNS(ns, 'path');
+    path.setAttribute('d', blobPaths[Math.floor(rand(0, blobPaths.length))]);
+    path.setAttribute('fill', rawColors[colorKey]);
+    g.appendChild(path);
+    washSvg.appendChild(g);
+    return g;
+  }
+
+  const drifts = ['drift-a', 'drift-b', 'drift-c', 'drift-d'];
+  const activeBlobs = [];
+
+  function paintWash(colorKey){
+    // fade out & remove old blobs
+    activeBlobs.forEach(b => {
+      b.style.opacity = 0;
+      setTimeout(() => b.remove(), 1300);
+    });
+    activeBlobs.length = 0;
+
+    const vw = window.innerWidth, vh = window.innerHeight;
+    const positions = [
+      {x: vw*0.02, y: vh*0.05, s: rand(1.0,1.6)},
+      {x: vw*0.55, y: vh*0.35, s: rand(1.1,1.8)},
+      {x: vw*0.15, y: vh*0.55, s: rand(0.9,1.4)}
+    ];
+    positions.forEach((p, idx) => {
+      const b = makeBlob(colorKey, drifts[idx % drifts.length], p.x, p.y, p.s);
+      b.style.opacity = 0;
+      requestAnimationFrame(() => {
+        b.style.transition = 'opacity 1.4s ease';
+        b.style.opacity = 0.55;
+      });
+      activeBlobs.push(b);
+    });
+  }
+
+  function goTo(idx){
+    if (animating || idx === current || idx < 0 || idx >= slides.length) return;
+    animating = true;
+    slides[current].classList.remove('active');
+    dots[current].classList.remove('active');
+    current = idx;
+    const wash = slides[current].dataset.wash || 'a';
+    document.documentElement.style.setProperty('--accent', washColors[wash]);
+    paintWash(wash);
+    slides[current].classList.add('active');
+    dots[current].classList.add('active');
+    setTimeout(() => { animating = false; }, 950);
+  }
+
+  function next(){ goTo(Math.min(current + 1, slides.length - 1)); }
+  function prev(){ goTo(Math.max(current - 1, 0)); }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); next(); }
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); prev(); }
+  });
+
+  let touchStartX = null;
+  document.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; }, {passive:true});
+  document.addEventListener('touchend', (e) => {
+    if (touchStartX === null) return;
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 50) { dx < 0 ? next() : prev(); }
+    touchStartX = null;
+  }, {passive:true});
+
+  document.addEventListener('wheel', (() => {
+    let locked = false;
+    return (e) => {
+      if (locked) return;
+      if (Math.abs(e.deltaY) < 24) return;
+      locked = true;
+      e.deltaY > 0 ? next() : prev();
+      setTimeout(() => locked = false, 700);
+    };
+  })(), {passive:true});
+
+  // init
+  slides[0].classList.add('active');
+  document.documentElement.style.setProperty('--accent', washColors['a']);
+  paintWash('a');
+
+  setTimeout(() => hint.classList.add('fade'), 3800);
+})();
+</script>
+
+</body>
+</html>

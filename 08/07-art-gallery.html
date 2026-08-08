@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MuseumOS — Router Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Bricolage+Grotesque:wght@200;300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0908; --paper:#f3ede1; --gold:#c9a24b; --gold-bright:#e8c874;
+    --line:rgba(243,237,225,0.14); --muted:rgba(243,237,225,0.55);
+    --serif:'Cormorant Garamond', serif; --sans:'Bricolage Grotesque', sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg); color:var(--paper); font-family:var(--sans); font-size:16px;}
+  @media (max-width:600px){ body{font-size:14px;} }
+  a{color:inherit; text-decoration:none;}
+  #top-gallery{height:100vh;position: absolute;right: 0;top: 0;z-index: 99999;max-width: 50%;display: flex;justify-content: center;flex-direction: column;}
+  img{max-width: 100%;opacity: 0.1;}
+  img:hover{opacity: 1;}
+
+  header{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:22px clamp(20px,5vw,50px); border-bottom:1px solid var(--line);
+  }
+  .logo{font-family:var(--serif); font-style:italic; font-size:clamp(18px,2vw,22px);}
+  .logo span{color:var(--gold-bright); font-style:normal;}
+  nav a{
+    font-size:clamp(12px,1vw,14px); letter-spacing:.1em; text-transform:uppercase;
+    margin-left:26px; opacity:.75; transition:opacity .3s;
+  }
+  nav a:hover{opacity:1;}
+  nav a.active{opacity:1; color:var(--gold-bright);}
+
+  main{padding: clamp(30px,5vw,60px) clamp(20px,5vw,50px); max-width:1100px; margin:0 auto; min-height:60vh;}
+  .crumb{font-size:clamp(11px,.9vw,13px); color:var(--muted); text-transform:uppercase; letter-spacing:.1em; margin-bottom:14px;}
+  .crumb a{color:var(--gold-bright);}
+  h1{font-family:var(--serif); font-weight:400; font-size:clamp(28px,4.5vw,52px); margin-bottom:8px;}
+  .sub{font-size:clamp(13px,1vw,15px); color:var(--muted); text-transform:uppercase; letter-spacing:.08em; margin-bottom:30px;}
+
+  .grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(220px,1fr)); gap:18px; margin-top:10px;}
+  .card{
+    border:1px solid var(--line); border-radius:6px; padding:20px; cursor:pointer;
+    background:linear-gradient(160deg, rgba(201,162,75,0.06), transparent);
+    transition: border-color .3s, transform .3s;
+  }
+  .card:hover{border-color:var(--gold); transform:translateY(-4px);}
+  .card h3{font-family:var(--serif); font-size:clamp(19px,2vw,24px); margin-bottom:6px;}
+  .card p{font-size:clamp(12px,1vw,14px); color:var(--muted);}
+
+  .detail-body{font-size:clamp(14px,1vw,16px); line-height:1.7; color:var(--muted); max-width:60ch; margin-bottom:24px;}
+  .meta-row{display:flex; flex-wrap:wrap; gap:26px; margin:22px 0 30px; padding:18px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
+  .meta-row div span{display:block; font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--muted); margin-bottom:4px;}
+  .meta-row div strong{font-family:var(--serif); font-size:clamp(16px,1.4vw,20px); font-weight:500;}
+  .related{margin-top:18px;}
+  .not-found{opacity:.7;}
+
+  footer{padding:20px clamp(20px,5vw,50px); border-top:1px solid var(--line); font-size:clamp(11px,1vw,13px); color:var(--muted); display:flex; justify-content:space-between;}
+</style>
+</head>
+<body>
+
+<header>
+  <a href="/" data-link class="logo">museum<span>OS</span></a>
+  <nav id="topnav">
+    <a href="/" data-link data-route="/">Home</a>
+    <a href="/artists" data-link data-route="/artists">Artists</a>
+    <a href="/galleries" data-link data-route="/galleries">Galleries</a>
+  </nav>
+</header>
+
+<main id="app"></main>
+
+<footer>
+  <span>MuseumOS — routing demo</span>
+  <span id="url-echo"></span>
+</footer>
+
+<script>
+/* ============================================================
+   1) DATA — normally fetched from an API; embedded here so the
+   demo is self-contained. Shape mirrors the PRD entities.
+   ============================================================ */
+const DB = {
+  artists: [
+    { id: "riya-nair", name: "Riya Nair", country: "India", style: "Abstract · Oil",
+      bio: "Riya Nair works primarily in oil, layering earth pigments to explore memory and erosion.",
+      galleryId: "kavya-studio" },
+    { id: "devan-roy", name: "Devan Roy", country: "India", style: "Photography",
+      bio: "Devan Roy's large-format coastal photography documents disappearing shorelines across the Andamans.",
+      galleryId: "andaman-contemporary" },
+    { id: "meher-kaur", name: "Meher Kaur", country: "India", style: "Mixed Media",
+      bio: "Meher Kaur combines textile, found paper, and ink to build quiet, domestic-scale compositions.",
+      galleryId: "studio-meridian" }
+  ],
+  galleries: [
+    { id: "kavya-studio", name: "Kavya Studio", city: "Bengaluru", established: 2014,
+      about: "A project space in Bengaluru focused on emerging South Indian painters." },
+    { id: "andaman-contemporary", name: "Andaman Contemporary", city: "Port Blair", established: 2019,
+      about: "A young gallery working with island-based photographers and land artists." },
+    { id: "studio-meridian", name: "Studio Meridian", city: "Goa", established: 2011,
+      about: "Studio Meridian shows mixed-media and textile-based practices across South Asia." }
+  ],
+  artworks: [
+    { id: "dust-and-marigold", title: "Dust & Marigold", artistId: "riya-nair", year: 2023, medium: "Oil on canvas", dims: "120 × 90 cm", src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8_5YR3w10139vONY_seMddabDPsMvpFoQ5h8SjKVBEw&s=10" },
+    { id: "coastal-fog", title: "Coastal Fog", artistId: "devan-roy", year: 2022, medium: "Archival print", dims: "150 × 100 cm", src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5XVkbj2F8XQD21FnMqHDkZAtDcf6-HoIuDBoJCmQY-mfj6i7Xu4BGtTS8&s=10" },
+    { id: "notes-on-absence", title: "Notes on Absence", artistId: "meher-kaur", year: 2024, medium: "Textile, ink, found paper", dims: "80 × 80 cm", src: "https://img.hexahome.in/media/blogs/hexahome-blogs/alipur-new-delhi/hero-section.webp" }
+  ]
+};
+
+/* ============================================================
+   2) ROUTER — path-based (History API), so the URL is the
+   single source of truth for what's on screen. Reloading /artist/riya-nair
+   re-renders that exact page from DB; back/forward are native
+   browser history entries via popstate.
+
+   NOTE for deployment: because this is a client-side router,
+   your server needs a fallback rule that serves this same
+   index.html for ANY path (e.g. Netlify _redirects "/* /index.html 200",
+   or an Nginx try_files fallback) so a hard reload on /artist/riya-nair
+   doesn't 404. If you can't add that server rule, swap to
+   hash routing (see HASH_MODE below) — it needs zero server config.
+   ============================================================ */
+const HASH_MODE = true; // flip true to use #/artist/riya-nair style URLs instead
+
+const routes = [
+  { pattern: "/",                 render: renderHome },
+  { pattern: "/artists",          render: renderArtistList },
+  { pattern: "/artist/:id",       render: renderArtistDetail },
+  { pattern: "/galleries",        render: renderGalleryList },
+  { pattern: "/gallery/:id",      render: renderGalleryDetail },
+  { pattern: "/artwork/:id",      render: renderArtworkDetail },
+];
+
+function currentPath() {
+  return HASH_MODE ? (location.hash.slice(1) || "/") : location.pathname;
+}
+
+function matchRoute(path) {
+  for (const route of routes) {
+    const paramNames = [];
+    const regexStr = "^" + route.pattern.replace(/:[^/]+/g, (m) => {
+      paramNames.push(m.slice(1));
+      return "([^/]+)";
+    }) + "$";
+    const match = path.match(new RegExp(regexStr));
+    if (match) {
+      const params = {};
+      paramNames.forEach((name, i) => params[name] = decodeURIComponent(match[i + 1]));
+      return { route, params };
+    }
+  }
+  return null;
+}
+
+function navigate(path, { replace = false } = {}) {
+  const target = HASH_MODE ? "#" + path : path;
+  if (replace) history.replaceState({ path }, "", target);
+  else history.pushState({ path }, "", target);
+  render(path);
+}
+
+function render(path) {
+  const app = document.getElementById("app");
+  const matched = matchRoute(path);
+  if (!matched) {
+    app.innerHTML = `<p class="not-found">Nothing here. <a href="/" data-link>Go home →</a></p>`;
+  } else {
+    matched.route.render(app, matched.params);
+  }
+  updateActiveNav(path);
+  document.getElementById("url-echo").textContent = path;
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function updateActiveNav(path) {
+  document.querySelectorAll("#topnav a").forEach(a => {
+    a.classList.toggle("active", a.dataset.route === path);
+  });
+}
+
+// Intercept internal link clicks so they route via pushState, not a full page load
+document.addEventListener("click", (e) => {
+  const link = e.target.closest("[data-link]");
+  if (!link) return;
+  e.preventDefault();
+  const path = HASH_MODE ? link.getAttribute("href") : link.getAttribute("href");
+  navigate(path.replace(/^#/, ""));
+});
+
+// Browser back/forward
+window.addEventListener("popstate", () => render(currentPath()));
+if (HASH_MODE) window.addEventListener("hashchange", () => render(currentPath()));
+
+// Initial render — handles hard reload / direct URL entry
+window.addEventListener("DOMContentLoaded", () => render(currentPath()));
+
+/* ============================================================
+   3) VIEWS — each takes the container + route params and
+   pulls the relevant slice out of DB.
+   ============================================================ */
+function renderHome(app) {
+  app.innerHTML = `
+    <div class="crumb">MuseumOS</div>
+    <h1>Welcome to the collection</h1>
+    <div class="sub">${DB.artists.length} artists · ${DB.galleries.length} galleries · ${DB.artworks.length} works</div>
+    <div class="grid">
+      ${DB.artworks.map(w => `
+        <div class="card" data-link data-href="/artwork/${w.id}" onclick="navigate('/artwork/${w.id}')">
+          <h3>${w.title}</h3>
+          <p>${DB.artists.find(a=>a.id===w.artistId).name} · ${w.year}</p>
+          <img src="${w.src}" />
+        </div>
+      `).join("")}
+    </div>
+  `;
+}
+
+function renderArtistList(app) {
+  app.innerHTML = `
+    <div class="crumb"><a href="/" data-link>Home</a> / Artists</div>
+    <h1>Artists</h1>
+    <div class="grid">
+      ${DB.artists.map(a => `
+        <div class="card" onclick="navigate('/artist/${a.id}')">
+          <h3>${a.name}</h3>
+          <p>${a.style} · ${a.country}</p>
+        </div>
+      `).join("")}
+    </div>
+  `;
+}
+
+function renderArtistDetail(app, params) {
+  const artist = DB.artists.find(a => a.id === params.id);
+  if (!artist) return app.innerHTML = `<p class="not-found">Artist not found.</p>`;
+  const gallery = DB.galleries.find(g => g.id === artist.galleryId);
+  const works = DB.artworks.filter(w => w.artistId === artist.id);
+  app.innerHTML = `
+    <div class="crumb"><a href="/" data-link>Home</a> / <a href="/artists" data-link>Artists</a> / ${artist.name}</div>
+    <h1>${artist.name}</h1>
+    <div class="sub">${artist.style} · ${artist.country}</div>
+    <p class="detail-body">${artist.bio}</p>
+    <div class="meta-row">
+      <div><span>Represented by</span><strong onclick="navigate('/gallery/${gallery.id}')" style="cursor:pointer">${gallery.name}</strong></div>
+      <div><span>City</span><strong>${gallery.city}</strong></div>
+    </div>
+    <div class="related">
+      <div class="crumb">Works by ${artist.name}</div>
+      <div class="grid">
+        ${works.map(w => `
+          <div class="card" onclick="navigate('/artwork/${w.id}')">
+            <h3>${w.title}</h3><p>${w.medium} · ${w.year}</p>
+          </div>
+        `).join("") || "<p class='detail-body'>No works listed yet.</p>"}
+      </div>
+    </div>
+  `;
+}
+
+function renderGalleryList(app) {
+  app.innerHTML = `
+    <div class="crumb"><a href="/" data-link>Home</a> / Galleries</div>
+    <h1>Galleries</h1>
+    <div class="grid">
+      ${DB.galleries.map(g => `
+        <div class="card" onclick="navigate('/gallery/${g.id}')">
+          <h3>${g.name}</h3><p>${g.city} · est. ${g.established}</p>
+        </div>
+      `).join("")}
+    </div>
+  `;
+}
+
+function renderGalleryDetail(app, params) {
+  const gallery = DB.galleries.find(g => g.id === params.id);
+  if (!gallery) return app.innerHTML = `<p class="not-found">Gallery not found.</p>`;
+  const artists = DB.artists.filter(a => a.galleryId === gallery.id);
+  app.innerHTML = `
+    <div class="crumb"><a href="/" data-link>Home</a> / <a href="/galleries" data-link>Galleries</a> / ${gallery.name}</div>
+    <h1>${gallery.name}</h1>
+    <div class="sub">${gallery.city} · Established ${gallery.established}</div>
+    <p class="detail-body">${gallery.about}</p>
+    <div class="related">
+      <div class="crumb">Represented artists</div>
+      <div class="grid">
+        ${artists.map(a => `
+          <div class="card" onclick="navigate('/artist/${a.id}')">
+            <h3>${a.name}</h3><p>${a.style}</p>
+          </div>
+        `).join("") || "<p class='detail-body'>No artists listed yet.</p>"}
+      </div>
+    </div>
+  `;
+}
+
+function renderArtworkDetail(app, params) {
+  const work = DB.artworks.find(w => w.id === params.id);
+  if (!work) return app.innerHTML = `<p class="not-found">Artwork not found.</p>`;
+  const artist = DB.artists.find(a => a.id === work.artistId);
+  app.innerHTML = `
+    <div class="crumb"><a href="/" data-link>Home</a> / ${work.title}</div>
+    <h1>${work.title}</h1>
+    <div class="sub">by <span onclick="navigate('/artist/${artist.id}')" style="cursor:pointer; color:var(--gold-bright)">${artist.name}</span> · ${work.year}</div>
+    <div id="top-gallery"><p><img src="${work.src}" /></p></div>
+    <div class="meta-row">
+      <div><span>Medium</span><strong>${work.medium}</strong></div>
+      <div><span>Dimensions</span><strong>${work.dims}</strong></div>
+      <div><span>Year</span><strong>${work.year}</strong></div>
+    </div>
+  `;
+}
+</script>
+
+</body>
+</html>
