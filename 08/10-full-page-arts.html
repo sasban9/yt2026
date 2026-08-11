@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aperture — Ten Works</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Bricolage+Grotesque:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --gold:#c9a24b;
+    --gold-soft:#e6c98a;
+    --ink:#0a0908;
+    --bg-panel: rgba(10,8,6,0.74);
+    --fs-nav:13px;
+    --fs-label:12.5px;
+    --fs-value:14px;
+    --fs-artist:16px;
+    --fs-title:clamp(30px,9vw,46px);
+    --fs-hint:13px;
+    --fs-count:13px;
+  }
+  @media (min-width:641px){
+    :root{
+      --fs-nav:16px;
+      --fs-label:16px;
+      --fs-value:17px;
+      --fs-artist:20px;
+      --fs-title:clamp(46px,5.5vw,92px);
+      --fs-hint:16px;
+      --fs-count:16px;
+    }
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{width:100%;height:100%;overflow:hidden;background:var(--ink);font-family:'Bricolage Grotesque',sans-serif;}
+  body{cursor:default;}
+
+  .topnav{
+    position:fixed;top:0;left:0;right:0;z-index:60;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:1.6rem 2rem;
+    opacity:1;transform:translateY(0);
+    transition:opacity .7s ease, transform .7s ease;
+    pointer-events:none;
+  }
+  .topnav.hidden{opacity:0;transform:translateY(-14px);}
+  .brand{
+    font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;
+    font-size:calc(var(--fs-nav) + 4px);color:#f2ede4;letter-spacing:.03em;
+  }
+  .brand span{color:var(--gold);}
+  .navlinks{display:flex;align-items:center;gap:1.6rem;}
+  .navlinks a{
+    color:#cfc9bd;text-decoration:none;font-size:var(--fs-nav);
+    letter-spacing:.08em;text-transform:uppercase;opacity:.75;
+    transition:opacity .3s ease,color .3s ease;
+    pointer-events:auto;
+  }
+  .navlinks a:hover{opacity:1;color:var(--gold-soft);}
+  .counter{
+    font-size:var(--fs-count);color:#cfc9bd;letter-spacing:.08em;
+    font-variant-numeric:tabular-nums;
+  }
+  .counter .sep{margin:0 .3em;opacity:.4;}
+  .counter #totNum{opacity:.55;}
+
+  .progress{
+    position:fixed;top:0;left:0;right:0;height:2px;z-index:70;
+    background:rgba(255,255,255,.08);
+  }
+  .progress-bar{
+    height:100%;width:10%;background:linear-gradient(90deg,var(--gold),var(--gold-soft));
+    transition:width .8s cubic-bezier(.65,0,.35,1);
+  }
+
+  .stage{position:relative;width:100vw;height:100vh;overflow:hidden;}
+
+  .slide{
+    position:absolute;inset:0;
+    opacity:0;visibility:hidden;z-index:1;
+    transition:opacity 1.15s ease;
+  }
+  .slide.active{opacity:1;visibility:visible;z-index:3;}
+  .slide.leaving{opacity:0;z-index:2;}
+
+  .art{
+    position:absolute;inset:-6%;
+    background-size:auto 80%;background-position:center;background-repeat: no-repeat;
+    transform:scale(1.06);
+    filter:brightness(.86) saturate(1.02);
+    transition:filter 1s ease, transform 8s ease-out;
+  }
+  .slide.active .art{animation:kenburns 16s ease-in-out forwards;}
+  @keyframes kenburns{
+    from{transform:scale(1.04);}
+    to{transform:scale(1.16);}
+  }
+  .slide:hover .art{filter:brightness(.5) saturate(1.05);}
+
+  .art-fallback{
+    position:absolute;inset:0;display:none;align-items:center;justify-content:center;
+    background:linear-gradient(135deg,#1c1712,#2c2318 50%,#181410);
+  }
+  .art-fallback.show{display:flex;}
+  .art-fallback span{
+    font-family:'Cormorant Garamond',serif;font-style:italic;color:rgba(230,201,138,.35);
+    font-size:clamp(24px,4vw,40px);
+  }
+
+  .vignette{
+    position:absolute;inset:0;pointer-events:none;
+    background:
+      linear-gradient(to top, rgba(0,0,0,.65) 0%, rgba(0,0,0,0) 32%),
+      linear-gradient(to bottom, rgba(0,0,0,.35) 0%, rgba(0,0,0,0) 22%);
+  }
+
+  .details{
+    position:absolute;left:0;bottom:0;
+    max-width:min(480px,88vw);
+    padding:2.4rem clamp(1.6rem,4vw,3rem) 2.6rem;
+    background:var(--bg-panel);
+    backdrop-filter:blur(6px);
+    -webkit-backdrop-filter:blur(6px);
+    opacity:0;transform:translateY(28px);
+    pointer-events:none;
+    transition:opacity .55s ease, transform .55s ease;
+  }
+  .slide:hover .details,
+  .slide.touch-active .details{
+    opacity:1;transform:translateY(0);pointer-events:auto;
+  }
+
+  .d-eyebrow{
+    font-size:var(--fs-label);letter-spacing:.16em;text-transform:uppercase;
+    color:var(--gold-soft);opacity:0;transform:translateY(10px);
+    transition:opacity .5s ease .05s, transform .5s ease .05s;
+  }
+  .d-title{
+    font-family:'Cormorant Garamond',serif;font-weight:500;
+    font-size:var(--fs-title);line-height:1.05;color:#f6f1e7;margin:.35rem 0 .6rem;
+    opacity:0;transform:translateY(14px);
+    transition:opacity .55s ease .1s, transform .55s ease .1s;
+  }
+  .d-artist{
+    font-size:var(--fs-artist);color:#e7e1d3;font-style:italic;
+    font-family:'Cormorant Garamond',serif;margin-bottom:1.1rem;
+    opacity:0;transform:translateY(12px);
+    transition:opacity .55s ease .16s, transform .55s ease .16s;
+  }
+  .d-rows{
+    display:flex;flex-wrap:wrap;gap:1.6rem 2.2rem;
+    border-top:1px solid rgba(230,201,138,.22);padding-top:.9rem;
+    opacity:0;transform:translateY(10px);
+    transition:opacity .55s ease .22s, transform .55s ease .22s;
+  }
+  .d-row{display:flex;flex-direction:column;gap:.25rem;}
+  .d-label{font-size:var(--fs-label);letter-spacing:.1em;text-transform:uppercase;color:#a89d84;}
+  .d-value{font-size:var(--fs-value);color:#f0ebe0;}
+
+  .slide:hover .d-eyebrow, .slide.touch-active .d-eyebrow,
+  .slide:hover .d-title, .slide.touch-active .d-title,
+  .slide:hover .d-artist, .slide.touch-active .d-artist,
+  .slide:hover .d-rows, .slide.touch-active .d-rows{
+    opacity:1;transform:translateY(0);
+  }
+
+  .dots{
+    position:fixed;right:1.6rem;top:50%;transform:translateY(-50%);
+    z-index:60;display:flex;flex-direction:column;gap:12px;
+  }
+  .dot{
+    width:6px;height:6px;border-radius:50%;
+    background:rgba(255,255,255,.28);cursor:pointer;
+    transition:background .35s ease, transform .35s ease, height .35s ease;
+    border:none;padding:0;
+  }
+  .dot:hover{background:rgba(230,201,138,.7);}
+  .dot.active{
+    height:22px;border-radius:3px;
+    background:var(--gold-soft);
+  }
+
+  .particles{position:fixed;inset:0;z-index:2;pointer-events:none;mix-blend-mode:screen;}
+  .p{
+    position:absolute;border-radius:50%;
+    background:rgba(230,201,138,.55);
+    animation:drift linear infinite;
+  }
+  @keyframes drift{
+    0%{transform:translateY(0) translateX(0);opacity:0;}
+    10%{opacity:.5;}
+    90%{opacity:.35;}
+    100%{transform:translateY(-110vh) translateX(20px);opacity:0;}
+  }
+
+  .hint{
+    position:fixed;left:2rem;bottom:1.6rem;z-index:60;
+    font-size:var(--fs-hint);color:#cfc9bd;letter-spacing:.06em;
+    opacity:.6;transition:opacity .7s ease, transform .7s ease;
+    pointer-events:none;
+  }
+  .hint.hidden{opacity:0;transform:translateY(8px);}
+
+  @media (prefers-reduced-motion: reduce){
+    .slide.active .art{animation:none;}
+    .art{transition:none;}
+    .p{animation:none;display:none;}
+  }
+</style>
+</head>
+<body>
+
+<header class="topnav" id="topnav">
+  <div class="brand">Apertu<span>r</span>e</div>
+  <nav class="navlinks">
+    <a href="#" data-action="about">About</a>
+    <a href="#" data-action="visit">Visit</a>
+  </nav>
+  <div class="counter"><span id="curNum">01</span><span class="sep">/</span><span id="totNum">10</span></div>
+</header>
+
+<div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+
+<main class="stage" id="stage"></main>
+
+<div class="particles" id="particles"></div>
+
+<nav class="dots" id="dots"></nav>
+
+<div class="hint" id="hint">use &uarr; &darr; to move between works</div>
+
+<script>
+const artworks = [
+  {
+    title: "The Starry Night",
+    artist: "Vincent van Gogh",
+    style: "Post-Impressionism",
+    year: "1889",
+    price: "MoMA collection \u00b7 not for sale",
+    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRh649mDnwShcLA70RNN538Yj94PmGkj4rpl4kp1FtdmMaZHYN1ZUCa-Ow&s=10"
+  },
+  {
+    title: "Mona Lisa",
+    artist: "Leonardo da Vinci",
+    style: "High Renaissance",
+    year: "c. 1503",
+    price: "Mus\u00e9e du Louvre \u00b7 priceless",
+    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqMXBcJ76i97lQiO0licfWPAdC6j51JEnF0tfhDH8Zhpc9RCnwyu2w8tVz&s=10"
+  },
+  {
+    title: "The Great Wave off Kanagawa",
+    artist: "Katsushika Hokusai",
+    style: "Ukiyo-e woodblock",
+    year: "c. 1831",
+    price: "Editions in museum collections worldwide",
+    img: "https://m.media-amazon.com/images/I/91lt6TS878L.jpg"
+  },
+  {
+    title: "Girl with a Pearl Earring",
+    artist: "Johannes Vermeer",
+    style: "Dutch Golden Age",
+    year: "1665",
+    price: "Mauritshuis, The Hague \u00b7 not for sale",
+    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSewAHHRngpYzpK08UguNLFv47pgmyt-PmGuKS7EoF16w&s=10"
+  },
+  {
+    title: "The Scream",
+    artist: "Edvard Munch",
+    style: "Expressionism",
+    year: "1893",
+    price: "Pastel edition sold for $119.9M (2012)",
+    img: "https://static01.nyt.com/images/2012/09/18/arts/MUSEUM/MUSEUM-superJumbo.jpg"
+  },
+  {
+    title: "American Gothic",
+    artist: "Grant Wood",
+    style: "American Regionalism",
+    year: "1930",
+    price: "Art Institute of Chicago \u00b7 not for sale",
+    img: "https://cdn.britannica.com/47/24347-050-9719FF7E/American-Gothic-beaverboard-Grant-Wood-Art-Institute-1930.jpg"
+  },
+  {
+    title: "The Birth of Venus",
+    artist: "Sandro Botticelli",
+    style: "Early Renaissance",
+    year: "c. 1485",
+    price: "Uffizi Gallery, Florence \u00b7 priceless",
+    img: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Sandro_Botticelli_-_La_nascita_di_Venere_-_Google_Art_Project_-_edited.jpg/1280px-Sandro_Botticelli_-_La_nascita_di_Venere_-_Google_Art_Project_-_edited.jpg?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=thumbnail"
+  },
+  {
+    title: "The Kiss",
+    artist: "Gustav Klimt",
+    style: "Vienna Secession",
+    year: "1908",
+    price: "Belvedere, Vienna \u00b7 not for sale",
+    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRh649mDnwShcLA70RNN538Yj94PmGkj4rpl4kp1FtdmMaZHYN1ZUCa-Ow&s=10"
+  },
+  {
+    title: "Water Lilies",
+    artist: "Claude Monet",
+    style: "Impressionism",
+    year: "1906",
+    price: "Series pieces in private collections \u00b7 auction record $80M+",
+    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRh649mDnwShcLA70RNN538Yj94PmGkj4rpl4kp1FtdmMaZHYN1ZUCa-Ow&s=10"
+  },
+  {
+    title: "Impression, Sunrise",
+    artist: "Claude Monet",
+    style: "Impressionism",
+    year: "1872",
+    price: "Mus\u00e9e Marmottan Monet, Paris \u00b7 not for sale",
+    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRh649mDnwShcLA70RNN538Yj94PmGkj4rpl4kp1FtdmMaZHYN1ZUCa-Ow&s=10"
+  }
+];
+
+const stage = document.getElementById('stage');
+const dotsWrap = document.getElementById('dots');
+const curNum = document.getElementById('curNum');
+const totNum = document.getElementById('totNum');
+const progressBar = document.getElementById('progressBar');
+const topnav = document.getElementById('topnav');
+const hint = document.getElementById('hint');
+
+totNum.textContent = String(artworks.length).padStart(2,'0');
+
+artworks.forEach((a, i) => {
+  const slide = document.createElement('section');
+  slide.className = 'slide' + (i === 0 ? ' active' : '');
+  slide.dataset.index = i;
+
+  slide.innerHTML = `
+    <div class="art" style="background-image:url('${a.img}')"></div>
+    <div class="art-fallback"><span>${a.title}</span></div>
+    <div class="vignette"></div>
+    <div class="details">
+      <p class="d-eyebrow">${a.style}</p>
+      <p class="d-title">${a.title}</p>
+      <p class="d-artist">${a.artist}</p>
+      <div class="d-rows">
+        <div class="d-row"><span class="d-label">Artist</span><span class="d-value">${a.artist}</span></div>
+        <div class="d-row"><span class="d-label">Year</span><span class="d-value">${a.year}</span></div>
+        <div class="d-row"><span class="d-label">Price</span><span class="d-value">${a.price}</span></div>
+      </div>
+    </div>
+  `;
+
+  const img = new Image();
+  img.onerror = () => slide.querySelector('.art-fallback').classList.add('show');
+  img.src = a.img;
+
+  stage.appendChild(slide);
+
+  const dot = document.createElement('button');
+  dot.className = 'dot' + (i === 0 ? ' active' : '');
+  dot.setAttribute('aria-label', 'Go to ' + a.title);
+  dot.addEventListener('click', () => goTo(i));
+  dotsWrap.appendChild(dot);
+
+  slide.querySelector('.art').addEventListener('touchstart', () => {
+    document.querySelectorAll('.slide.touch-active').forEach(s => s !== slide && s.classList.remove('touch-active'));
+    slide.classList.toggle('touch-active');
+  }, {passive:true});
+});
+
+const slides = Array.from(document.querySelectorAll('.slide'));
+const dots = Array.from(document.querySelectorAll('.dot'));
+let current = 0;
+let isAnimating = false;
+
+function goTo(i){
+  if(i === current || i < 0 || i >= slides.length || isAnimating) return;
+  isAnimating = true;
+  slides[current].classList.remove('active');
+  slides[current].classList.add('leaving');
+  slides[current].classList.remove('touch-active');
+  const prevIndex = current;
+  current = i;
+  slides[current].classList.add('active');
+  const art = slides[current].querySelector('.art');
+  art.style.animation = 'none';
+  void art.offsetWidth;
+  art.style.animation = '';
+
+  dots[prevIndex].classList.remove('active');
+  dots[current].classList.add('active');
+  curNum.textContent = String(current + 1).padStart(2,'0');
+  progressBar.style.width = ((current + 1) / slides.length * 100) + '%';
+
+  revealNav();
+
+  setTimeout(() => {
+    slides[prevIndex].classList.remove('leaving');
+    isAnimating = false;
+  }, 1150);
+}
+
+function next(){ goTo(Math.min(current + 1, slides.length - 1)); }
+function prev(){ goTo(Math.max(current - 1, 0)); }
+
+document.addEventListener('keydown', (e) => {
+  if(['ArrowDown','ArrowRight','PageDown',' '].includes(e.key)){ e.preventDefault(); next(); }
+  if(['ArrowUp','ArrowLeft','PageUp'].includes(e.key)){ e.preventDefault(); prev(); }
+});
+
+let wheelLock = false;
+window.addEventListener('wheel', (e) => {
+  if(wheelLock) return;
+  wheelLock = true;
+  if(e.deltaY > 12) next();
+  else if(e.deltaY < -12) prev();
+  setTimeout(() => wheelLock = false, 700);
+}, {passive:true});
+
+let touchStartY = null;
+window.addEventListener('touchstart', (e) => { touchStartY = e.touches[0].clientY; }, {passive:true});
+window.addEventListener('touchend', (e) => {
+  if(touchStartY === null) return;
+  const dy = touchStartY - e.changedTouches[0].clientY;
+  if(Math.abs(dy) > 60){ dy > 0 ? next() : prev(); }
+  touchStartY = null;
+}, {passive:true});
+
+let navTimeout;
+function revealNav(){
+  topnav.classList.remove('hidden');
+  hint.classList.remove('hidden');
+  clearTimeout(navTimeout);
+  navTimeout = setTimeout(() => {
+    topnav.classList.add('hidden');
+    hint.classList.add('hidden');
+  }, 2600);
+}
+window.addEventListener('mousemove', (e) => {
+  if(e.clientY < 90){
+    topnav.classList.remove('hidden');
+    clearTimeout(navTimeout);
+    navTimeout = setTimeout(() => topnav.classList.add('hidden'), 2600);
+  }
+});
+revealNav();
+
+const particlesWrap = document.getElementById('particles');
+const particleCount = window.innerWidth < 640 ? 14 : 26;
+for(let i=0;i<particleCount;i++){
+  const p = document.createElement('div');
+  p.className = 'p';
+  const size = 1 + Math.random()*2.5;
+  p.style.width = size + 'px';
+  p.style.height = size + 'px';
+  p.style.left = Math.random()*100 + 'vw';
+  p.style.bottom = -(Math.random()*20) + 'px';
+  p.style.animationDuration = (14 + Math.random()*16) + 's';
+  p.style.animationDelay = (Math.random()*20) + 's';
+  particlesWrap.appendChild(p);
+}
+</script>
+</body>
+</html>
