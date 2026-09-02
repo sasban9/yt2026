@@ -6,15 +6,16 @@
     <title>Document</title>
     <style>
         *{margin: 0;padding: 0;box-sizing: border-box;}
+        html{scrollbar-width: thin;}
         body{background: #222;font-family: sans-serif;color:#fff;}
         main{width:80%;margin: 0 auto;display: flex;width: 800px;height:90vh;align-items: center;flex-direction: column;}
         b{background: #0008;color: #fff;padding: 4px 10px;z-index: 999;position: absolute;right: 0;}
         img{max-height:90vh;max-width:96%;border-bottom:solid 1px #000;box-shadow: 0 10px 10px #000;margin:1rem;}
         div{padding: 1rem;background: rgba(240, 128, 128, 0);position: relative;}
         article{width: 100%;display: flex;justify-content: center;line-height: 2;flex-wrap: wrap;}
-        article>div{width: 33%;height:100vh;display: flex;flex-direction: column;justify-content: center;}
+        article>div{width: 33%;display: flex;flex-direction: column;justify-content: center;}
         article>div:nth-of-type(2n){background: #111;}
-        .frame{border: solid 1px #000;height:96vh;}
+        .frame{border: solid 1px #000;}
 
         @media (max-width:1000px) {
             article>div{width: 50%;}
@@ -27,11 +28,16 @@
 <body>
     <article>
         <div>
-            <div class="frame" style="background:url(https://scontent.fixb5-1.fna.fbcdn.net/v/t39.30808-6/681125910_4119451045012792_5965178128439877288_n.jpg?stp=dst-jpg_tt6&cstp=mx960x1280&ctp=s960x1280&_nc_cat=106&ccb=1-7&_nc_sid=833d8c&_nc_ohc=KKlEgBoiGkIQ7kNvwGM67es&_nc_oc=AdqtpfD2HSz3G3iwh8MTZp0nhvjmxHm442YkuPhCaFZaRdAZmX6gTN8Abpw1eKLhSuVPFWoVdUBKjbomFuWGewCJ&_nc_zt=23&_nc_ht=scontent.fixb5-1.fna&_nc_gid=XBWJGdUI2oHggZ_dDWCrxg&_nc_ss=7d2a8&oh=00_AQJb0YAsNkiLTAHLvIiC9WaSXh8KBMeCQLF4_iuzB3tUAA&oe=6A9D5D66) 50% 50% no-repeat;background-size: contain;"></div>
+            <img src="https://scontent-ccu1-1.xx.fbcdn.net/v/t39.30808-6/518259719_23997167183270106_3881382859550706694_n.jpg?stp=dst-jpg_tt6&cstp=mx736x1000&ctp=s736x1000&_nc_cat=102&ccb=1-7&_nc_sid=833d8c&_nc_ohc=xmTRzE89aMkQ7kNvwG3nWyt&_nc_oc=AdrDFDC6SbZtib2C-LAhpdn8i0Fz0gqVr5LlVM5_NRNyXzMKQSVVsMUjZJ_p1--g8_LjbFA-c3v5RybQW26QNTRJ&_nc_zt=23&_nc_ht=scontent-ccu1-1.xx&_nc_gid=FbY9LDjy2MEahwJMfZD57w&_nc_ss=7b2a8&oh=00_AQJF4OquOTN_AH0G2BFr4b4m17b9yZLuVhEL-Fv3x9sT6Q&oe=6A9D4D14" alt="">
         </div>
         <div>
-            <h3>SUBIR BISWAS</h3>
-            <h4>Swapno Udaan</h4>
+            <img src="https://scontent.fixb5-1.fna.fbcdn.net/v/t39.30808-6/681125910_4119451045012792_5965178128439877288_n.jpg?stp=dst-jpg_tt6&cstp=mx960x1280&ctp=s960x1280&_nc_cat=106&ccb=1-7&_nc_sid=833d8c&_nc_ohc=KKlEgBoiGkIQ7kNvwGM67es&_nc_oc=AdqtpfD2HSz3G3iwh8MTZp0nhvjmxHm442YkuPhCaFZaRdAZmX6gTN8Abpw1eKLhSuVPFWoVdUBKjbomFuWGewCJ&_nc_zt=23&_nc_ht=scontent.fixb5-1.fna&_nc_gid=XBWJGdUI2oHggZ_dDWCrxg&_nc_ss=7d2a8&oh=00_AQJb0YAsNkiLTAHLvIiC9WaSXh8KBMeCQLF4_iuzB3tUAA&oe=6A9D5D66" alt="">
+            <!-- <div class="frame" style="background:url() 50% 50% no-repeat;background-size: contain;"></div> -->
+        </div>
+        <div>
+            <h3>সুবীর বিশ্বাসের স্বপ্ন উড়ান </h3>
+            <h3>SUBIR BISWAS <small>Swapno Udaan</small></h3>
+            
             <p>
                 
 The exploration of metal in sculptural form has been one of the preoccupations of artist Janardhanan Rudhramoorthy, over the last decade. Deeply inspired by nature, he has found various means to adapt the hard and heavy medium into visibly fluid and dynamic objects. Coming from a background in painting, Jana was drawn to processes of three-dimensionality that translated and presented his concepts in ways beyond the surface of a canvas. This led to interesting experiments early in his career, including composite forms like the creation of a beehive with nails on wood, and meticulously shaped wire arrangements representing human anatomy.
@@ -39,7 +45,8 @@ The exploration of metal in sculptural form has been one of the preoccupations o
             <img src="https://scontent.fixb5-1.fna.fbcdn.net/v/t39.30808-6/719798452_4165889340368962_1150844091978606967_n.jpg?stp=cp6_dst-jpg_tt6&cstp=mx2048x1536&ctp=s2048x1536&_nc_cat=105&ccb=1-7&_nc_sid=833d8c&_nc_ohc=WKdI_apapdMQ7kNvwGkQFQM&_nc_oc=Adpa31GVvZTCJ-8I4Wlw7nzBTHU6H_QDrMrkwASvQjiRHHeGqejBRond0hG3gGDSEhN5d6fwIkU4mOxmqQ3cVkSP&_nc_zt=23&_nc_ht=scontent.fixb5-1.fna&_nc_gid=VsFL7QqOKOmmd7-uukuM9A&_nc_ss=7d2a8&oh=00_AQJmHlWeGFSfHO_r8biTkr6ay6OfvO-4EQ4nf-YeT73eHg&oe=6A9D36E9" alt="">
         </div>
         <div>
-            <div class="frame" style="background: url(https://scontent-ccu2-1.xx.fbcdn.net/v/t39.30808-6/479312685_3698042120487022_3713699678108345794_n.jpg?stp=dst-jpg_tt6&cstp=mx630x1050&ctp=s630x1050&_nc_cat=103&ccb=1-7&_nc_sid=127cfc&_nc_ohc=zB9-tNZOyqsQ7kNvwH1fW_D&_nc_oc=AdqvWD1Aofrqx1OPfTQIiUNTaRFj1vTwEO3iPvg-_VdEYq-Jtn33wFx6zZLD4fhlTPN-nQMEMMr2FzZuYRUXcebP&_nc_zt=23&_nc_ht=scontent-ccu2-1.xx&_nc_gid=qN4Py62jqIKOUCdPYI1DqQ&_nc_ss=7d2a8&oh=00_AQISInzGXaqNXoMV4Ro3zDkmahkExqOOWlLm3WcHYmRV3A&oe=6A9D355E) 50% 50% no-repeat;background-size: contain;"></div>
+            <img src="https://scontent-ccu2-1.xx.fbcdn.net/v/t39.30808-6/479312685_3698042120487022_3713699678108345794_n.jpg?stp=dst-jpg_tt6&cstp=mx630x1050&ctp=s630x1050&_nc_cat=103&ccb=1-7&_nc_sid=127cfc&_nc_ohc=zB9-tNZOyqsQ7kNvwH1fW_D&_nc_oc=AdqvWD1Aofrqx1OPfTQIiUNTaRFj1vTwEO3iPvg-_VdEYq-Jtn33wFx6zZLD4fhlTPN-nQMEMMr2FzZuYRUXcebP&_nc_zt=23&_nc_ht=scontent-ccu2-1.xx&_nc_gid=qN4Py62jqIKOUCdPYI1DqQ&_nc_ss=7d2a8&oh=00_AQISInzGXaqNXoMV4Ro3zDkmahkExqOOWlLm3WcHYmRV3A&oe=6A9D355E" alt="">
+            <!-- <div class="frame" style="background: url() 50% 50% no-repeat;background-size: contain;"></div> -->
         </div>
         <div>
             <p>As he expertly pursues potential shapes and figures, Jana’s grammar has grown to accommodate visual and material paradoxes. Solid iron is teased into softness, furthering the experience of malleable matter that can bend and turn with ease. </p>
@@ -50,7 +57,8 @@ Dense sheets of metal are forged into multiple slender strips, developing the il
         </div>
 
         <div>
-            <div class="frame" style="background:url(https://scontent.fixb5-1.fna.fbcdn.net/v/t39.30808-6/730749021_4183454898612406_7318953856790959423_n.jpg?stp=cp6_dst-jpg_tt6&cstp=mx1536x2048&ctp=s1536x2048&_nc_cat=105&ccb=1-7&_nc_sid=833d8c&_nc_ohc=fRA1veJFdyEQ7kNvwEyLbp2&_nc_oc=Adq4coGjWHU8Fcd1XaLnxHXsh5Sgw2qtlKEtD4j8CUkeLQHBNFXyNQKho2uSJROM5Oeypyo5IvzPLHc5_kRF286m&_nc_zt=23&_nc_ht=scontent.fixb5-1.fna&_nc_gid=IEmkID6IJb6PxHLkpoGW7g&_nc_ss=7d2a8&oh=00_AQLlIBLJdcqalwO_kdGzOdxTFqgEDL_PjZ_9oc65FvT8Ew&oe=6A9D389C) 50% 50% no-repeat;background-size: contain;"></div>
+            <img src="https://scontent.fixb5-1.fna.fbcdn.net/v/t39.30808-6/730749021_4183454898612406_7318953856790959423_n.jpg?stp=cp6_dst-jpg_tt6&cstp=mx1536x2048&ctp=s1536x2048&_nc_cat=105&ccb=1-7&_nc_sid=833d8c&_nc_ohc=fRA1veJFdyEQ7kNvwEyLbp2&_nc_oc=Adq4coGjWHU8Fcd1XaLnxHXsh5Sgw2qtlKEtD4j8CUkeLQHBNFXyNQKho2uSJROM5Oeypyo5IvzPLHc5_kRF286m&_nc_zt=23&_nc_ht=scontent.fixb5-1.fna&_nc_gid=IEmkID6IJb6PxHLkpoGW7g&_nc_ss=7d2a8&oh=00_AQLlIBLJdcqalwO_kdGzOdxTFqgEDL_PjZ_9oc65FvT8Ew&oe=6A9D389C" alt="">
+            <!-- <div class="frame" style="background:url() 50% 50% no-repeat;background-size: contain;"></div> -->
         </div>
         <div>
 
@@ -61,32 +69,45 @@ As he expertly pursues potential shapes and figures, Jana’s grammar has grown 
         
         </div>
         <div style="width:66%">
-            <div class="frame" style="background:url(https://scontent.fixb5-1.fna.fbcdn.net/v/t39.30808-6/497501749_3783527125271854_1966730131719360890_n.jpg?stp=dst-jpg_tt6&cstp=mx1080x637&ctp=s1080x637&_nc_cat=109&ccb=1-7&_nc_sid=833d8c&_nc_ohc=LjrMnLl2-NkQ7kNvwELNIIE&_nc_oc=Adpqq8CHOQBPgIx9MCL1swSODllhbdpcYgZlZru7NATGOL0fx1a-dhx9FF3-3Eldr-LuhmATi0iCqa_xlonTD3Nm&_nc_zt=23&_nc_ht=scontent.fixb5-1.fna&_nc_gid=5nR6XlnVbGjb1-8qxptGvw&_nc_ss=7d2a8&oh=00_AQIr_XS0jDJ3f_DQLB0J5RP2bNQfsc8NAqLD3GwJ5IAqYw&oe=6A9D6412) 50% 50% no-repeat;background-size: contain;"></div>
+            <img src="https://scontent.fixb5-1.fna.fbcdn.net/v/t39.30808-6/497501749_3783527125271854_1966730131719360890_n.jpg?stp=dst-jpg_tt6&cstp=mx1080x637&ctp=s1080x637&_nc_cat=109&ccb=1-7&_nc_sid=833d8c&_nc_ohc=LjrMnLl2-NkQ7kNvwELNIIE&_nc_oc=Adpqq8CHOQBPgIx9MCL1swSODllhbdpcYgZlZru7NATGOL0fx1a-dhx9FF3-3Eldr-LuhmATi0iCqa_xlonTD3Nm&_nc_zt=23&_nc_ht=scontent.fixb5-1.fna&_nc_gid=5nR6XlnVbGjb1-8qxptGvw&_nc_ss=7d2a8&oh=00_AQIr_XS0jDJ3f_DQLB0J5RP2bNQfsc8NAqLD3GwJ5IAqYw&oe=6A9D6412" alt="">
+            <!-- <div class="frame" style="background:url() 50% 50% no-repeat;background-size: contain;"></div> -->
         </div>
     
         <div>
-            <img src="https://www.aakritiartgallery.com/storage/2485/cfc6a15558c7dfeab75296970ac6eae5.jpeg" alt="">
-            <p>Bimal Kundu</p>
+            <img src="https://scontent-ccu2-2.xx.fbcdn.net/v/t39.30808-6/557592803_3917884241836141_532382422191390926_n.jpg?stp=dst-jpg_tt6&cstp=mx1001x853&ctp=s1001x853&_nc_cat=104&ccb=1-7&_nc_sid=833d8c&_nc_ohc=0k2AVQkRWXsQ7kNvwFocBkF&_nc_oc=Adrh1ANaIG3O1G5jY9Wa41zIOawdhCnTXOchbvf51nMUkiTZTYdFQzHx4qgXjFBNpBJMGUBYKxR6JiHzroTB2oE2&_nc_zt=23&_nc_ht=scontent-ccu2-2.xx&_nc_gid=zK8g0lv0trcKCVPBk3ngCg&_nc_ss=7b2a8&oh=00_AQI6bX5RV9Fr9oVZY8zeOGYGdgNYo4wI7oGy4Py8ScxtKQ&oe=6A9D66E8" alt="">
+            <!-- <p>Bimal Kundu</p> -->
+
+            <img src="https://scontent-ccu2-1.xx.fbcdn.net/v/t39.30808-6/634840489_4050867078537856_5881053244505625448_n.jpg?stp=cp6_dst-jpg_tt6&cstp=mx2048x1536&ctp=s2048x1536&_nc_cat=103&ccb=1-7&_nc_sid=833d8c&_nc_ohc=bHtENweF3Y8Q7kNvwEJuclT&_nc_oc=AdpWGLzQRcDDc0D5RYVKLfVnqoN8D9KtCxuTlf67KwTMDsH7M1DBQau00JbMLIAEZgQE1veVD-FXn9g9Hzy7mYMX&_nc_zt=23&_nc_ht=scontent-ccu2-1.xx&_nc_gid=kP_69wnkH9t3A-008i7WKA&_nc_ss=7b2a8&oh=00_AQIvWB9y7-0Wfe10eizr93r5lCMPNpLHxxI4zl01jns3rQ&oe=6A9D48B6" alt="">
         </div>
         <div>
-            <b>INR 4.50L</b>
-            <img src="https://www.aakritiartgallery.com/storage/1132/conversions/1536928940_DSC_1277-display.webp" alt="">
+            <img src="https://scontent-ccu2-2.xx.fbcdn.net/v/t39.30808-6/497867193_3786209071670326_7677780233995464659_n.jpg?stp=cp6_dst-jpg_tt6&cstp=mx752x1020&ctp=s752x1020&_nc_cat=100&ccb=1-7&_nc_sid=127cfc&_nc_ohc=0t7Pd_1issYQ7kNvwFIMHtF&_nc_oc=AdpyTL1Gk4d4v7ukukGIx8V28dHtHJm9leH95fjbdwywnJACc9zqxrnP8XaCUBN3tXn-h0QEzQnA-0VyKU0rShjl&_nc_zt=23&_nc_ht=scontent-ccu2-2.xx&_nc_gid=sQwARrTyy1FPc3zp3WRWyQ&_nc_ss=7b2a8&oh=00_AQIieZSjPJizjY30pg1Axc-H9b-Hr2J7ym-B0DSS99g3Lg&oe=6A9D413A" alt="">
+
+        </div>
+        <div>
+            <b>INR 1.50L</b>
+            <img src="https://scontent-ccu1-2.xx.fbcdn.net/v/t39.30808-6/473787422_3676910905933477_7003526511220556513_n.jpg?stp=dst-jpg_tt6&cstp=mx922x2048&ctp=s922x2048&_nc_cat=111&ccb=1-7&_nc_sid=833d8c&_nc_ohc=OdoxOa2yNEkQ7kNvwH6GR-_&_nc_oc=AdpPaMdfB4EaObtcJKqulLIDcvCBe3ksGoLdtMWex46BpCngi0UpA5-cHNbOWED7mWMG_KgQvmNmEaR-PxB-hAfS&_nc_zt=23&_nc_ht=scontent-ccu1-2.xx&_nc_gid=45EwvBEu_3NMV3VMud0Oxg&_nc_ss=7b2a8&oh=00_AQLwupVSYxR3jkIKNecLvpcBwZhFrODI-e6qMRRgIAU33w&oe=6A9D62D4" alt="">
         </div>
         <div>
             <b>INR 2.25L</b>
-            <img src="https://www.aakritiartgallery.com/storage/2115/conversions/fc83d98fca609361267aeb9576d956a2-display.webp" alt="">
+            <img src="https://scontent-ccu2-2.xx.fbcdn.net/v/t39.30808-6/599964301_3989083418049556_3535457640551979926_n.jpg?stp=cp6_dst-jpg_tt6&cstp=mx1536x2048&ctp=s1536x2048&_nc_cat=104&ccb=1-7&_nc_sid=833d8c&_nc_ohc=ccXAfsKhtg8Q7kNvwFTRIMn&_nc_oc=AdqUCFUWT4TSK6YwRiluAOKNnxqiwHGx3wHASKqXXcKkQAzLwJKPYv7IOK1ornSqnAGBpm88F0cnitltIJrAkVcx&_nc_zt=23&_nc_ht=scontent-ccu2-2.xx&_nc_gid=U8N2g5GvK6Is9X2_83DLzQ&_nc_ss=7b2a8&oh=00_AQLARVs42YW4LNzbTbPkPbIjxO4-YIiQpOEqwVqXnjClfw&oe=6A9D7561" alt="">
         </div>
         <div>
             <b>INR 1.36L</b>
-            <img src="https://www.aakritiartgallery.com/storage/552/conversions/1409402497_4119-display.webp" alt="">
+            <img src="https://scontent-ccu2-1.xx.fbcdn.net/v/t39.30808-6/784426829_4243879992569896_4025145612961630187_n.jpg?stp=cp6_dst-jpg_tt6&cstp=mx1803x2048&ctp=s1803x2048&_nc_cat=109&ccb=1-7&_nc_sid=833d8c&_nc_ohc=wxNKg5D-nBMQ7kNvwEGVErf&_nc_oc=AdrtWgM0ieh2pFYzxy_2QhYh6352zzg3DV-3cDPjD5WXtfbgQnJa5rJCtX0xDCnrcNs_E82pWe4qFyY7DjkkQCdk&_nc_zt=23&_nc_ht=scontent-ccu2-1.xx&_nc_gid=Hbg12QCEYTQqFpF_lqKRjA&_nc_ss=7b2a8&oh=00_AQKKZXcO6Yv5PrlieGZWttTVxIh4ABB0cfMv5Evh1g4OUg&oe=6A9D5B31" alt="">
+        </div>
+        <div>
+            <img src="https://scontent-ccu2-2.xx.fbcdn.net/v/t39.30808-6/493844432_3770260379931862_6406194449794291817_n.jpg?stp=dst-jpg_tt6&cstp=mx625x1280&ctp=s625x1280&_nc_cat=100&ccb=1-7&_nc_sid=127cfc&_nc_ohc=mCKcLN-CrbAQ7kNvwEx2U0a&_nc_oc=Adpar7yE8hwI0NUM-mrj_Mvx3TYCuNXmJq0GcEdD3UJxfWH-qJXfb-YEuRVM68G0WcDw68KNV-4uYIwvr8CDPdAf&_nc_zt=23&_nc_ht=scontent-ccu2-2.xx&_nc_gid=GHSz2dZdvorG0hypKlZtBA&_nc_ss=7b2a8&oh=00_AQJDTSIaifHXnEfzM9_JV3x6uBWHTKZ7GppsMT4YGGs63g&oe=6A9D4676" alt="">
         </div>
         <div>
             <b>INR 4.20L</b>
-            <img src="https://www.aakritiartgallery.com/storage/1129/conversions/1536927326_DSC_1351-thumb.webp" alt="">
+            <img src="https://scontent-ccu2-2.xx.fbcdn.net/v/t39.30808-6/474947881_3683282455296322_2682320152546842482_n.jpg?stp=dst-jpg_tt6&cstp=mx1269x2048&ctp=s1269x2048&_nc_cat=105&ccb=1-7&_nc_sid=833d8c&_nc_ohc=SpWDpwhioBcQ7kNvwEuJU36&_nc_oc=AdrzAMP_Wo3GHvvxnSsntHxTAuAhfUwje_-NUO_n8pvCkgtS4nmGJs_gztRas7KmOEbXXz0L88rgdy_ncR24WY7P&_nc_zt=23&_nc_ht=scontent-ccu2-2.xx&_nc_gid=2OVVnfzRYm3f7aOTtDjXUw&_nc_ss=7b2a8&oh=00_AQKS1LJvSHu-TmnvgfHgwDuMgzPA2Y95M0p-NXBpUxtEYw&oe=6A9D59DE" alt="">
+        </div>
+        <div style="width: 66%;">
+            <img src="https://scontent-ccu2-1.xx.fbcdn.net/v/t39.30808-6/474492381_3680398398918061_4126948195742860270_n.jpg?stp=dst-jpg_tt6&cstp=mx2048x922&ctp=s2048x922&_nc_cat=108&ccb=1-7&_nc_sid=833d8c&_nc_ohc=nFUG0J-BiboQ7kNvwEPBePy&_nc_oc=Adr2QyDtazoE5GSJnp_gDgPHq7Nx9fn6q83_zTLIxTM5VjlHSyM-sQxwETAq1n0PFAyW4ameS5ePiSxsMcfESumz&_nc_zt=23&_nc_ht=scontent-ccu2-1.xx&_nc_gid=cAM-hbz0x9O4FECCSAMwfQ&_nc_ss=7b2a8&oh=00_AQLpA0Nv17bWKI2gsxEnJNGJPBaoFH6YTREHNKpoubt-3A&oe=6A9D50A7" alt="">
         </div>
         <div>
-            <b>INR 4.20L</b>
-            <img src="https://www.aakritiartgallery.com/storage/1712/conversions/020ed6005bf8b3dac500ee6f2d407566-thumb.webp" alt="">
+            <b>INR 42k</b>
+            <img src="https://scontent-ccu2-2.xx.fbcdn.net/v/t39.30808-6/592325065_3978522765772288_6590577864673905278_n.jpg?stp=dst-jpg_tt6&cstp=mx1532x2048&ctp=s1532x2048&_nc_cat=107&ccb=1-7&_nc_sid=127cfc&_nc_ohc=bJdtFkfOk8sQ7kNvwEgjsjH&_nc_oc=AdrHwRg6iD1HQtaQ9PkVnD0CZqW7peBGZ_2YWXhtQwUzmYExEX3jcWr2n1W-mbioLyCVNooAgCWFbP9zzXLhC01B&_nc_zt=23&_nc_ht=scontent-ccu2-2.xx&_nc_gid=2BVLiqjl4itjJ4_lT8oFOA&_nc_ss=7b2a8&oh=00_AQKGRVx1o2zB3OVjCxV42YX0aCWxcC5kuFD0OEYb3B9sfQ&oe=6A9D7460" alt="">
         </div>
     </article>
 </body>
