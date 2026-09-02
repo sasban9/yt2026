@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Career Question Every Teenager Gets Wrong</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0a0b;
+    --bg2:#121214;
+    --ink:#f3efe6;
+    --muted:#a39d8f;
+    --gold:#d8ac52;
+    --gold-dim:#9c7c3f;
+    --acid:#c6ff5e;
+    --line:rgba(216,172,82,0.22);
+    --display:'Cormorant Garamond', serif;
+    --body:'Bricolage Grotesque', sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{
+    width:100%;height:100%;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--body);
+    overflow:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--gold);color:#100c02;}
+
+  /* ---------- ambient background ---------- */
+  #grain{
+    position:fixed;inset:0;pointer-events:none;z-index:5;opacity:.05;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  #mesh{position:fixed;inset:0;z-index:0;overflow:hidden;}
+  .blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:.35;}
+  .blob1{width:46vw;height:46vw;background:radial-gradient(circle,var(--gold-dim),transparent 70%);top:-14vw;left:-10vw;animation:drift1 26s ease-in-out infinite;}
+  .blob2{width:38vw;height:38vw;background:radial-gradient(circle,#3a5c1f,transparent 70%);bottom:-16vw;right:-8vw;animation:drift2 32s ease-in-out infinite;}
+  .blob3{width:26vw;height:26vw;background:radial-gradient(circle,#5c3a1f,transparent 70%);top:40%;right:20%;animation:drift3 22s ease-in-out infinite;}
+  @keyframes drift1{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(4vw,6vw) scale(1.15);}}
+  @keyframes drift2{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(-5vw,-4vw) scale(1.1);}}
+  @keyframes drift3{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(-3vw,5vw) scale(0.9);}}
+
+  .particles{position:fixed;inset:0;z-index:1;pointer-events:none;}
+  .particle{position:absolute;border-radius:50%;background:var(--gold);opacity:0;animation:rise linear infinite;}
+  @keyframes rise{
+    0%{transform:translateY(0) translateX(0);opacity:0;}
+    10%{opacity:.5;}
+    90%{opacity:.3;}
+    100%{transform:translateY(-100vh) translateX(20px);opacity:0;}
+  }
+
+  /* ---------- stage ---------- */
+  #stage{position:relative;width:100%;height:100%;z-index:2;}
+  .slide{
+    position:absolute;inset:0;
+    display:flex;flex-direction:column;justify-content:center;
+    padding:clamp(28px,6vw,90px) clamp(24px,9vw,140px);
+    opacity:0;visibility:hidden;
+    transform:translateY(24px) scale(.985);
+    transition:opacity .7s cubic-bezier(.16,.8,.24,1), transform .8s cubic-bezier(.16,.8,.24,1);
+  }
+  .slide.active{opacity:1;visibility:visible;transform:translateY(0) scale(1);}
+  .slide.leaving{opacity:0;transform:translateY(-18px) scale(1.01);}
+
+  .eyebrow{
+    font-family:var(--body);font-weight:600;letter-spacing:.28em;text-transform:uppercase;
+    color:var(--gold);font-size:clamp(16px,1.1vw,17px);
+    display:inline-flex;align-items:center;gap:12px;margin-bottom:clamp(18px,2.6vw,30px);
+    opacity:0;transform:translateY(14px);
+  }
+  .eyebrow::before{content:"";width:34px;height:1px;background:var(--gold);display:inline-block;}
+  .active .eyebrow{animation:riseIn .7s .1s cubic-bezier(.16,.8,.24,1) forwards;}
+
+  h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.02;color:var(--ink);}
+  .headline{
+    font-size:clamp(16px,7.4vw,96px);
+    letter-spacing:-0.01em;
+    opacity:0;transform:translateY(26px);
+  }
+  .active .headline{animation:riseIn .85s .18s cubic-bezier(.16,.8,.24,1) forwards;}
+  .headline em{font-style:italic;color:var(--gold);font-weight:500;}
+  .headline .strike{position:relative;color:var(--muted);}
+  .headline .strike::after{content:"";position:absolute;left:-2%;right:-2%;top:52%;height:2px;background:var(--muted);transform:scaleX(0);transform-origin:left;}
+  .active .headline .strike::after{animation:strikeDraw .6s .9s ease forwards;}
+  @keyframes strikeDraw{to{transform:scaleX(1);}}
+
+  .lede{
+    font-size:clamp(16px,2vw,22px);color:var(--muted);max-width:60ch;line-height:1.55;
+    margin-top:clamp(14px,2vw,22px);
+    opacity:0;transform:translateY(20px);
+  }
+  .active .lede{animation:riseIn .8s .32s cubic-bezier(.16,.8,.24,1) forwards;}
+  @keyframes riseIn{to{opacity:1;transform:translateY(0);}}
+
+  .accent-rule{width:64px;height:3px;background:linear-gradient(90deg,var(--gold),var(--acid));margin-top:22px;transform:scaleX(0);transform-origin:left;}
+  .active .accent-rule{animation:ruleGrow .7s .2s ease forwards;}
+  @keyframes ruleGrow{to{transform:scaleX(1);}}
+
+  .stagger > *{opacity:0;transform:translateY(18px);}
+  .active .stagger > *{animation:riseIn .6s cubic-bezier(.16,.8,.24,1) forwards;}
+  .active .stagger > *:nth-child(1){animation-delay:.15s;}
+  .active .stagger > *:nth-child(2){animation-delay:.24s;}
+  .active .stagger > *:nth-child(3){animation-delay:.33s;}
+  .active .stagger > *:nth-child(4){animation-delay:.42s;}
+  .active .stagger > *:nth-child(5){animation-delay:.51s;}
+  .active .stagger > *:nth-child(6){animation-delay:.6s;}
+  .active .stagger > *:nth-child(7){animation-delay:.69s;}
+
+  /* ---------- slide number / progress ---------- */
+  #chrome{position:fixed;inset:0;z-index:6;pointer-events:none;}
+  #progress{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--gold),var(--acid));width:0%;transition:width .5s cubic-bezier(.4,0,.2,1);z-index:7;}
+  #counter{
+    position:fixed;bottom:clamp(20px,3vw,34px);left:clamp(24px,6vw,60px);
+    font-size:16px;color:var(--muted);letter-spacing:.06em;z-index:7;
+    font-variant-numeric:tabular-nums;
+  }
+  #counter b{color:var(--gold);font-weight:600;}
+  #dots{
+    position:fixed;bottom:clamp(20px,3vw,34px);right:clamp(24px,6vw,60px);
+    display:flex;gap:9px;z-index:7;pointer-events:auto;
+  }
+  .dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.18);cursor:pointer;transition:all .35s ease;border:none;padding:0;}
+  .dot.on{background:var(--gold);width:22px;border-radius:4px;}
+  #hint{
+    position:fixed;top:clamp(20px,3vw,34px);right:clamp(24px,6vw,60px);
+    font-size:16px;color:var(--muted);letter-spacing:.05em;z-index:7;
+    display:flex;align-items:center;gap:8px;opacity:.75;
+  }
+  .kbd{border:1px solid var(--line);border-radius:5px;padding:2px 8px;font-size:16px;color:var(--gold);animation:pulseKey 2.4s ease-in-out infinite;}
+  @keyframes pulseKey{0%,100%{opacity:.6;}50%{opacity:1;}}
+  #brand{position:fixed;top:clamp(20px,3vw,34px);left:clamp(24px,6vw,60px);font-size:16px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;z-index:7;}
+  #brand b{color:var(--ink);}
+
+  @media(max-width:640px){
+    #hint{display:none;}
+    #brand{font-size:16px;}
+  }
+
+  /* ---------- content components ---------- */
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:clamp(20px,4vw,60px);align-items:start;}
+  @media(max-width:760px){.grid-2{grid-template-columns:1fr;}}
+
+  table.evidence{border-collapse:collapse;width:100%;max-width:780px;margin-top:8px;}
+  table.evidence th{
+    font-family:var(--body);font-weight:600;font-size:16px;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--gold);text-align:left;padding:0 18px 14px 0;border-bottom:1px solid var(--line);
+  }
+  table.evidence td{
+    padding:14px 18px 14px 0;font-size:clamp(16px,1.6vw,19px);color:var(--ink);border-bottom:1px solid rgba(255,255,255,.06);
+  }
+  table.evidence tr td:first-child{color:var(--muted);}
+  table.evidence tr{opacity:0;transform:translateX(-14px);}
+  .active table.evidence tr{animation:rowIn .55s cubic-bezier(.16,.8,.24,1) forwards;}
+  .active table.evidence tr:nth-child(1){animation-delay:.2s;}
+  .active table.evidence tr:nth-child(2){animation-delay:.28s;}
+  .active table.evidence tr:nth-child(3){animation-delay:.36s;}
+  .active table.evidence tr:nth-child(4){animation-delay:.44s;}
+  .active table.evidence tr:nth-child(5){animation-delay:.52s;}
+  .active table.evidence tr:nth-child(6){animation-delay:.6s;}
+  .active table.evidence tr:nth-child(7){animation-delay:.68s;}
+  @keyframes rowIn{to{opacity:1;transform:translateX(0);}}
+
+  .cardgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:20px;}
+  @media(max-width:980px){.cardgrid{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:520px){.cardgrid{grid-template-columns:1fr;}}
+  .xcard{
+    background:linear-gradient(160deg,rgba(216,172,82,.08),rgba(255,255,255,.02));
+    border:1px solid var(--line);border-radius:14px;padding:18px 16px;
+    opacity:0;transform:translateY(24px);
+    transition:transform .35s ease,border-color .35s ease,background .35s ease;
+  }
+  .xcard:hover{transform:translateY(-6px);border-color:var(--gold);background:linear-gradient(160deg,rgba(216,172,82,.16),rgba(255,255,255,.03));}
+  .active .xcard{animation:cardIn .6s cubic-bezier(.16,.8,.24,1) forwards;}
+  .active .xcard:nth-child(1){animation-delay:.18s;}
+  .active .xcard:nth-child(2){animation-delay:.28s;}
+  .active .xcard:nth-child(3){animation-delay:.38s;}
+  .active .xcard:nth-child(4){animation-delay:.48s;}
+  .active .xcard:nth-child(5){animation-delay:.58s;}
+  @keyframes cardIn{to{opacity:1;transform:translateY(0);}}
+  .xcard .num{font-family:var(--display);font-size:clamp(16px,2.2vw,30px);color:var(--gold);display:block;margin-bottom:6px;}
+  .xcard h4{font-family:var(--body);font-weight:700;font-size:clamp(16px,1.5vw,18px);margin-bottom:10px;}
+  .xcard ul{list-style:none;font-size:16px;color:var(--muted);line-height:1.6;}
+  .xcard ul li::before{content:"— ";color:var(--gold-dim);}
+
+  .split{display:grid;grid-template-columns:1fr auto 1fr;gap:clamp(18px,3vw,36px);align-items:center;margin-top:10px;}
+  @media(max-width:760px){.split{grid-template-columns:1fr;}}
+  .versus{
+    font-family:var(--display);font-style:italic;font-size:clamp(16px,2.4vw,26px);color:var(--muted);
+    align-self:center;justify-self:center;opacity:0;
+  }
+  .active .versus{animation:riseIn .5s .5s ease forwards;}
+  .panel{
+    border:1px solid var(--line);border-radius:16px;padding:clamp(18px,2.4vw,28px);
+    background:rgba(255,255,255,.02);opacity:0;transform:translateY(20px);
+  }
+  .active .panel{animation:riseIn .65s cubic-bezier(.16,.8,.24,1) forwards;}
+  .active .panelA{animation-delay:.2s;}
+  .active .panelB{animation-delay:.35s;}
+  .panel h4{font-family:var(--body);font-weight:700;font-size:clamp(16px,1.6vw,20px);margin-bottom:4px;}
+  .panel .tag{font-size:16px;color:var(--gold);letter-spacing:.05em;text-transform:uppercase;margin-bottom:14px;display:block;}
+  .panel ol{margin-left:1.1em;color:var(--muted);font-size:clamp(16px,1.4vw,17px);line-height:1.85;}
+  .panel ol li::marker{color:var(--gold-dim);}
+  .panel .result{margin-top:14px;padding-top:14px;border-top:1px solid var(--line);font-size:clamp(16px,1.5vw,18px);color:var(--ink);font-style:italic;font-family:var(--display);}
+
+  .callout{
+    border-left:3px solid var(--acid);padding:clamp(16px,2.4vw,26px) clamp(18px,3vw,32px);
+    background:linear-gradient(90deg,rgba(198,255,94,.06),transparent);
+    margin-top:18px;max-width:70ch;
+    opacity:0;transform:translateX(-16px);
+  }
+  .active .callout{animation:calloutIn .6s .3s cubic-bezier(.16,.8,.24,1) forwards;}
+  @keyframes calloutIn{to{opacity:1;transform:translateX(0);}}
+  .callout p{font-size:clamp(16px,1.7vw,20px);color:var(--ink);line-height:1.6;}
+  .callout .q{font-family:var(--display);font-style:italic;font-size:clamp(16px,2vw,24px);color:var(--acid);}
+
+  .pillrow{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px;}
+  .pill{
+    border:1px solid var(--line);border-radius:100px;padding:9px 18px;font-size:clamp(16px,1.2vw,16px);
+    color:var(--ink);opacity:0;transform:translateY(14px) scale(.9);
+    background:rgba(255,255,255,.02);
+  }
+  .active .pill{animation:pillIn .5s cubic-bezier(.16,.8,.24,1) forwards;}
+  .active .pill:nth-child(1){animation-delay:.15s;} .active .pill:nth-child(2){animation-delay:.2s;}
+  .active .pill:nth-child(3){animation-delay:.25s;} .active .pill:nth-child(4){animation-delay:.3s;}
+  .active .pill:nth-child(5){animation-delay:.35s;} .active .pill:nth-child(6){animation-delay:.4s;}
+  .active .pill:nth-child(7){animation-delay:.45s;} .active .pill:nth-child(8){animation-delay:.5s;}
+  .active .pill:nth-child(9){animation-delay:.55s;} .active .pill:nth-child(10){animation-delay:.6s;}
+  @keyframes pillIn{to{opacity:1;transform:translateY(0) scale(1);}}
+
+  .timeline{position:relative;margin-top:34px;padding-left:6px;}
+  .tline{position:absolute;left:0;top:8px;bottom:8px;width:2px;background:var(--line);}
+  .tline-fill{position:absolute;left:0;top:8px;width:2px;background:linear-gradient(180deg,var(--gold),var(--acid));height:0;transition:height 1.4s cubic-bezier(.16,.8,.24,1) .3s;}
+  .active .tline-fill{height:calc(100% - 16px);}
+  .tstep{position:relative;padding:0 0 26px 30px;opacity:0;transform:translateX(-14px);}
+  .active .tstep{animation:riseIn .55s cubic-bezier(.16,.8,.24,1) forwards;}
+  .active .tstep:nth-child(2){animation-delay:.25s;}
+  .active .tstep:nth-child(3){animation-delay:.5s;}
+  .active .tstep:nth-child(4){animation-delay:.75s;}
+  .active .tstep:nth-child(5){animation-delay:1s;}
+  .tstep::before{content:"";position:absolute;left:-4.5px;top:4px;width:10px;height:10px;border-radius:50%;background:var(--bg);border:2px solid var(--gold);}
+  .tstep .age{font-family:var(--display);font-size:clamp(16px,2vw,24px);color:var(--gold);font-style:italic;}
+  .tstep p{font-size:clamp(16px,1.4vw,17px);color:var(--muted);margin-top:2px;max-width:60ch;}
+
+  .scorelist{display:grid;grid-template-columns:1fr 1fr;gap:10px 40px;margin-top:24px;max-width:900px;}
+  @media(max-width:640px){.scorelist{grid-template-columns:1fr;}}
+  .scoreitem{display:flex;align-items:center;gap:14px;opacity:0;transform:translateY(12px);font-size:clamp(16px,1.5vw,18px);}
+  .active .scoreitem{animation:riseIn .5s cubic-bezier(.16,.8,.24,1) forwards;}
+  .scoreitem .bar{flex:1;height:1px;background:var(--line);position:relative;overflow:hidden;}
+  .scoreitem .bar::after{content:"";position:absolute;left:0;top:0;bottom:0;width:0;background:var(--gold);animation:barfill 1.6s 1s ease forwards;}
+  .scoreitem:nth-child(odd) .bar::after{width:72%;}
+  .scoreitem:nth-child(even) .bar::after{width:58%;}
+  @keyframes barfill{to{width:var(--w,60%);}}
+  .scoreitem span.n{color:var(--gold);font-family:var(--display);font-style:italic;font-size:16px;}
+
+  .closewrap{display:flex;flex-direction:column;align-items:flex-start;}
+  .bigquote{font-family:var(--display);font-size:clamp(16px,4.4vw,52px);line-height:1.15;max-width:16ch;font-weight:500;}
+  .bigquote em{color:var(--acid);font-style:italic;}
+
+  /* subtle number watermark per section */
+  .watermark{
+    position:absolute;right:clamp(10px,3vw,50px);bottom:clamp(-10px,-2vw,10px);
+    font-family:var(--display);font-size:clamp(120px,22vw,320px);color:rgba(255,255,255,.03);
+    font-weight:600;line-height:1;pointer-events:none;user-select:none;z-index:0;
+  }
+</style>
+</head>
+<body>
+
+<div id="mesh"><div class="blob blob1"></div><div class="blob blob2"></div><div class="blob blob3"></div></div>
+<div class="particles" id="particles"></div>
+<div id="grain"></div>
+
+<div id="progress"></div>
+<div id="brand">Career <b>Compass</b></div>
+<div id="hint">use <span class="kbd">←</span><span class="kbd">→</span> to navigate</div>
+<div id="counter"><b id="cnum">01</b> / 11</div>
+<div id="dots"></div>
+
+<div id="stage">
+
+  <section class="slide" data-title="The Question">
+    <span class="watermark">01</span>
+    <span class="eyebrow">A Framework For Teenagers &amp; Parents</span>
+    <h1 class="headline">The <span class="strike">wrong question</span><br>every teenager is asked</h1>
+    <p class="lede">The biggest mistake is trying to answer <em>"What profession should I choose?"</em> while still in school — before there's any evidence to answer it with.</p>
+    <div class="accent-rule"></div>
+  </section>
+
+  <section class="slide" data-title="The Reframe">
+    <span class="watermark">02</span>
+    <span class="eyebrow">A Better Question</span>
+    <h2 class="headline" style="font-size:clamp(16px,4.6vw,58px);max-width:22ch;">"What evidence do I have that I should spend <em>10–15 years</em> becoming a doctor, lawyer, engineer or CA — rather than becoming exceptionally good at creating and selling things?"</h2>
+    <p class="lede">You can actually build a decision system around this question — instead of guessing at fifteen.</p>
+  </section>
+
+  <section class="slide" data-title="Not School Marks">
+    <span class="watermark">03</span>
+    <span class="eyebrow">Step 1 — Don't Decide From Grades</span>
+    <h2 class="headline" style="font-size:clamp(16px,3.6vw,44px);">School marks are a weak predictor of career fit.</h2>
+    <p class="lede">Instead, observe what kind of work actually gives you energy:</p>
+    <table class="evidence">
+      <tr><th>If you naturally enjoy…</th><th>Possible direction</th></tr>
+      <tr><td>Biology, human body, helping people, patience</td><td>Doctor</td></tr>
+      <tr><td>Arguments, reading, writing, negotiation</td><td>Law</td></tr>
+      <tr><td>Mathematics, physics, building things</td><td>Engineering</td></tr>
+      <tr><td>Accounting, numbers, business structure</td><td>CA / Finance</td></tr>
+      <tr><td>Convincing, negotiating, finding customers</td><td>Sales / Business</td></tr>
+      <tr><td>Building websites, apps, products</td><td>Technology / Entrepreneurship</td></tr>
+      <tr><td>Making videos, attracting an audience</td><td>Creator / Business</td></tr>
+    </table>
+  </section>
+
+  <section class="slide" data-title="Run Experiments">
+    <span class="watermark">04</span>
+    <span class="eyebrow">Step 2 — Run Experiments, Not a Life Decision</span>
+    <h2 class="headline" style="font-size:clamp(16px,3.6vw,42px);">A 15-year-old doesn't need to decide. They need to try things.</h2>
+    <div class="cardgrid">
+      <div class="xcard"><span class="num">01</span><h4>Doctor</h4><ul>
+        <li>Spend a day with a doctor</li><li>Learn basic anatomy</li><li>Volunteer in healthcare</li><li>Can you tolerate the boring parts?</li></ul></div>
+      <div class="xcard"><span class="num">02</span><h4>Law</h4><ul>
+        <li>Debate both sides</li><li>Read an actual judgment</li><li>Model UN / debate club</li></ul></div>
+      <div class="xcard"><span class="num">03</span><h4>Engineering</h4><ul>
+        <li>Build an app</li><li>Build a robot</li><li>Take something apart</li></ul></div>
+      <div class="xcard"><span class="num">04</span><h4>CA / Finance</h4><ul>
+        <li>Learn how a small business earns</li><li>Keep its books</li><li>Understand GST &amp; margins</li></ul></div>
+      <div class="xcard"><span class="num">05</span><h4>Business</h4><ul>
+        <li>Find something people want</li><li>Get your first customer</li><li>Handle rejection</li><li>Make ₹1,000 → ₹10,000</li></ul></div>
+    </div>
+  </section>
+
+  <section class="slide" data-title="Comparative Advantage">
+    <span class="watermark">05</span>
+    <span class="eyebrow">Step 3 — The Real Discovery</span>
+    <h2 class="headline">It's not your career.<br>It's your <em>comparative advantage</em>.</h2>
+    <p class="lede">The last experiment — selling something real — teaches what school almost never does: does this person actually enjoy creating economic value?</p>
+  </section>
+
+  <section class="slide" data-title="Student A vs Student B">
+    <span class="watermark">06</span>
+    <span class="eyebrow">Two Seventeen-Year-Olds</span>
+    <h2 class="headline" style="font-size:clamp(16px,3.2vw,38px);">Same intelligence. Very different evidence.</h2>
+    <div class="split">
+      <div class="panel panelA">
+        <span class="tag">Student A · 95%</span>
+        <h4>The credential path</h4>
+        <ol>
+          <li>IIT</li><li>B.Tech</li><li>Job</li><li>MBA</li><li>Management</li>
+        </ol>
+        <div class="result">25 years later, discovers they actually love selling.</div>
+      </div>
+      <div class="versus">vs</div>
+      <div class="panel panelB">
+        <span class="tag">Student B · 85%</span>
+        <h4>The evidence path (age 15+)</h4>
+        <ol>
+          <li>Builds websites, sells to local businesses</li>
+          <li>Learns advertising</li>
+          <li>Starts an Instagram page, sells ₹500 products</li>
+          <li>Builds a small online business</li>
+        </ol>
+        <div class="result">₹2 lakh/year by 17 — and knows how to acquire customers.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-title="Not the Opposite Mistake">
+    <span class="watermark">07</span>
+    <span class="eyebrow">Step 4 — The Opposite Mistake Is Also a Mistake</span>
+    <h2 class="headline" style="font-size:clamp(16px,3.6vw,42px);">"Degrees are useless, start a business" is bad advice too.</h2>
+    <div class="callout">
+      <p>Medicine, law, engineering and CA are credential-heavy professions with barriers to entry <em>for a reason</em>. If you discover at 16 that you genuinely want to be a doctor — don't waste three years on dropshipping because a YouTuber said entrepreneurship is the future.</p>
+      <p class="q">The real question: does this career require the degree, and do I actually want the underlying work?</p>
+    </div>
+  </section>
+
+  <section class="slide" data-title="Learn Sales">
+    <span class="watermark">08</span>
+    <span class="eyebrow">Step 5 — One Almost-Universal Skill</span>
+    <h2 class="headline">Learn <em>sales</em> — regardless of the career.</h2>
+    <p class="lede">Even a future doctor needs to communicate with patients. A lawyer needs persuasion. An engineer needs to sell ideas internally. A CA needs clients. An entrepreneur needs customers.</p>
+    <div class="pillrow">
+      <span class="pill">Communication</span><span class="pill">Negotiation</span><span class="pill">Writing</span>
+      <span class="pill">Presenting</span><span class="pill">Persuasion</span><span class="pill">Understanding customers</span>
+      <span class="pill">Building an audience</span><span class="pill">Using AI</span><span class="pill">Digital products</span>
+      <span class="pill">How money flows</span>
+    </div>
+  </section>
+
+  <section class="slide" data-title="The Career Laboratory">
+    <span class="watermark">09</span>
+    <span class="eyebrow">Step 6 — A Career Laboratory (Ages 13–18)</span>
+    <h2 class="headline" style="font-size:clamp(16px,3.4vw,40px);">Don't force the decision. Escalate the experiments.</h2>
+    <div class="timeline">
+      <div class="tline"></div><div class="tline-fill"></div>
+      <div class="tstep"><span class="age">13–14</span><p>Explore everything: coding, debating, selling, writing, science, video, design, sport, teaching.</p></div>
+      <div class="tstep"><span class="age">15–16</span><p>Start building: a website, a YouTube channel, a small product, tutoring, a school club, a simple app.</p></div>
+      <div class="tstep"><span class="age">16–17</span><p>Start making money — even ₹500 matters, then ₹5,000, then ₹50,000. Can you spot a problem and get someone to pay for the fix?</p></div>
+      <div class="tstep"><span class="age">17–18</span><p>Now make the serious decision — backed by three years of actual evidence, not self-perception.</p></div>
+    </div>
+  </section>
+
+  <section class="slide" data-title="Score Yourself">
+    <span class="watermark">10</span>
+    <span class="eyebrow">The Framework — Score Yourself 1–10</span>
+    <h2 class="headline" style="font-size:clamp(16px,3.4vw,40px);">Combine self-scoring with actual experiments — not self-perception.</h2>
+    <div class="scorelist">
+      <div class="scoreitem"><span>Academic curiosity</span><div class="bar"></div></div>
+      <div class="scoreitem"><span>Problem solving</span><div class="bar"></div></div>
+      <div class="scoreitem"><span>Communication</span><div class="bar"></div></div>
+      <div class="scoreitem"><span>Persuasion</span><div class="bar"></div></div>
+      <div class="scoreitem"><span>Building things</span><div class="bar"></div></div>
+      <div class="scoreitem"><span>Working with people</span><div class="bar"></div></div>
+      <div class="scoreitem"><span>Working independently</span><div class="bar"></div></div>
+      <div class="scoreitem"><span>Tolerance for long study</span><div class="bar"></div></div>
+      <div class="scoreitem"><span>Tolerance for uncertainty</span><div class="bar"></div></div>
+      <div class="scoreitem"><span>Desire to build a business</span><div class="bar"></div></div>
+    </div>
+  </section>
+
+  <section class="slide" data-title="The Real Goal">
+    <span class="watermark">11</span>
+    <span class="eyebrow">Closing Thought</span>
+    <div class="closewrap">
+      <p class="bigquote">The goal isn't to eliminate degrees. It's to stop students from spending <em>5–10 years</em> collecting credentials before discovering what they actually enjoy doing.</p>
+      <div class="accent-rule"></div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function(){
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const total = slides.length;
+  let current = 0;
+
+  const dotsWrap = document.getElementById('dots');
+  slides.forEach((_, i) => {
+    const d = document.createElement('button');
+    d.className = 'dot';
+    d.setAttribute('aria-label', 'Go to slide ' + (i+1));
+    d.addEventListener('click', () => goTo(i));
+    dotsWrap.appendChild(d);
+  });
+  const dots = Array.from(dotsWrap.children);
+  const cnum = document.getElementById('cnum');
+  const progress = document.getElementById('progress');
+
+  function render(prev, next){
+    slides.forEach((s, i) => {
+      s.classList.remove('active','leaving');
+      if(i === next){ s.classList.add('active'); }
+    });
+    dots.forEach((d,i) => d.classList.toggle('on', i === next));
+    cnum.textContent = String(next+1).padStart(2,'0');
+    progress.style.width = ((next+1)/total*100) + '%';
+  }
+
+  function goTo(i){
+    if(i < 0 || i >= total || i === current) return;
+    current = i;
+    render(null, current);
+  }
+  function next(){ goTo(Math.min(current+1, total-1)); }
+  function prev(){ goTo(Math.max(current-1, 0)); }
+
+  window.addEventListener('keydown', (e) => {
+    if(['ArrowRight','ArrowDown',' ','PageDown'].includes(e.key)){ e.preventDefault(); next(); }
+    else if(['ArrowLeft','ArrowUp','PageUp'].includes(e.key)){ e.preventDefault(); prev(); }
+    else if(e.key === 'Home'){ goTo(0); }
+    else if(e.key === 'End'){ goTo(total-1); }
+  });
+
+  // touch swipe
+  let touchX = null;
+  window.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; }, {passive:true});
+  window.addEventListener('touchend', e => {
+    if(touchX === null) return;
+    const dx = e.changedTouches[0].clientX - touchX;
+    if(Math.abs(dx) > 50){ dx < 0 ? next() : prev(); }
+    touchX = null;
+  }, {passive:true});
+
+  // click right/left thirds of screen to navigate (minimal, invisible)
+  document.getElementById('stage').addEventListener('click', (e) => {
+    const w = window.innerWidth;
+    if(e.clientX > w * 0.82) next();
+    else if(e.clientX < w * 0.18) prev();
+  });
+
+  render(null, 0);
+
+  // ambient floating particles
+  const pWrap = document.getElementById('particles');
+  const COUNT = 22;
+  for(let i=0;i<COUNT;i++){
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = 2 + Math.random()*3;
+    p.style.width = size+'px';
+    p.style.height = size+'px';
+    p.style.left = Math.random()*100+'vw';
+    p.style.bottom = -20+'px';
+    p.style.animationDuration = (14 + Math.random()*18)+'s';
+    p.style.animationDelay = (Math.random()*20)+'s';
+    pWrap.appendChild(p);
+  }
+
+  // subtle parallax on mouse move for blobs
+  const blobs = document.querySelectorAll('.blob');
+  window.addEventListener('mousemove', (e) => {
+    const x = (e.clientX / window.innerWidth - 0.5);
+    const y = (e.clientY / window.innerHeight - 0.5);
+    blobs.forEach((b, i) => {
+      const factor = (i+1) * 6;
+      b.style.marginLeft = (x*factor)+'px';
+      b.style.marginTop = (y*factor)+'px';
+    });
+  });
+})();
+</script>
+</body>
+</html>

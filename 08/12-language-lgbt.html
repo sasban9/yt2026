@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Language Evolution vs Precision 2026</title>
+    <style>
+        body {
+            margin: 0;
+            background: #111;
+            background: url(https://cdn.wallpapersafari.com/91/2/whfYS0.jpg) no-repeat;background-size: cover;
+            /* background: url(https://media.istockphoto.com/id/1250380933/photo/top-down-aerial-view-of-chicago-downtown-urban-grid-with-park.jpg?s=612x612&w=0&k=20&c=ojXCwviHjJCOgvWU-JUM0_AC6hsaI9UfzzhzvDLJkIU=) no-repeat;background-size: cover; */
+            color: white;
+            font-family: sans-serif;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            touch-action: manipulation;
+        }
+        p{text-align: center;margin:0;}
+        img{max-width: 90%;max-height: 400px;}
+
+        .slide {
+            padding: 0 300px;line-height: 2;
+            position: absolute;
+            min-width: 80%;
+            min-height: 30vh;
+            background: #222;
+            border-radius: 20px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+            display: flex;flex-direction: column;
+            justify-content: center;gap: 1rem;text-align: center;
+            align-items: center;
+            font-size: 3em;
+            transform: scale(0);
+            opacity: 0;
+            transition: transform 0.1s ease, opacity 0.3s ease;
+        }
+
+        .slide.active {
+            transform: scale(1);
+            opacity: 1;
+            z-index: 1;
+        }
+
+        .slide.hidden {
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 0;
+        }
+
+        .nav-buttons {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 40px;
+            pointer-events: none;
+        }
+
+        button {
+            background: #333;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 1em;
+            cursor: pointer;
+            pointer-events: all;
+        }
+
+        button:disabled {
+            opacity: 0.3;
+            cursor: default;
+        }
+
+        li{display: inline-block;padding-left: 1rem;border-left: solid 6px grey;transform: skewX(-10deg);}
+    </style>
+</head>
+
+<body>
+    <img src="https://sasban.online/img/sasban/sasban2024a-removebg-preview.png" alt="" style="position: fixed;bottom: 0;left: 0;z-index: 9999;max-height: 60vh;">
+    <!-- Slides -->
+    <div class="slide active">
+        <p>There is a real tension here, but I would separate <strong>two different issues</strong>:</p>
+    </div>
+    <div class="slide">
+        how language naturally evolves, and whether institutions should deliberately change language for social reasons.
+    </div>
+    <div class="slide">
+        <h3 id="1-language-was-never-designed-by-committee-for-maximum-precision">Language was never designed by committee for maximum precision</h3>
+    </div>
+    <div class="slide">
+        <p>Language is primarily a tool for <strong>communication</strong>, not a formal specification language.</p>
+    </div>
+    <div class="slide">
+        <p>English constantly trades precision for convenience:</p>
+    </div>
+    <div class="slide">
+<ul>
+<li>“I’ll see you later.”</li>
+<li>“It’s cold.”</li>
+<li>“That’s expensive.”</li>
+<li>“They said it was fine.”</li>
+</ul>
+    </div>
+    <div class="slide">
+<p>All of these require context. We tolerate ambiguity because making every sentence perfectly explicit would make ordinary communication painfully cumbersome.</p>
+    </div>
+    <div class="slide">
+<p>So the existence of ambiguity isn&#39;t necessarily a failure of language.</p>
+    </div>
+    <div class="slide">
+<h3 id="2-but-your-criticism-becomes-stronger-when-ambiguity-is-deliberately-introduced-">But your criticism becomes stronger when ambiguity is <em>deliberately introduced</em></h3>
+    </div>
+    <div class="slide">
+<p>There is a meaningful difference between:</p>
+    </div>
+    <div class="slide">
+<blockquote>
+<p>Language naturally developing new forms.</p>
+</blockquote>
+    </div>
+    <div class="slide">
+<p>and:</p>
+<blockquote>
+<p>Institutions expecting everyone to adopt a new linguistic convention because an existing convention is considered socially problematic.</p>
+</blockquote>
+    </div>
+    <div class="slide">
+<p>The second can absolutely create friction.</p>
+    </div>
+    <div class="slide">
+<p>For example, if a conventional grammatical structure historically communicated information efficiently,</p>
+    </div>
+    <div class="slide">
+        <p>replacing it with something that requires the listener to infer the intended meaning can reduce clarity </p>
+    </div>
+    <div class="slide">— particularly in:
+<ul>
+<li>legal documents</li>
+<li>medicine</li>
+<li>engineering</li>
+<li>aviation</li>
+<li>technical documentation</li>
+<li>education</li>
+<li>computer interfaces</li>
+</ul>
+    </div>
+    <div class="slide">
+<p>In those contexts, <strong>precision should generally win over ideological elegance</strong>.</p>
+    </div>
+    <div class="slide">
+<h3 id="3-the-interesting-part-is-that-language-usually-doesn-t-obey-the-majority-anyway">The interesting part is that language usually doesn&#39;t obey the majority anyway</h3>
+    </div>
+    <div class="slide">
+<p>This is where the premise gets complicated.</p>
+    </div>
+    <div class="slide">
+<p>English grammar hasn&#39;t historically been controlled by &quot;the majority.&quot; It evolves through millions of individual choices.</p>
+    </div>
+    <div class="slide">
+<p>A form initially used by a minority can eventually become standard because enough people find it useful.</p>
+    </div>
+    <div class="slide">
+<p>Consider:</p>
+<ul>
+<li><strong>“You” replacing “thou”</strong></li>
+<li>singular <strong>“they”</strong></li>
+<li>contractions such as <strong>“don&#39;t”</strong></li>
+<li>informal verbs becoming standard usage</li>
+<li>words changing meaning over centuries</li>
+</ul>
+    </div>
+    <div class="slide">
+<p>At some point, what was perceived as &quot;incorrect&quot; becomes ordinary English.</p>
+    </div>
+    <div class="slide">
+<p>So a minority introducing a linguistic change isn&#39;t inherently unusual. <strong>That&#39;s essentially how language evolves.</strong></p>
+    </div>
+    <div class="slide">
+<h3 id="4-the-legitimate-question-is-whether-people-are-being-asked-or-forced-">The legitimate question is whether people are being <em>asked</em> or <em>forced</em></h3>
+    </div>
+    <div class="slide">
+<p>There&#39;s an important distinction between:</p>
+<blockquote>
+<p>&quot;Some people prefer using X.&quot;</p>
+</blockquote>
+    </div>
+    <div class="slide">
+<p>and</p>
+<blockquote>
+<p>&quot;Everyone must use X, and refusing to do so is unacceptable.&quot;</p>
+</blockquote>
+    </div>
+    <div class="slide">
+<p>The first is ordinary linguistic evolution.</p>
+    </div>
+    <div class="slide">
+<p>The second raises a legitimate question about <strong>institutional authority and compelled speech</strong>.</p>
+    </div>
+    <div class="slide">
+<p>And there is an equally important distinction between:</p>
+<blockquote>
+<p>&quot;You don&#39;t have to use my preferred terminology.&quot;</p>
+</blockquote>
+    </div>
+    <div class="slide">
+<p>and</p>
+<blockquote>
+<p>&quot;You are forbidden from using the traditional terminology.&quot;</p>
+</blockquote>
+    </div>
+    <div class="slide">
+<p>The latter deserves considerably more scrutiny.</p>
+    </div>
+    <div class="slide">
+<h3 id="5-precision-isn-t-always-the-same-thing-as-traditional-grammar">Precision isn&#39;t always the same thing as traditional grammar</h3>
+    </div>
+    <div class="slide">
+<p>This is perhaps the strongest counterpoint to your argument.</p>
+    </div>
+    <div class="slide">
+<p>Suppose a new grammatical convention actually makes a previously ambiguous sentence <em>less</em> ambiguous.</p>
+    </div>
+    <div class="slide">
+<p>Then changing grammar could increase precision rather than decrease it.</p>
+    </div>
+    <div class="slide">
+<p>Likewise, some traditional constructions are surprisingly ambiguous:</p>
+<blockquote>
+<p>“John told David that he was late.”</p>
+</blockquote>
+    </div>
+    <div class="slide">
+<p>Who was late?</p>
+<p>John or David?</p>
+    </div>
+    <div class="slide">
+<p>Natural language has enormous amounts of ambiguity despite centuries of established grammar.</p>
+    </div>
+    <div class="slide">
+<p>So we shouldn&#39;t automatically assume:</p>
+<p><strong>old grammar = precise</strong><br>
+<strong>new grammar = vague</strong></p>
+    </div>
+    <div class="slide">
+<p>The real test should be:</p>
+<blockquote>
+<p><strong>Does the convention allow the listener to recover the intended meaning more reliably and with less effort?</strong></p>
+</blockquote>
+    </div>
+    <div class="slide">
+<h3 id="6-there-s-also-a-hidden-cost-cognitive-overhead">There&#39;s also a hidden cost: <br> cognitive overhead</h3>
+    </div>
+    <div class="slide">
+<p>Your &quot;guessing game&quot; point is particularly relevant here.</p>
+    </div>
+    <div class="slide">
+<p>Every unfamiliar linguistic convention imposes a temporary <strong>processing cost</strong>.</p>
+    </div>
+    <div class="slide">
+<p>If a speaker uses terminology that the listener hasn&#39;t encountered before, the listener has to perform:</p>
+    </div>
+    <div class="slide">
+<p><strong>words → interpretation → intended meaning</strong></p>
+    </div>
+    <div class="slide">
+<p>rather than simply:</p>
+<p><strong>words → meaning</strong></p>
+    </div>
+    <div class="slide">
+<p>That matters enormously when communicating with millions of people.</p>
+    </div>
+    <div class="slide">
+<p>A language convention becomes successful when its benefits eventually outweigh that cognitive cost.</p>
+    </div>
+    <div class="slide">
+<h3 id="the-principle-i-d-use">The principle I&#39;d use</h3>
+    </div>
+    <div class="slide">
+<p>Rather than asking:</p>
+<blockquote>
+<p><strong>Should the majority change its grammar for the minority?</strong></p>
+</blockquote>
+    </div>
+    <div class="slide">
+<p>I&#39;d ask:</p>
+<blockquote>
+<p><strong>Does this linguistic change improve communication enough to justify the additional complexity it introduces?</strong></p>
+</blockquote>
+    </div>
+    <div class="slide">
+<p>That&#39;s a much harder—and more useful—standard.</p>
+    </div>
+    <div class="slide">
+<p>If it improves clarity, adoption makes sense.</p>
+    </div>
+    <div class="slide">
+<p>If it merely signals allegiance to a social position while making communication harder, resistance is understandable.</p>
+    </div>
+    <div class="slide">
+<p>And if different groups can use different conventions without preventing communication, <strong>linguistic pluralism is probably preferable to forcing everyone into one system</strong>.</p>
+    </div>
+    <div class="slide">
+<p>The fascinating thing is that English is currently undergoing exactly this kind of experiment in real time: </p>
+    </div>
+    <div class="slide">
+    <p>some innovations will become completely unremarkable in 20 years, while others will disappear 
+    because speakers simply won&#39;t find them useful.</p>
+
+    </div>
+
+    <!-- Navigation Buttons -->
+    <div class="nav-buttons" style="opacity: 1;">
+        <button id="prev">Previous</button>
+        <b style="background: linear-gradient(45deg, red, coral, crimson, black);padding: 10px;">linktr.ee/sasban9</b>
+        <button id="next">Next</button>
+    </div>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const prevBtn = document.getElementById('prev');
+        const nextBtn = document.getElementById('next');
+        let current = 0;
+
+        function updateButtons() {
+            prevBtn.disabled = current === 0;
+            nextBtn.disabled = current === slides.length - 1;
+        }
+
+        function showSlide(index) {
+            slides[current].classList.remove('active');
+            slides[current].classList.remove('hidden');
+
+            current = index;
+
+            slides[current].classList.remove('hidden');
+            setTimeout(() => {
+                slides[current].classList.add('active');
+            }, 50);
+
+            updateButtons();
+        }
+
+        function nextSlide() {
+            if (current < slides.length - 1) {
+                showSlide(current + 1);
+            }
+        }
+
+        function prevSlide() {
+            if (current > 0) {
+                showSlide(current - 1);
+            }
+        }
+
+        nextBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            nextSlide();
+        });
+
+        prevBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            prevSlide();
+        });
+
+        document.body.addEventListener('click', () => {
+            nextSlide();
+        });
+
+        // Keyboard support
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') prevSlide();
+        });
+
+        // Swipe support
+        let touchStartX = 0;
+
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', (e) => {
+            let touchEndX = e.changedTouches[0].screenX;
+            if (touchEndX - touchStartX > 50) {
+                prevSlide();
+            } else if (touchStartX - touchEndX > 50) {
+                nextSlide();
+            }
+        });
+
+        updateButtons();
+    </script>
+
+</body>
+
+</html>

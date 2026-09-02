@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>School of Builders — Practice Adulthood, Don't Just Prepare For It</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500;1,600&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0a0b; --bg2:#111114; --bg3:#16161a;
+  --ink:#f3efe6; --muted:#a39d8f; --muted-dim:#6f6a5f;
+  --gold:#d8ac52; --gold-dim:#9c7c3f;
+  --acid:#c6ff5e; --acid-dim:#7fa63c;
+  --line:rgba(216,172,82,0.2);
+  --display:'Cormorant Garamond', serif;
+  --body:'Bricolage Grotesque', sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;scrollbar-width: none;}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+::selection{background:var(--gold);color:#100c02;}
+img{max-width:100%;display:block;}
+a{color:inherit;text-decoration:none;}
+section{position:relative;padding:clamp(90px,12vw,150px) clamp(24px,7vw,90px);}
+.wrap{max-width:1180px;margin:0 auto;position:relative;z-index:2;}
+
+#grain{position:fixed;inset:0;pointer-events:none;z-index:50;opacity:.045;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+
+/* ---------- nav ---------- */
+#nav{position:fixed;top:0;left:0;right:0;z-index:40;display:flex;align-items:center;justify-content:space-between;
+  padding:18px clamp(20px,5vw,60px);transition:transform .4s ease,background .4s ease,border-color .4s ease;
+  border-bottom:1px solid transparent;}
+#nav.solid{background:rgba(10,10,11,.82);backdrop-filter:blur(10px);border-color:var(--line);}
+#nav.hide{transform:translateY(-100%);}
+.logo{font-family:var(--display);font-size:20px;font-weight:600;letter-spacing:.02em;}
+.logo b{color:var(--gold);font-style:italic;font-weight:600;}
+.navcta{border:1px solid var(--gold);color:var(--gold);font-size:16px;font-weight:600;letter-spacing:.03em;
+  padding:9px 20px;border-radius:100px;transition:all .3s ease;white-space:nowrap;}
+.navcta:hover{background:var(--gold);color:#0a0a0b;}
+
+/* ---------- generic reveal ---------- */
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .8s cubic-bezier(.16,.8,.24,1),transform .9s cubic-bezier(.16,.8,.24,1);}
+.reveal.on{opacity:1;transform:translateY(0);}
+.reveal-l{opacity:0;transform:translateX(-30px);transition:opacity .8s cubic-bezier(.16,.8,.24,1),transform .9s cubic-bezier(.16,.8,.24,1);}
+.reveal-l.on{opacity:1;transform:translateX(0);}
+.reveal-r{opacity:0;transform:translateX(30px);transition:opacity .8s cubic-bezier(.16,.8,.24,1),transform .9s cubic-bezier(.16,.8,.24,1);}
+.reveal-r.on{opacity:1;transform:translateX(0);}
+.stagger-grp > *{opacity:0;transform:translateY(20px);transition:opacity .6s cubic-bezier(.16,.8,.24,1),transform .7s cubic-bezier(.16,.8,.24,1);}
+.stagger-grp.on > *{opacity:1;transform:translateY(0);}
+.stagger-grp.on > *:nth-child(1){transition-delay:.05s;} .stagger-grp.on > *:nth-child(2){transition-delay:.12s;}
+.stagger-grp.on > *:nth-child(3){transition-delay:.19s;} .stagger-grp.on > *:nth-child(4){transition-delay:.26s;}
+.stagger-grp.on > *:nth-child(5){transition-delay:.33s;} .stagger-grp.on > *:nth-child(6){transition-delay:.4s;}
+.stagger-grp.on > *:nth-child(7){transition-delay:.47s;} .stagger-grp.on > *:nth-child(8){transition-delay:.54s;}
+
+h1,h2,h3,h4{font-family:var(--display);font-weight:600;color:var(--ink);line-height:1.05;}
+em{font-style:italic;color:var(--gold);font-weight:500;}
+.eyebrow{font-family:var(--body);font-weight:700;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);
+  font-size:16px;display:inline-flex;align-items:center;gap:12px;margin-bottom:20px;}
+.eyebrow::before{content:"";width:30px;height:1px;background:var(--gold);}
+.lede{font-size:clamp(16px,1.9vw,21px);color:var(--muted);max-width:62ch;line-height:1.6;margin-top:16px;}
+.rule{width:60px;height:3px;background:linear-gradient(90deg,var(--gold),var(--acid));margin-top:24px;border-radius:2px;}
+.btn{display:inline-flex;align-items:center;gap:10px;background:var(--gold);color:#0a0a0b;font-weight:700;
+  font-size:16px;letter-spacing:.03em;padding:15px 30px;border-radius:100px;border:none;cursor:pointer;
+  transition:transform .3s cubic-bezier(.16,.8,.24,1),box-shadow .3s ease,background .3s ease;}
+.btn:hover{transform:translateY(-3px);box-shadow:0 14px 34px -12px rgba(216,172,82,.55);background:var(--acid);}
+.btn-ghost{border:1px solid var(--line);color:var(--ink);background:transparent;}
+.btn-ghost:hover{border-color:var(--gold);background:rgba(216,172,82,.08);box-shadow:none;transform:translateY(-3px);}
+
+/* ---------- ambient mesh (hero only) ---------- */
+#mesh{position:absolute;inset:0;overflow:hidden;z-index:0;}
+.blob{position:absolute;border-radius:50%;filter:blur(100px);opacity:.32;}
+.blob1{width:50vw;height:50vw;background:radial-gradient(circle,var(--gold-dim),transparent 70%);top:-18vw;left:-14vw;animation:drift1 24s ease-in-out infinite;}
+.blob2{width:40vw;height:40vw;background:radial-gradient(circle,#3a5c1f,transparent 70%);bottom:-18vw;right:-10vw;animation:drift2 30s ease-in-out infinite;}
+.blob3{width:26vw;height:26vw;background:radial-gradient(circle,#5c3a1f,transparent 70%);top:35%;right:15%;animation:drift3 20s ease-in-out infinite;}
+@keyframes drift1{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(4vw,6vw) scale(1.14);}}
+@keyframes drift2{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(-5vw,-4vw) scale(1.1);}}
+@keyframes drift3{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(-3vw,4vw) scale(.9);}}
+.particles{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+.particle{position:absolute;border-radius:50%;background:var(--gold);opacity:0;animation:rise linear infinite;}
+@keyframes rise{0%{transform:translateY(0);opacity:0;}8%{opacity:.55;}92%{opacity:.25;}100%{transform:translateY(-108vh);opacity:0;}}
+
+/* ---------- hero ---------- */
+#hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding-top:120px;}
+.watermark-num{position:absolute;font-family:var(--display);font-weight:600;color:rgba(255,255,255,.035);
+  line-height:1;pointer-events:none;user-select:none;z-index:0;}
+#hero .watermark-num{font-size:clamp(200px,32vw,460px);right:-2vw;bottom:-6vw;}
+.badgerow{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:22px;}
+.badge{border:1px solid var(--line);border-radius:100px;padding:7px 16px;font-size:16px;letter-spacing:.04em;color:var(--muted);}
+.badge b{color:var(--acid);}
+.hero-head{font-size:clamp(16px,3.2vw,40px);color:var(--muted);font-weight:500;margin-bottom:10px;letter-spacing:-.01em;}
+.hero-headline{font-size:clamp(16px,8vw,104px);max-width:16ch;letter-spacing:-.015em;}
+.hero-sub{font-size:clamp(16px,2.3vw,25px);font-family:var(--display);font-style:italic;color:var(--gold);margin-top:14px;font-weight:500;}
+.hero-lede{font-size:clamp(16px,1.9vw,20px);color:var(--muted);max-width:58ch;margin-top:22px;line-height:1.65;}
+.hero-lede strong{color:var(--ink);font-weight:700;}
+.hero-actions{display:flex;flex-wrap:wrap;align-items:center;gap:20px;margin-top:38px;}
+.pricepill{display:flex;flex-direction:column;font-size:16px;color:var(--muted);}
+.pricepill b{font-family:var(--display);font-size:clamp(16px,2.2vw,26px);color:var(--ink);font-weight:600;}
+.scrollcue{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;
+  align-items:center;gap:8px;font-size:16px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted-dim);}
+.scrollcue .line{width:1px;height:34px;background:linear-gradient(180deg,var(--gold),transparent);animation:scrollpulse 1.8s ease-in-out infinite;}
+@keyframes scrollpulse{0%,100%{opacity:.3;}50%{opacity:1;}}
+
+/* ---------- manifesto contrast section ---------- */
+.manifesto{text-align:left;}
+.manifesto .no{font-size:clamp(16px,4vw,42px);color:var(--muted-dim);text-decoration:line-through;text-decoration-color:var(--muted-dim);text-decoration-thickness:2px;}
+.manifesto .yes{font-size:clamp(16px,6vw,64px);color:var(--ink);}
+.manifesto .yes em{color:var(--acid);}
+.threeword{display:flex;flex-wrap:wrap;gap:14px;margin-top:26px;}
+.threeword span{font-family:var(--display);font-style:italic;font-size:clamp(16px,2.4vw,28px);color:var(--gold);}
+.threeword span::after{content:"·";color:var(--muted-dim);margin-left:14px;font-style:normal;}
+.threeword span:last-child::after{content:"";}
+
+/* ---------- loop diagram ---------- */
+.loop{display:flex;flex-wrap:wrap;gap:0;margin-top:40px;align-items:stretch;}
+.loop-step{flex:1;min-width:140px;position:relative;padding:22px 20px;border-top:1px solid var(--line);}
+.loop-step .ln{font-family:var(--display);font-size:16px;color:var(--gold-dim);font-style:italic;}
+.loop-step h4{font-size:clamp(16px,1.6vw,20px);margin-top:6px;font-weight:700;}
+.loop-step::before{content:"";position:absolute;top:-1px;left:0;width:0;height:1px;background:linear-gradient(90deg,var(--gold),var(--acid));
+  transition:width .8s cubic-bezier(.16,.8,.24,1);}
+.stagger-grp.on .loop-step::before{width:100%;}
+.loop-arrow{display:flex;align-items:center;color:var(--muted-dim);font-size:20px;padding:0 6px;}
+@media(max-width:760px){.loop{flex-direction:column;}.loop-arrow{transform:rotate(90deg);padding:2px 0;}}
+
+.pillrow{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px;}
+.pill{border:1px solid var(--line);border-radius:100px;padding:9px 18px;font-size:16px;color:var(--ink);
+  background:rgba(255,255,255,.02);transition:border-color .3s ease,transform .3s ease;}
+.pill:hover{border-color:var(--gold);transform:translateY(-2px);}
+
+/* ---------- pod section ---------- */
+.podgrid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(30px,5vw,70px);align-items:center;margin-top:40px;}
+@media(max-width:820px){.podgrid{grid-template-columns:1fr;}}
+.podcluster{position:relative;height:280px;display:flex;align-items:center;justify-content:center;}
+.podnode{position:absolute;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-family:var(--display);font-style:italic;color:#0a0a0b;font-weight:600;}
+.podnode.center{width:96px;height:96px;background:linear-gradient(150deg,var(--gold),var(--acid));font-size:22px;z-index:3;
+  box-shadow:0 0 60px -10px rgba(216,172,82,.5);}
+.podnode.sat{width:56px;height:56px;background:var(--bg3);border:1px solid var(--line);color:var(--gold);font-size:16px;}
+.podorbit{position:absolute;border:1px dashed var(--line);border-radius:50%;animation:spin 40s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.podlist{list-style:none;margin-top:18px;color:var(--muted);font-size:clamp(16px,1.4vw,18px);line-height:2;}
+.podlist li::before{content:"— ";color:var(--gold-dim);}
+
+/* ---------- build together examples ---------- */
+.rolegrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:34px;}
+@media(max-width:820px){.rolegrid{grid-template-columns:1fr;}}
+.rolecard{border:1px solid var(--line);border-radius:16px;padding:24px;background:rgba(255,255,255,.02);}
+.rolecard .want{font-size:16px;color:var(--muted);margin-bottom:12px;}
+.rolecard .want em{color:var(--ink);font-style:normal;font-weight:700;}
+.rolecard .roles{display:flex;flex-wrap:wrap;gap:8px;}
+.rolecard .roles span{font-size:16px;padding:5px 12px;border-radius:100px;background:rgba(216,172,82,.1);color:var(--gold);}
+.becomes{margin-top:30px;font-family:var(--display);font-size:clamp(16px,2.4vw,28px);font-style:italic;color:var(--muted);}
+.becomes b{color:var(--acid);font-style:italic;font-weight:600;}
+
+/* ---------- path cards ---------- */
+.pathgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:36px;}
+@media(max-width:980px){.pathgrid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:560px){.pathgrid{grid-template-columns:1fr;}}
+.pathcard{border:1px solid var(--line);border-radius:16px;padding:22px 18px;position:relative;overflow:hidden;
+  background:linear-gradient(165deg,rgba(216,172,82,.07),rgba(255,255,255,.015));transition:transform .35s ease,border-color .35s ease;}
+.pathcard:hover{transform:translateY(-8px);border-color:var(--gold);}
+.pathcard .pn{font-family:var(--display);font-size:clamp(16px,2vw,26px);color:var(--gold);font-style:italic;}
+.pathcard h4{font-size:clamp(16px,1.4vw,18px);margin-top:8px;font-weight:700;}
+.pathcard p{font-size:16px;color:var(--muted);margin-top:10px;line-height:1.6;}
+
+/* ---------- measure comparison ---------- */
+.measuregrid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(20px,4vw,50px);margin-top:36px;}
+@media(max-width:760px){.measuregrid{grid-template-columns:1fr;}}
+.mpanel{border:1px solid var(--line);border-radius:16px;padding:clamp(20px,3vw,32px);}
+.mpanel.no{background:rgba(255,255,255,.015);}
+.mpanel.yes{background:linear-gradient(160deg,rgba(198,255,94,.06),rgba(255,255,255,.02));border-color:rgba(198,255,94,.28);}
+.mpanel .tag{font-size:16px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;margin-bottom:16px;display:block;}
+.mpanel.no .tag{color:var(--muted-dim);}
+.mpanel.yes .tag{color:var(--acid);}
+.mpanel ul{list-style:none;font-size:clamp(16px,1.4vw,18px);line-height:2.1;}
+.mpanel.no ul li{color:var(--muted-dim);text-decoration:line-through;text-decoration-color:var(--muted-dim);}
+.mpanel.yes ul li{color:var(--ink);}
+.mpanel.yes ul li::before{content:"✓ ";color:var(--acid);}
+
+/* ---------- passport card ---------- */
+.passport{margin-top:40px;border:1px solid var(--line);border-radius:22px;padding:clamp(24px,4vw,44px);
+  background:linear-gradient(155deg,rgba(216,172,82,.09),rgba(255,255,255,.015));position:relative;overflow:hidden;max-width:720px;}
+.passport::before{content:"BUILDER PASSPORT";position:absolute;top:22px;right:-64px;transform:rotate(90deg);
+  font-size:16px;letter-spacing:.3em;color:var(--gold-dim);}
+.passport-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:26px;}
+.passport-name{font-family:var(--display);font-size:clamp(16px,2.6vw,30px);font-weight:600;}
+.passport-name span{display:block;font-family:var(--body);font-size:16px;color:var(--muted);margin-top:4px;font-weight:500;}
+.passport-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:20px 16px;}
+@media(max-width:560px){.passport-stats{grid-template-columns:repeat(2,1fr);}}
+.pstat b{display:block;font-family:var(--display);font-size:clamp(16px,2.2vw,26px);color:var(--gold);font-weight:600;}
+.pstat span{font-size:16px;color:var(--muted);}
+.passport-current{margin-top:22px;padding-top:18px;border-top:1px solid var(--line);font-size:clamp(16px,1.4vw,17px);color:var(--muted);}
+.passport-current b{color:var(--ink);font-weight:700;}
+
+/* ---------- demo day callout ---------- */
+.democallout{margin-top:34px;border-left:3px solid var(--acid);padding:22px 28px;background:linear-gradient(90deg,rgba(198,255,94,.06),transparent);max-width:70ch;}
+.democallout .title{font-family:var(--display);font-style:italic;font-size:clamp(16px,2.2vw,24px);color:var(--acid);}
+.democallout p{margin-top:8px;color:var(--muted);font-size:clamp(16px,1.5vw,18px);}
+
+/* ---------- pricing section ---------- */
+#pricing{background:var(--bg2);}
+.pricebig{font-family:var(--display);font-size:clamp(16px,7vw,90px);color:var(--gold);font-weight:600;margin-top:6px;}
+.pricebig span{font-size:.35em;color:var(--muted);font-family:var(--body);font-weight:600;}
+.priceladder{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:36px;}
+@media(max-width:760px){.priceladder{grid-template-columns:1fr;}}
+.rung{border:1px solid var(--line);border-radius:14px;padding:20px;text-align:center;transition:transform .3s ease;}
+.rung.active{border-color:var(--gold);background:linear-gradient(160deg,rgba(216,172,82,.12),transparent);transform:scale(1.04);}
+.rung .amt{font-family:var(--display);font-size:clamp(16px,2.4vw,28px);color:var(--ink);font-weight:600;}
+.rung .desc{font-size:16px;color:var(--muted);margin-top:8px;}
+.commitquote{margin-top:36px;font-family:var(--display);font-style:italic;font-size:clamp(16px,2.6vw,32px);color:var(--ink);max-width:24ch;}
+.scholarnote{margin-top:22px;font-size:clamp(16px,1.5vw,17px);color:var(--muted);max-width:62ch;line-height:1.7;}
+.scholarnote b{color:var(--acid);font-weight:700;}
+
+/* ---------- worth it list ---------- */
+.worthgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:30px;}
+@media(max-width:820px){.worthgrid{grid-template-columns:repeat(2,1fr);}}
+.worthitem{border:1px solid var(--line);border-radius:12px;padding:16px 14px;font-size:16px;color:var(--muted);text-align:center;}
+.notclaim{margin-top:30px;padding:20px 24px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.015);
+  font-size:clamp(16px,1.5vw,17px);color:var(--muted);max-width:70ch;line-height:1.7;}
+
+/* ---------- for parents split ---------- */
+.parentgrid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,4vw,60px);margin-top:36px;align-items:start;}
+@media(max-width:820px){.parentgrid{grid-template-columns:1fr;}}
+.parentquote{font-family:var(--display);font-style:italic;font-size:clamp(16px,2.6vw,30px);color:var(--muted);line-height:1.4;}
+.parentquote b{color:var(--ink);font-style:normal;font-weight:700;}
+.skillgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px 20px;}
+.skillgrid div{font-size:clamp(16px,1.4vw,17px);color:var(--ink);padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06);}
+
+/* ---------- not anti degree ---------- */
+.degree-split{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:34px;}
+@media(max-width:760px){.degree-split{grid-template-columns:1fr;}}
+.degree-panel{border:1px solid var(--line);border-radius:16px;padding:22px;background:rgba(255,255,255,.02);}
+.degree-panel .tag{font-size:16px;color:var(--gold);text-transform:uppercase;letter-spacing:.06em;font-weight:700;}
+.degree-panel p{margin-top:10px;font-family:var(--display);font-size:clamp(16px,1.8vw,20px);color:var(--ink);font-style:italic;}
+
+/* ---------- founding 1000 stat row ---------- */
+.statrow{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:44px;}
+@media(max-width:820px){.statrow{grid-template-columns:repeat(2,1fr);}}
+.statitem{text-align:left;border-top:1px solid var(--line);padding-top:16px;}
+.statitem b{display:block;font-family:var(--display);font-size:clamp(16px,3vw,40px);color:var(--gold);font-weight:600;}
+.statitem span{font-size:16px;color:var(--muted);}
+.notmillions{font-size:clamp(16px,2vw,22px);color:var(--muted-dim);margin-top:16px;}
+.notmillions strong{color:var(--muted);text-decoration:line-through;font-weight:500;}
+
+/* ---------- the promise ---------- */
+.promisegrid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(20px,4vw,50px);margin-top:36px;}
+@media(max-width:760px){.promisegrid{grid-template-columns:1fr;}}
+.promise-col .tag{font-size:16px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;margin-bottom:14px;display:block;}
+.promise-col.cant .tag{color:var(--muted-dim);}
+.promise-col.can .tag{color:var(--acid);}
+.promise-col ul{list-style:none;font-size:clamp(16px,1.5vw,18px);line-height:2;}
+.promise-col.cant li{color:var(--muted-dim);}
+.promise-col.can li{color:var(--ink);}
+.verbrow{display:flex;flex-wrap:wrap;gap:10px 20px;margin-top:30px;}
+.verbrow span{font-family:var(--display);font-style:italic;font-size:clamp(16px,1.8vw,21px);color:var(--gold);}
+.verbrow span:not(:last-child)::after{content:"→";color:var(--muted-dim);margin-left:16px;font-family:var(--body);font-style:normal;}
+
+/* ---------- final cta ---------- */
+#final{text-align:center;padding-top:clamp(100px,14vw,170px);padding-bottom:clamp(100px,14vw,170px);}
+#final .wrap{display:flex;flex-direction:column;align-items:center;}
+.final-headline{font-size:clamp(16px,7vw,80px);max-width:20ch;}
+.final-headline em{display:block;}
+.final-sub{font-family:var(--display);font-style:italic;color:var(--muted);font-size:clamp(16px,2vw,22px);margin-top:18px;}
+.final-actions{margin-top:38px;display:flex;flex-direction:column;align-items:center;gap:14px;}
+.final-meta{font-size:16px;color:var(--muted-dim);margin-top:10px;}
+
+footer{padding:32px clamp(24px,7vw,90px);border-top:1px solid var(--line);display:flex;justify-content:space-between;
+  align-items:center;flex-wrap:wrap;gap:14px;color:var(--muted-dim);font-size:16px;}
+</style>
+</head>
+<body>
+<div id="grain"></div>
+
+<nav id="nav">
+  <div class="logo">School of <b>Builders</b></div>
+  <a href="#pricing" class="navcta">Join the Founding 1000</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div id="mesh"><div class="blob blob1"></div><div class="blob blob2"></div><div class="blob blob3"></div><div class="particles" id="particles"></div></div>
+  <span class="watermark-num">01</span>
+  <div class="wrap">
+    <div class="badgerow reveal">
+      <span class="badge">For ages <b>13–19</b></span>
+      <span class="badge"><b>₹999</b> / year</span>
+      <span class="badge">Founding <b>1,000</b> members</span>
+    </div>
+    <div class="hero-head reveal">School of Builders</div>
+    <h1 class="hero-headline reveal">Don't spend your teenage years only <em>preparing</em> for adulthood.</h1>
+    <div class="hero-sub reveal">Practice it.</div>
+    <p class="hero-lede reveal">A 52-week builder community for ambitious 13–19-year-olds. Learn to <strong>make plans, stick to them, build real things, work with people, experiment with careers</strong> — and discover what you're actually good at.</p>
+    <div class="hero-actions reveal">
+      <a href="#pricing" class="btn">Join the Founding 1,000 →</a>
+      <div class="pricepill"><span>Starting at</span><b>₹999 / year</b></div>
+    </div>
+  </div>
+  <div class="scrollcue"><span>Scroll</span><div class="line"></div></div>
+</section>
+
+<!-- MANIFESTO -->
+<section id="manifesto">
+  <span class="watermark-num" style="font-size:clamp(140px,20vw,300px);left:-2vw;top:10%;">02</span>
+  <div class="wrap manifesto">
+    <span class="eyebrow reveal">The Problem With School</span>
+    <div class="no reveal">School teaches you to pass exams.</div>
+    <div class="yes reveal">We teach you to <em>build</em>.</div>
+    <p class="lede reveal">You already have YouTube, ChatGPT and thousands of free courses. Information isn't the problem.</p>
+    <div class="threeword reveal"><span>Starting</span><span>Showing up</span><span>Finishing</span></div>
+    <p class="lede reveal">School of Builders gives you the environment, people and structure to turn your ideas into action.</p>
+  </div>
+</section>
+
+<!-- WHAT HAPPENS INSIDE -->
+<section id="inside">
+  <div class="wrap">
+    <span class="eyebrow reveal">What Happens Inside</span>
+    <h2 class="reveal" style="font-size:clamp(16px,4vw,48px);">One year. One plan. <em>52 missions.</em></h2>
+    <p class="lede reveal">When you join, you choose something you actually want to accomplish — and we turn it into 52 small, achievable missions.</p>
+    <div class="pillrow stagger-grp">
+      <span class="pill">Build an app</span><span class="pill">Start a YouTube channel</span><span class="pill">Make your first ₹10,000</span>
+      <span class="pill">Learn AI</span><span class="pill">Start a small business</span><span class="pill">Become a better speaker</span>
+      <span class="pill">Explore medicine, law, engineering or finance</span><span class="pill">Build a portfolio</span>
+    </div>
+    <div class="loop stagger-grp">
+      <div class="loop-step"><div class="ln">i.</div><h4>Plan</h4></div>
+      <div class="loop-arrow">→</div>
+      <div class="loop-step"><div class="ln">ii.</div><h4>Do</h4></div>
+      <div class="loop-arrow">→</div>
+      <div class="loop-step"><div class="ln">iii.</div><h4>Ship</h4></div>
+      <div class="loop-arrow">→</div>
+      <div class="loop-step"><div class="ln">iv.</div><h4>Reflect</h4></div>
+      <div class="loop-arrow">→</div>
+      <div class="loop-step"><div class="ln">v.</div><h4>Repeat</h4></div>
+    </div>
+    <p class="lede reveal" style="margin-top:30px;font-family:var(--display);font-style:italic;font-size:clamp(16px,2vw,22px);color:var(--ink);">You don't just learn. <em>You do.</em></p>
+  </div>
+</section>
+
+<!-- POD -->
+<section id="pod" style="background:var(--bg2);">
+  <div class="wrap podgrid">
+    <div>
+      <span class="eyebrow reveal">You Don't Have To Build Alone</span>
+      <h2 class="reveal" style="font-size:clamp(16px,3.6vw,42px);">Meet your <em>Pod</em>.</h2>
+      <p class="lede reveal">A small group of 5–8 students with similar interests, age and ambition. Your Pod becomes your accountability circle.</p>
+      <ul class="podlist reveal">
+        <li>Share what you're building</li>
+        <li>Help each other, give feedback</li>
+        <li>Find collaborators</li>
+        <li>Celebrate wins</li>
+        <li>Get back on track when you fall behind</li>
+      </ul>
+      <p class="lede reveal" style="font-family:var(--display);font-style:italic;color:var(--gold);font-size:clamp(16px,2vw,22px);">Ambitious teenagers don't need more motivation. They need to find their people.</p>
+    </div>
+    <div class="podcluster reveal-r">
+      <div class="podorbit" style="width:220px;height:220px;"></div>
+      <div class="podorbit" style="width:280px;height:280px;animation-direction:reverse;animation-duration:55s;"></div>
+      <div class="podnode center">You</div>
+      <div class="podnode sat" style="top:6%;left:20%;">C</div>
+      <div class="podnode sat" style="top:14%;right:10%;">A</div>
+      <div class="podnode sat" style="bottom:10%;left:8%;">R</div>
+      <div class="podnode sat" style="bottom:2%;right:22%;">M</div>
+      <div class="podnode sat" style="top:50%;left:-2%;">D</div>
+    </div>
+  </div>
+</section>
+
+<!-- BUILD WITH OTHERS -->
+<section id="together">
+  <div class="wrap">
+    <span class="eyebrow reveal">Build With Other Students</span>
+    <h2 class="reveal" style="font-size:clamp(16px,3.6vw,42px);">"I have an idea" becomes <em>"Let's build it together."</em></h2>
+    <div class="rolegrid stagger-grp">
+      <div class="rolecard"><div class="want">Want to start a <em>YouTube channel</em>?</div>
+        <div class="roles"><span>Scriptwriter</span><span>Editor</span><span>Researcher</span><span>Designer</span></div></div>
+      <div class="rolecard"><div class="want">Want to build an <em>app</em>?</div>
+        <div class="roles"><span>Coder</span><span>Designer</span><span>Marketer</span></div></div>
+      <div class="rolecard"><div class="want">Want to start a <em>business</em>?</div>
+        <div class="roles"><span>Someone who sells</span><span>Someone who builds</span><span>Someone who creates</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PATHS -->
+<section id="paths" style="background:var(--bg2);">
+  <div class="wrap">
+    <span class="eyebrow reveal">Choose Your Builder Path</span>
+    <h2 class="reveal" style="font-size:clamp(16px,3.6vw,42px);">Experiment first. <em>Decide later.</em></h2>
+    <p class="lede reveal">You don't have to decide your career at 15.</p>
+    <div class="pathgrid stagger-grp">
+      <div class="pathcard"><div class="pn">01</div><h4>Creator</h4><p>YouTube · Storytelling · Editing · Design · Personal Brand</p></div>
+      <div class="pathcard"><div class="pn">02</div><h4>Builder</h4><p>AI · Coding · No-code · Websites · Apps · Automation</p></div>
+      <div class="pathcard"><div class="pn">03</div><h4>Entrepreneur</h4><p>Problems · Customers · Sales · Pricing · Marketing · Money</p></div>
+      <div class="pathcard"><div class="pn">04</div><h4>Communicator</h4><p>Writing · Public Speaking · Negotiation · Persuasion · Leadership</p></div>
+      <div class="pathcard"><div class="pn">05</div><h4>Explorer</h4><p>Medicine · Law · Engineering · Finance · Design · Entrepreneurship</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- NOT A COURSE LIBRARY -->
+<section id="measure">
+  <div class="wrap">
+    <span class="eyebrow reveal">This Is Not Another Course Library</span>
+    <h2 class="reveal" style="font-size:clamp(16px,3.6vw,42px);">We measure <em>things you actually did.</em></h2>
+    <div class="measuregrid">
+      <div class="mpanel no reveal-l"><span class="tag">We don't measure</span>
+        <ul><li>Hours watched</li><li>Certificates collected</li><li>Quizzes completed</li></ul></div>
+      <div class="mpanel yes reveal-r"><span class="tag">We measure</span>
+        <ul><li>Projects shipped</li><li>People interviewed</li><li>Presentations delivered</li><li>Customers spoken to</li><li>Money earned</li><li>Teams formed</li><li>Failures recovered from</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- PASSPORT -->
+<section id="passport" style="background:var(--bg2);">
+  <div class="wrap">
+    <span class="eyebrow reveal">Your Builder Passport</span>
+    <h2 class="reveal" style="font-size:clamp(16px,3.6vw,42px);">Not a certificate. <em>Proof of work.</em></h2>
+    <p class="lede reveal">Something you can show your parents, teachers, mentors, colleges — and most importantly, yourself.</p>
+    <div class="passport reveal">
+      <div class="passport-top">
+        <div class="passport-name">Riya, 16 <span>Builder Path · Entrepreneur</span></div>
+      </div>
+      <div class="passport-stats">
+        <div class="pstat"><b>41 / 52</b><span>Missions completed</span></div>
+        <div class="pstat"><b>7</b><span>Projects shipped</span></div>
+        <div class="pstat"><b>18</b><span>Collaborations</span></div>
+        <div class="pstat"><b>6</b><span>Presentations</span></div>
+        <div class="pstat"><b>14</b><span>People interviewed</span></div>
+        <div class="pstat"><b>₹7,400</b><span>Money earned</span></div>
+      </div>
+      <div class="passport-current">Current project — <b>AI study assistant</b></div>
+    </div>
+  </div>
+</section>
+
+<!-- 52 WEEK CHALLENGE -->
+<section id="challenge">
+  <div class="wrap">
+    <span class="eyebrow reveal">The 52-Week Challenge</span>
+    <h2 class="reveal" style="font-size:clamp(16px,3.6vw,42px);">Every week, a new opportunity to <em>practice.</em></h2>
+    <div class="pillrow stagger-grp">
+      <span class="pill">Find a problem</span><span class="pill">Interview someone</span><span class="pill">Build a website</span>
+      <span class="pill">Make your first ₹100</span><span class="pill">Write a sales pitch</span><span class="pill">Publish your first video</span>
+      <span class="pill">Build something with AI</span><span class="pill">Give a presentation</span><span class="pill">Work with strangers</span>
+      <span class="pill">Make your first ₹1,000</span><span class="pill">Start something</span><span class="pill">Finish something</span>
+    </div>
+    <div class="democallout reveal">
+      <div class="title">Once a year — Demo Day</div>
+      <p>Students showcase what they built. Parents, mentors and fellow builders get to see the work.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="wrap">
+    <span class="eyebrow reveal">Why ₹999?</span>
+    <h2 class="reveal" style="font-size:clamp(16px,3.6vw,42px);">Not a poverty filter. A <em>commitment</em> filter.</h2>
+    <div class="pricebig reveal">₹999 <span>/ year</span></div>
+    <p class="lede reveal">This isn't another free-content library — you already have those. ₹999 asks one simple question:</p>
+    <div class="commitquote reveal">"Am I willing to invest one year in myself?"</div>
+    <div class="priceladder stagger-grp">
+      <div class="rung"><div class="amt">₹99</div><div class="desc">Someone can join casually</div></div>
+      <div class="rung"><div class="amt">₹499</div><div class="desc">Someone might buy on impulse</div></div>
+      <div class="rung active"><div class="amt">₹999</div><div class="desc">A student needs a real conversation with their parent first</div></div>
+    </div>
+    <p class="scholarnote reveal">We don't want to exclude students based on wealth. <b>If ₹999 is genuinely a barrier for an exceptional student, we'll offer a scholarship</b> — funded in part by every founding member who joins at full price. ₹999 gets you through the door. What you build inside is up to you.</p>
+  </div>
+</section>
+
+<!-- WHAT IT'S WORTH -->
+<section id="worth" style="background:var(--bg2);">
+  <div class="wrap">
+    <span class="eyebrow reveal">What Is It Really Worth?</span>
+    <h2 class="reveal" style="font-size:clamp(16px,3.6vw,42px);">The value isn't in any single lesson.</h2>
+    <p class="lede reveal">You could spend thousands separately on workshops, mentors, communities, career exploration, communication training, entrepreneurship programs and technology courses. The most valuable part is having all of it together, for a full year:</p>
+    <div class="worthgrid stagger-grp">
+      <div class="worthitem">A plan</div><div class="worthitem">A peer group</div><div class="worthitem">Accountability</div><div class="worthitem">Mentors</div>
+      <div class="worthitem">Real projects</div><div class="worthitem">Collaboration</div><div class="worthitem">A year to experiment</div><div class="worthitem">Proof of work</div>
+    </div>
+    <div class="notclaim reveal">If you bought comparable workshops, mentorship, communities and project experiences separately, you could easily spend tens of thousands of rupees. We deliberately bundle the experience into ₹999 a year — and the real value shows up in the outcome, not the price tag.</div>
+  </div>
+</section>
+
+<!-- FOR PARENTS -->
+<section id="parents">
+  <div class="wrap parentgrid">
+    <div class="reveal-l">
+      <span class="eyebrow">For Parents</span>
+      <p class="parentquote">Your child doesn't need another place to watch videos. They need opportunities to <b>think independently, communicate clearly, work with others and finish what they start.</b></p>
+    </div>
+    <div class="reveal-r">
+      <div class="skillgrid">
+        <div>Think independently</div><div>Communicate clearly</div>
+        <div>Work with others</div><div>Solve problems</div>
+        <div>Handle rejection</div><div>Manage their time</div>
+        <div>Build things</div><div>Understand money</div>
+        <div>Take responsibility</div><div>Finish what they start</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NOT ANTI DEGREE -->
+<section id="notantidegree" style="background:var(--bg2);">
+  <div class="wrap">
+    <span class="eyebrow reveal">We Are Not An "Anti-Degree" Program</span>
+    <h2 class="reveal" style="font-size:clamp(16px,3.6vw,42px);">We help them experiment <em>before</em> they commit.</h2>
+    <p class="lede reveal">We don't tell students to become entrepreneurs instead of doctors, lawyers, engineers or CAs. The goal is better decisions — not predetermined careers.</p>
+    <div class="degree-split stagger-grp">
+      <div class="degree-panel"><span class="tag">Success looks like</span><p>"I discovered I want to become a doctor — and now I know why."</p></div>
+      <div class="degree-panel"><span class="tag">Success also looks like</span><p>"I discovered I want to build companies instead."</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOUNDING 1000 -->
+<section id="founding">
+  <div class="wrap">
+    <span class="eyebrow reveal">The Founding 1,000</span>
+    <h2 class="reveal" style="font-size:clamp(16px,4vw,46px);">We're starting with <em>1,000 students.</em></h2>
+    <p class="notmillions reveal">Not <strong>100,000</strong>. Not <strong>millions</strong>. A community is only valuable when you actually know the people inside it.</p>
+    <div class="statrow stagger-grp">
+      <div class="statitem"><b>52</b><span>Weeks</span></div>
+      <div class="statitem"><b>1,000</b><span>Students</span></div>
+      <div class="statitem"><b>1,000s</b><span>Experiments</span></div>
+      <div class="statitem"><b>100s</b><span>Projects</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- PROMISE -->
+<section id="promise" style="background:var(--bg2);">
+  <div class="wrap">
+    <span class="eyebrow reveal">The Promise</span>
+    <h2 class="reveal" style="font-size:clamp(16px,3.6vw,42px);">52 opportunities to practice turning intention into action.</h2>
+    <div class="promisegrid">
+      <div class="promise-col cant reveal-l"><span class="tag">We can't promise</span>
+        <ul><li>A successful entrepreneur</li><li>A particular career</li><li>A million views</li><li>A million rupees</li></ul></div>
+      <div class="promise-col can reveal-r"><span class="tag">We can promise</span>
+        <ul><li>52 real opportunities to try</li><li>A structured plan, every week</li><li>A pod that notices when you disappear</li><li>Proof of work you can be proud of</li></ul></div>
+    </div>
+    <div class="verbrow stagger-grp">
+      <span>Plan</span><span>Try</span><span>Fail</span><span>Collaborate</span><span>Build</span><span>Reflect</span><span>Try again</span>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section id="final">
+  <div class="wrap">
+    <span class="eyebrow reveal">School of Builders</span>
+    <h2 class="final-headline reveal">Find your people. Build something real. <em>Discover what you're capable of.</em></h2>
+    <div class="final-sub reveal">Don't spend your teenage years only preparing for the future. Use them to build it.</div>
+    <div class="final-actions reveal">
+      <a href="#" class="btn">Join the Founding 1,000 →</a>
+      <div class="final-meta">₹999 / year · Ages 13–19 · Scholarships available</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="logo" style="font-size:16px;">School of <b>Builders</b></div>
+  <div>Founding 1,000 · 52 weeks · One community</div>
+</footer>
+
+<script>
+// nav show/hide + solid on scroll
+const nav = document.getElementById('nav');
+let lastY = window.scrollY;
+window.addEventListener('scroll', () => {
+  const y = window.scrollY;
+  nav.classList.toggle('solid', y > 40);
+  if(y > lastY && y > 140){ nav.classList.add('hide'); } else { nav.classList.remove('hide'); }
+  lastY = y;
+}, {passive:true});
+
+// scroll reveal
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('on'); io.unobserve(e.target); } });
+}, {threshold:0.18, rootMargin:'0px 0px -8% 0px'});
+document.querySelectorAll('.reveal,.reveal-l,.reveal-r,.stagger-grp').forEach(el => io.observe(el));
+
+// hero particles
+const pWrap = document.getElementById('particles');
+if(pWrap){
+  for(let i=0;i<20;i++){
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = 2 + Math.random()*3;
+    p.style.width = size+'px'; p.style.height = size+'px';
+    p.style.left = Math.random()*100+'%'; p.style.bottom = '-20px';
+    p.style.animationDuration = (14 + Math.random()*18)+'s';
+    p.style.animationDelay = (Math.random()*20)+'s';
+    pWrap.appendChild(p);
+  }
+}
+
+// parallax blobs on mouse move (hero only)
+const blobs = document.querySelectorAll('#mesh .blob');
+document.getElementById('hero').addEventListener('mousemove', (e) => {
+  const x = (e.clientX / window.innerWidth - 0.5);
+  const y = (e.clientY / window.innerHeight - 0.5);
+  blobs.forEach((b,i) => { const f=(i+1)*8; b.style.marginLeft=(x*f)+'px'; b.style.marginTop=(y*f)+'px'; });
+});
+</script>
+</body>
+</html>

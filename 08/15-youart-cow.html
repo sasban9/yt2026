@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cow — Manohar Chiluveru | You.Art</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Bricolage+Grotesque:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0d0c0a;
+    --bg-soft:#141210;
+    --panel:#181614;
+    --line: rgba(230,220,200,0.12);
+    --ink:#efe9df;
+    --ink-dim:#a89e8e;
+    --ink-faint:#6f6656;
+    --gold:#c9a24b;
+    --gold-bright:#e6c778;
+    --acid:#b8d15a;
+    --serif:'Cormorant Garamond', serif;
+    --sans:'Bricolage Grotesque', sans-serif;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+
+  html{scroll-behavior:smooth;}
+
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--sans);
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* base font floor: never below 16px tablet/desktop, ~14px mobile */
+  body{ font-size: clamp(16px, 1vw + 14px, 18px); line-height:1.6; }
+  @media (max-width:640px){ body{ font-size: 15px; } }
+
+  ::selection{ background:var(--gold); color:#12100d; }
+
+  a{ color:inherit; text-decoration:none; }
+
+  /* ---------- grain / atmosphere ---------- */
+  .grain{
+    position:fixed; inset:0; pointer-events:none; z-index:60; opacity:.05; mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .vignette{
+    position:fixed; inset:0; pointer-events:none; z-index:55;
+    background: radial-gradient(120% 90% at 50% 0%, transparent 40%, rgba(0,0,0,.55) 100%);
+  }
+
+  /* ---------- top ribbon ---------- */
+  .ribbon{
+    position:sticky; top:0; z-index:50;
+    background:linear-gradient(90deg,#1b1812,#221d15,#1b1812);
+    border-bottom:1px solid var(--line);
+    text-align:center;
+    padding:9px 12px;
+    font-size:clamp(11px,2.4vw,13px);
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--gold-bright);
+  }
+  .ribbon span{ opacity:.55; margin:0 .6em; }
+
+  /* ---------- nav ---------- */
+  nav{
+    position:sticky; top:34px; z-index:49;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px clamp(20px,5vw,56px);
+    background:rgba(13,12,10,0.86);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .logo{ font-family:var(--serif); font-style:italic; font-size:clamp(20px,3vw,26px); letter-spacing:.02em; }
+  .logo b{ font-style:normal; color:var(--gold-bright); font-weight:600; }
+  .nav-links{ display:flex; gap:clamp(16px,3vw,34px); font-size:13px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-dim); }
+  .nav-links a{ position:relative; transition:color .3s; }
+  .nav-links a:hover{ color:var(--gold-bright); }
+  .nav-links a::after{ content:''; position:absolute; left:0; bottom:-6px; width:0; height:1px; background:var(--gold); transition:width .35s; }
+  .nav-links a:hover::after{ width:100%; }
+  .nav-cart{ display:flex; align-items:center; gap:18px; }
+  .cart-icon{ width:22px; height:22px; border:1px solid var(--ink-dim); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; }
+  @media (max-width:820px){ .nav-links{ display:none; } }
+
+  /* ---------- hero / gallery split ---------- */
+  .hero{
+    display:grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    min-height:92vh;
+    position:relative;
+  }
+  @media (max-width:980px){ .hero{ grid-template-columns:1fr; min-height:auto; } }
+
+  .gallery{
+    position:relative;
+    background:var(--bg-soft);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    padding:clamp(20px,4vw,50px);
+  }
+  .gallery::before{
+    content:'';
+    position:absolute; inset:0;
+    background:
+      radial-gradient(60% 50% at 20% 15%, rgba(201,162,75,0.09), transparent 60%),
+      radial-gradient(50% 40% at 85% 85%, rgba(184,209,90,0.06), transparent 60%);
+  }
+  .stage{
+    position:relative;
+    width:100%;
+    max-width:640px;
+    aspect-ratio: 69/57;
+  }
+  .stage img{
+    position:absolute; inset:0;
+    width:100%; height:100%; object-fit:cover;
+    border-radius:2px;
+    box-shadow: 0 40px 90px -20px rgba(0,0,0,.7), 0 0 0 1px var(--line);
+    opacity:0;
+    transform: scale(1.04);
+    animation: reveal 1.4s cubic-bezier(.16,1,.3,1) forwards;
+  }
+  .stage img.active{ z-index:2; }
+  @keyframes reveal{
+    from{ opacity:0; transform:scale(1.06); }
+    to{ opacity:1; transform:scale(1); }
+  }
+  .frame-tag{
+    position:absolute; top:-14px; left:-14px;
+    font-family:var(--serif); font-style:italic; font-size:14px;
+    color:var(--gold-bright);
+    background:var(--bg); padding:6px 14px;
+    border:1px solid var(--line);
+    z-index:3;
+    animation: floatIn .9s .3s cubic-bezier(.16,1,.3,1) both;
+  }
+  @keyframes floatIn{ from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
+
+  .thumbs{
+    position:absolute; bottom:clamp(16px,3vw,34px); left:50%; transform:translateX(-50%);
+    display:flex; gap:10px; z-index:4;
+  }
+  .thumbs button{
+    width:56px; height:46px; padding:0; border:1px solid var(--line); border-radius:2px; overflow:hidden;
+    cursor:pointer; background:none; opacity:.5; transition:opacity .3s, border-color .3s, transform .3s;
+  }
+  .thumbs button img{ width:100%; height:100%; object-fit:cover; }
+  .thumbs button:hover{ opacity:.85; transform:translateY(-2px); }
+  .thumbs button.active{ opacity:1; border-color:var(--gold); }
+
+  .drift{
+    position:absolute; font-family:var(--serif); font-style:italic; color:var(--ink-faint);
+    font-size:13px; letter-spacing:.06em; z-index:3;
+    animation: drift 8s ease-in-out infinite;
+  }
+  .drift.d1{ top:22px; right:26px; animation-delay:0s; }
+  .drift.d2{ bottom:22px; right:30px; animation-delay:2s; }
+  @keyframes drift{ 0%,100%{ transform:translateY(0); opacity:.5;} 50%{ transform:translateY(-6px); opacity:.9;} }
+
+  /* ---------- info panel ---------- */
+  .info{
+    padding:clamp(32px,5vw,72px) clamp(24px,5vw,64px);
+    display:flex; flex-direction:column; justify-content:center;
+    position:relative;
+  }
+  .eyebrow{
+    display:flex; align-items:center; gap:10px;
+    font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:var(--acid);
+    opacity:0; animation: rise .8s .1s forwards;
+  }
+  .eyebrow .dot{ width:6px; height:6px; border-radius:50%; background:var(--acid); box-shadow:0 0 10px var(--acid); animation:pulse 2s infinite; }
+  @keyframes pulse{ 0%,100%{opacity:1;} 50%{opacity:.35;} }
+
+  h1{
+    font-family:var(--serif); font-weight:500;
+    font-size:clamp(48px, 8vw, 96px);
+    line-height:.95;
+    margin:14px 0 6px;
+    opacity:0; animation: rise .9s .25s forwards;
+  }
+  h1 em{ font-style:italic; color:var(--gold-bright); }
+
+  .by{
+    display:flex; align-items:center; gap:10px;
+    font-size:15px; color:var(--ink-dim); margin-bottom:26px;
+    opacity:0; animation: rise .9s .4s forwards;
+  }
+  .by img{ width:26px; height:26px; border-radius:50%; border:1px solid var(--line); }
+  .by a{ color:var(--ink); border-bottom:1px solid var(--line); padding-bottom:1px; transition:border-color .3s, color .3s; }
+  .by a:hover{ color:var(--gold-bright); border-color:var(--gold); }
+
+  .desc{
+    font-family:var(--serif); font-size:clamp(17px,2vw,19px);
+    color:var(--ink-dim); line-height:1.7; max-width:52ch;
+    margin-bottom:28px;
+    opacity:0; animation: rise .9s .5s forwards;
+    position:relative; padding-left:18px;
+  }
+  .desc::before{ content:''; position:absolute; left:0; top:4px; bottom:4px; width:2px; background:linear-gradient(var(--gold), transparent); }
+
+  .meta-row{
+    display:flex; flex-wrap:wrap; gap:10px 28px; margin-bottom:30px;
+    opacity:0; animation: rise .9s .6s forwards;
+  }
+  .meta-item{ font-size:13px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.08em; }
+  .meta-item b{ display:block; font-size:15px; color:var(--ink); text-transform:none; letter-spacing:0; font-family:var(--sans); font-weight:600; margin-top:2px; }
+
+  .price-block{
+    display:flex; align-items:baseline; gap:14px; margin-bottom:8px;
+    opacity:0; animation: rise .9s .7s forwards;
+  }
+  .price-strike{ font-size:16px; color:var(--ink-faint); text-decoration:line-through; }
+  .price-now{ font-family:var(--serif); font-size:clamp(30px,4vw,40px); color:var(--gold-bright); font-weight:600; }
+  .price-tag{ font-size:11px; letter-spacing:.1em; text-transform:uppercase; background:rgba(184,209,90,.12); color:var(--acid); border:1px solid rgba(184,209,90,.35); padding:4px 10px; border-radius:20px; }
+
+  .size-note{ font-size:13px; color:var(--ink-faint); margin-bottom:28px; opacity:0; animation: rise .9s .78s forwards; }
+
+  @keyframes rise{ from{opacity:0; transform:translateY(18px);} to{opacity:1; transform:translateY(0);} }
+
+  /* ---------- CTA cluster ---------- */
+  .cta-row{
+    display:flex; gap:14px; flex-wrap:wrap; margin-bottom:22px;
+    opacity:0; animation: rise .9s .86s forwards;
+  }
+  .btn{
+    position:relative; overflow:hidden;
+    font-family:var(--sans); font-weight:700; font-size:15px; letter-spacing:.03em;
+    padding:17px 30px; border-radius:3px; cursor:pointer;
+    display:inline-flex; align-items:center; gap:10px;
+    transition:transform .35s cubic-bezier(.16,1,.3,1), box-shadow .35s;
+  }
+  .btn-primary{
+    background:linear-gradient(120deg,var(--gold-bright),var(--gold));
+    color:#191510; border:none;
+    box-shadow:0 14px 30px -10px rgba(201,162,75,.55);
+  }
+  .btn-primary:hover{ transform:translateY(-3px); box-shadow:0 20px 40px -10px rgba(201,162,75,.7); }
+  .btn-primary .shine{
+    position:absolute; top:0; left:-60%; width:40%; height:100%;
+    background:linear-gradient(120deg, transparent, rgba(255,255,255,.55), transparent);
+    transform:skewX(-20deg);
+    animation: shine 3.2s ease-in-out infinite;
+  }
+  @keyframes shine{ 0%{left:-60%;} 35%{left:130%;} 100%{left:130%;} }
+
+  .btn-ghost{
+    background:transparent; color:var(--ink); border:1px solid var(--line);
+  }
+  .btn-ghost:hover{ border-color:var(--gold); color:var(--gold-bright); transform:translateY(-3px); }
+  .btn-ghost img{ width:18px; height:18px; filter:invert(1); }
+
+  .micro-trust{
+    display:flex; flex-wrap:wrap; gap:18px; font-size:13px; color:var(--ink-faint);
+    opacity:0; animation: rise .9s .95s forwards;
+  }
+  .micro-trust span{ display:flex; align-items:center; gap:6px; }
+  .micro-trust b{ color:var(--acid); }
+
+  /* ---------- floating badge ---------- */
+  .float-badge{
+    position:absolute; right:clamp(10px,4vw,50px); top:clamp(20px,6vw,60px);
+    width:112px; height:112px; border-radius:50%;
+    border:1px dashed rgba(201,162,75,.5);
+    display:flex; align-items:center; justify-content:center; text-align:center;
+    font-family:var(--serif); font-style:italic; font-size:12.5px; color:var(--gold-bright);
+    animation: spin 22s linear infinite, rise .9s 1s forwards;
+    opacity:0;
+  }
+  @keyframes spin{ from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
+  .float-badge span{ display:inline-block; animation: counter-spin 22s linear infinite; }
+  @keyframes counter-spin{ from{transform:rotate(0deg);} to{transform:rotate(-360deg);} }
+  @media (max-width:980px){ .float-badge{ display:none; } }
+
+  /* ---------- marquee strip ---------- */
+  .marquee-wrap{
+    border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+    background:var(--panel); overflow:hidden; padding:16px 0;
+  }
+  .marquee{
+    display:flex; white-space:nowrap; width:max-content;
+    animation: scroll-left 26s linear infinite;
+    font-family:var(--serif); font-style:italic; font-size:clamp(16px,2.4vw,20px);
+    color:var(--ink-dim); gap:60px;
+  }
+  .marquee span{ display:flex; align-items:center; gap:60px; }
+  .marquee em{ color:var(--gold-bright); font-style:italic; padding:0 6px; }
+  @keyframes scroll-left{ from{transform:translateX(0);} to{transform:translateX(-50%);} }
+
+  /* ---------- sections ---------- */
+  section{ padding:clamp(60px,8vw,120px) clamp(20px,6vw,80px); position:relative; }
+  .section-head{ margin-bottom:clamp(36px,5vw,60px); }
+  .kicker{ font-size:12px; letter-spacing:.2em; text-transform:uppercase; color:var(--gold); margin-bottom:12px; }
+  .section-title{ font-family:var(--serif); font-size:clamp(32px,5vw,54px); line-height:1.05; max-width:16ch; }
+  .section-title em{ color:var(--gold-bright); font-style:italic; }
+
+  .reveal{ opacity:0; transform:translateY(28px); transition:opacity .9s cubic-bezier(.16,1,.3,1), transform .9s cubic-bezier(.16,1,.3,1); }
+  .reveal.in{ opacity:1; transform:translateY(0); }
+
+  /* trust grid */
+  .trust-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:1px; background:var(--line); border:1px solid var(--line); }
+  .trust-card{ background:var(--bg); padding:32px 26px; transition:background .4s; }
+  .trust-card:hover{ background:var(--bg-soft); }
+  .trust-num{ font-family:var(--serif); font-style:italic; color:var(--gold-bright); font-size:34px; margin-bottom:10px; display:block; }
+  .trust-card h3{ font-size:17px; margin-bottom:8px; font-weight:600; }
+  .trust-card p{ font-size:14px; color:var(--ink-faint); line-height:1.6; }
+
+  /* artist spotlight */
+  .artist{
+    display:grid; grid-template-columns:0.9fr 1.1fr; gap:clamp(30px,5vw,70px); align-items:center;
+    background:var(--panel); border:1px solid var(--line); border-radius:4px; padding:clamp(28px,4vw,56px);
+    position:relative; overflow:hidden;
+  }
+  @media (max-width:860px){ .artist{ grid-template-columns:1fr; } }
+  .artist::before{
+    content:'"'; position:absolute; top:-40px; left:10px; font-family:var(--serif); font-size:260px; color:rgba(201,162,75,.06); line-height:1;
+  }
+  .artist-img{ position:relative; }
+  .artist-img img{ width:100%; border-radius:3px; box-shadow:0 30px 60px -20px rgba(0,0,0,.6); }
+  .artist-quote{ font-family:var(--serif); font-size:clamp(19px,2.4vw,25px); line-height:1.55; color:var(--ink); font-style:italic; margin-bottom:22px; }
+  .artist-name{ font-size:14px; text-transform:uppercase; letter-spacing:.1em; color:var(--gold-bright); margin-bottom:4px; }
+  .artist-role{ font-size:13px; color:var(--ink-faint); }
+
+  /* wall view / room mockup */
+  .roommock{
+    position:relative; border-radius:4px; overflow:hidden; border:1px solid var(--line);
+    aspect-ratio:16/9; background: linear-gradient(180deg,#25211b 0%, #17140f 60%, #100d0a 100%);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .roommock .frame{
+    width:38%; aspect-ratio:69/57; box-shadow:0 30px 70px -20px rgba(0,0,0,.7), 0 0 0 10px #0e0c09, 0 0 0 11px rgba(201,162,75,.4);
+    transition:transform .6s cubic-bezier(.16,1,.3,1);
+  }
+  .roommock .frame img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .roommock:hover .frame{ transform:scale(1.03); }
+  .roommock .floor{ position:absolute; left:0; right:0; bottom:0; height:22%; background:linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,.5)); }
+
+  /* related */
+  .related-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:22px; }
+  .related-card{ position:relative; border-radius:3px; overflow:hidden; aspect-ratio:4/5; background:var(--bg-soft); border:1px solid var(--line); }
+  .related-card img{ width:100%; height:100%; object-fit:cover; transition:transform .7s cubic-bezier(.16,1,.3,1); }
+  .related-card:hover img{ transform:scale(1.08); }
+  .related-label{ position:absolute; left:0; right:0; bottom:0; padding:16px; background:linear-gradient(0deg, rgba(0,0,0,.75), transparent); font-size:14px; }
+
+  /* sticky mobile cta */
+  .sticky-cta{
+    position:fixed; left:0; right:0; bottom:0; z-index:70;
+    display:none; align-items:center; justify-content:space-between; gap:14px;
+    padding:14px clamp(16px,4vw,24px);
+    background:rgba(13,12,10,.92); backdrop-filter:blur(10px);
+    border-top:1px solid var(--line);
+    transform:translateY(110%); transition:transform .5s cubic-bezier(.16,1,.3,1);
+  }
+  .sticky-cta.show{ transform:translateY(0); }
+  .sticky-cta .price{ font-family:var(--serif); font-size:20px; color:var(--gold-bright); }
+  .sticky-cta .btn{ padding:13px 22px; font-size:14px; }
+  @media (max-width:980px){ .sticky-cta{ display:flex; } }
+
+  footer{
+    border-top:1px solid var(--line); padding:50px clamp(20px,6vw,80px) 90px;
+    display:flex; flex-wrap:wrap; justify-content:space-between; gap:24px;
+    font-size:13px; color:var(--ink-faint);
+  }
+  footer .fbrand{ font-family:var(--serif); font-style:italic; font-size:20px; color:var(--ink); }
+  @media (max-width:980px){ footer{ padding-bottom:120px; } }
+
+  /* scroll progress */
+  .progress{ position:fixed; top:0; left:0; height:2px; background:linear-gradient(90deg,var(--gold),var(--acid)); z-index:80; width:0%; }
+</style>
+</head>
+<body>
+
+<div class="grain"></div>
+<div class="vignette"></div>
+<div class="progress" id="progress"></div>
+
+<div class="ribbon">Free Shipping Across India <span>•</span> Authenticity Certificate Included <span>•</span> Ships in 14 Days</div>
+
+<nav>
+  <div class="logo">you<b>.art</b></div>
+  <div class="nav-links">
+    <a href="#">Curations</a>
+    <a href="#">Artists</a>
+    <a href="#">Rooms</a>
+    <a href="#">Exhibitions</a>
+  </div>
+  <div class="nav-cart">
+    <div class="cart-icon">0</div>
+  </div>
+</nav>
+
+<section class="hero" style="padding:0;">
+  <div class="gallery">
+    <div class="drift d1">est. moment ✧</div>
+    <div class="drift d2">1 of 1 original</div>
+    <div class="stage" id="stage">
+      <div class="frame-tag">69" × 57"</div>
+      <img class="active" data-i="0" src="https://you.art/cdn/shop/products/ManoharChiluveru-01_848x700.jpg?v=1649240125" alt="Cow painting by Manohar Chiluveru">
+      <img data-i="1" src="https://you.art/cdn/shop/products/Picture9-05_876x700.jpg?v=1649240197" alt="Acrylic cow painting on canvas detail">
+      <img data-i="2" src="https://you.art/cdn/shop/products/ManoharChiluveru-01_304494ce-bfc7-42e1-b99c-599a7e4209f3_875x700.jpg?v=1649240197" alt="Cow wall painting installed">
+    </div>
+    <div class="thumbs" id="thumbs">
+      <button class="active" data-i="0"><img src="https://you.art/cdn/shop/products/ManoharChiluveru-01_91x75_crop_center.jpg?v=1649240125" alt=""></button>
+      <button data-i="1"><img src="https://you.art/cdn/shop/products/Picture9-05_94x75_crop_center.jpg?v=1649240197" alt=""></button>
+      <button data-i="2"><img src="https://you.art/cdn/shop/products/ManoharChiluveru-01_304494ce-bfc7-42e1-b99c-599a7e4209f3_94x75_crop_center.jpg?v=1649240197" alt=""></button>
+    </div>
+  </div>
+
+  <div class="info">
+    <div class="float-badge"><span>ORIGINAL · SIGNED · ONE‑OF‑A‑KIND ✦</span></div>
+    <div class="eyebrow"><span class="dot"></span> Original Artwork — Only One Available</div>
+    <h1>C<em>o</em>w</h1>
+    <div class="by">
+      <img src="https://cdn.shopify.com/s/files/1/0619/4302/1780/files/link_1_50x50.png?v=1648409330" alt="">
+      by <a href="https://you.art/collections/manohar-chiluveru">Manohar Chiluveru</a>
+    </div>
+    <p class="desc">A painting suspended between spontaneity and intention — where memory, daily experience, and the pulse of the present converge on canvas, then invite you to complete the dialogue.</p>
+
+    <div class="meta-row">
+      <div class="meta-item">Medium <b>Acrylic on Canvas</b></div>
+      <div class="meta-item">Size <b>69" W × 57" H</b></div>
+      <div class="meta-item">Availability <b style="color:var(--acid)">1 in stock</b></div>
+    </div>
+
+    <div class="price-block">
+      <span class="price-strike">₹ 8,20,000</span>
+      <span class="price-now">₹ 7,37,000</span>
+      <span class="price-tag">Save 10%</span>
+    </div>
+    <div class="size-note">Inclusive of taxes · Complimentary insured shipping within India</div>
+
+    <div class="cta-row">
+      <button class="btn btn-primary" onclick="window.open('https://wa.me/919987212198?text=Hi,%20I%20want%20to%20enquiry%20about%20Artwork%20Cow','_blank')">
+        <span class="shine"></span> Enquire on WhatsApp →
+      </button>
+      <button class="btn btn-ghost">View on Your Wall</button>
+    </div>
+
+    <div class="micro-trust">
+      <span><b>✓</b> Authenticity Certificate</span>
+      <span><b>✓</b> Insured in Transit</span>
+      <span><b>✓</b> 14-Day Dispatch</span>
+    </div>
+  </div>
+</section>
+
+<div class="marquee-wrap">
+  <div class="marquee">
+    <span>ORIGINAL ARTWORK <em>✦</em> AUTHENTICITY CERTIFIED <em>✦</em> FREE PAN-INDIA SHIPPING <em>✦</em> INSURED TRANSIT <em>✦</em> ONE-OF-A-KIND PIECE <em>✦</em></span>
+    <span>ORIGINAL ARTWORK <em>✦</em> AUTHENTICITY CERTIFIED <em>✦</em> FREE PAN-INDIA SHIPPING <em>✦</em> INSURED TRANSIT <em>✦</em> ONE-OF-A-KIND PIECE <em>✦</em></span>
+  </div>
+</div>
+
+<section>
+  <div class="section-head reveal">
+    <div class="kicker">Why Collectors Choose You.Art</div>
+    <div class="section-title">Buying original art, <em>de-risked.</em></div>
+  </div>
+  <div class="trust-grid">
+    <div class="trust-card reveal"><span class="trust-num">01</span><h3>Certified Authenticity</h3><p>Every piece ships with a signed certificate confirming provenance and originality.</p></div>
+    <div class="trust-card reveal"><span class="trust-num">02</span><h3>Insured, White-Glove Shipping</h3><p>Complimentary delivery across India, fully insured door-to-door in transit.</p></div>
+    <div class="trust-card reveal"><span class="trust-num">03</span><h3>Direct From The Artist</h3><p>No intermediaries — your purchase supports Manohar Chiluveru directly.</p></div>
+    <div class="trust-card reveal"><span class="trust-num">04</span><h3>Only One Exists</h3><p>This exact canvas will never be reprinted or reproduced. Once sold, it's gone.</p></div>
+  </div>
+</section>
+
+<section>
+  <div class="section-head reveal">
+    <div class="kicker">The Artist</div>
+    <div class="section-title">A dialogue between <em>spontaneity</em> and idea.</div>
+  </div>
+  <div class="artist reveal">
+    <div class="artist-img">
+      <img src="https://you.art/cdn/shop/products/Picture9-05_876x700.jpg?v=1649240197" alt="Detail of Cow painting">
+    </div>
+    <div>
+      <p class="artist-quote">"My work exists in the space between spontaneity and preconceived ideas — travelling through daily experience and memory until it meets the age we are living in."</p>
+      <div class="artist-name">Manohar Chiluveru</div>
+      <div class="artist-role">Painter, Acrylic on Canvas</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section-head reveal">
+    <div class="kicker">Visualize It</div>
+    <div class="section-title">See <em>Cow</em> on your wall.</div>
+  </div>
+  <div class="roommock reveal">
+    <div class="frame"><img src="https://you.art/cdn/shop/products/ManoharChiluveru-01_848x700.jpg?v=1649240125" alt="Cow painting mockup on a wall"></div>
+    <div class="floor"></div>
+  </div>
+</section>
+
+<section>
+  <div class="section-head reveal">
+    <div class="kicker">Explore More</div>
+    <div class="section-title">You may also <em>fall for.</em></div>
+  </div>
+  <div class="related-grid">
+    <div class="related-card reveal"><img src="https://you.art/cdn/shop/products/Picture9-05_876x700.jpg?v=1649240197" alt="Related artwork"><div class="related-label">Abstract Painting</div></div>
+    <div class="related-card reveal"><img src="https://you.art/cdn/shop/products/ManoharChiluveru-01_304494ce-bfc7-42e1-b99c-599a7e4209f3_875x700.jpg?v=1649240197" alt="Related artwork"><div class="related-label">Landscape, Watercolor</div></div>
+    <div class="related-card reveal"><img src="https://you.art/cdn/shop/products/ManoharChiluveru-01_848x700.jpg?v=1649240125" alt="Related artwork"><div class="related-label">Ladakh Series</div></div>
+    <div class="related-card reveal"><img src="https://you.art/cdn/shop/products/Picture9-05_876x700.jpg?v=1649240197" alt="Related artwork"><div class="related-label">Full Moon</div></div>
+  </div>
+</section>
+
+<footer>
+  <div class="fbrand">you.art</div>
+  <div>© 2026 You.Art — Original artwork, direct from the artist's studio.</div>
+</footer>
+
+<div class="sticky-cta" id="stickyCta">
+  <div class="price">₹ 7,37,000</div>
+  <button class="btn btn-primary" onclick="window.open('https://wa.me/919987212198?text=Hi,%20I%20want%20to%20enquiry%20about%20Artwork%20Cow','_blank')"><span class="shine"></span>Enquire →</button>
+</div>
+
+<script>
+  // gallery switching
+  const images = document.querySelectorAll('#stage img');
+  const thumbs = document.querySelectorAll('#thumbs button');
+  function setActive(i){
+    images.forEach(img=>{
+      img.classList.toggle('active', img.dataset.i === String(i));
+    });
+    thumbs.forEach(t=> t.classList.toggle('active', t.dataset.i === String(i)));
+  }
+  thumbs.forEach(t=> t.addEventListener('click', ()=> setActive(t.dataset.i)));
+
+  // scroll reveal
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el=> io.observe(el));
+
+  // scroll progress + sticky cta
+  const progress = document.getElementById('progress');
+  const stickyCta = document.getElementById('stickyCta');
+  window.addEventListener('scroll', ()=>{
+    const h = document.documentElement;
+    const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+    progress.style.width = scrolled + '%';
+    stickyCta.classList.toggle('show', h.scrollTop > 500);
+  });
+</script>
+
+</body>
+</html>
