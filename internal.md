@@ -1,3 +1,10 @@
+SEP03 THU
+https://skald.in/padmashri/ - Padma consultant
+
+SEP02 WED
+https://kynkyny.com/collections/puviyarasu-kannadasan
+artflute.com
+
 ===
 AUG31 MON
 https://molit.darwinbox.in/ms/candidatev2/main/careers/jobDetails/a688b4768abf8a?from=all
@@ -5,7 +12,6 @@ https://www.kivoevents.com/blog
 Christie's | Gallery Sanskriti | Gallery Kolkata | SaffronArt | Aakriti Art Gallery | Janus Art Gallery | Experimenter | 
 https://www.ajkalporsu.in/about
 https://www.janusartgallery.com/about
-
 
 AUG30 SUN
 Bus MDN to JGM
