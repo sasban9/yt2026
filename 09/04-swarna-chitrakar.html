@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Swarna Chitrakar - Patachitra artist from Pingla, a changemaker and a community leader</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+
+  /* ---------- Design tokens ---------- */
+  :root{
+    --bg:#141210;
+    --bg-alt:#0f0d0c;
+    --ink:#f3efe8;
+    --ink-dim:#b8b0a4;
+    --line:rgba(243,239,232,0.08);
+    --gold:#c9a961;
+    --gold-soft:rgba(201,169,97,0.35);
+
+    /* Fluid type — hard floors baked into the clamp min value.
+       16px is the absolute floor at every breakpoint (tablet/desktop/mobile),
+       which trivially satisfies the ">12px on mobile" requirement too. */
+    --fs-body:   clamp(1rem, 0.94rem + 0.3vw, 1.0625rem);      /* floor 16px */
+    --fs-small:  clamp(1rem, 0.97rem + 0.15vw, 1.0625rem);     /* floor 16px */
+    --fs-badge:  clamp(1rem, 0.96rem + 0.2vw, 1.0625rem);      /* floor 16px */
+    --fs-h1:     clamp(1rem, 1rem + 2vw, 2.6rem);
+    --fs-h3:     clamp(1.3rem, 1.05rem + 1.2vw, 1.75rem);
+
+    --ease: cubic-bezier(.22,.61,.36,1);
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scrollbar-width:thin;scroll-behavior:smooth;}
+  html,body{background:var(--bg);}
+
+  body{
+    font-family:'Inter',sans-serif;
+    font-size:var(--fs-body);
+    line-height:1.75;
+    color:var(--ink);
+    background:
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(201,169,97,0.06), transparent),
+      var(--bg);
+  }
+
+  main{
+    width:80%;
+    max-width:800px;
+    margin:0 auto;
+    display:flex;
+    height:90vh;
+    align-items:center;
+    flex-direction:column;
+  }
+
+  h1{
+    font-family:'Cormorant Garamond',serif;
+    font-weight:600;
+    font-size:var(--fs-h1);
+    letter-spacing:0.01em;
+    line-height:1.15;
+  }
+  h1 small{
+    display:block;
+    margin-top:.35rem;
+    font-family:'Inter',sans-serif;
+    font-weight:500;
+    font-size:var(--fs-small);
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    color:var(--gold);
+  }
+  h3{
+    font-family:'Cormorant Garamond',serif;
+    font-weight:600;
+    font-size:var(--fs-h3);
+    letter-spacing:0.01em;
+    line-height:1.2;
+  }
+  h3 small{
+    display:block;
+    margin-top:.4rem;
+    font-family:'Inter',sans-serif;
+    font-weight:500;
+    font-size:var(--fs-small);
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+
+  p{
+    font-size:var(--fs-body);
+    color:var(--ink-dim);
+    max-width:60ch;
+  }
+
+  b{
+    font-family:'Inter',sans-serif;
+    font-weight:600;
+    font-size:var(--fs-badge);
+    letter-spacing:0.04em;
+    background:rgba(20,18,16,0.72);
+    backdrop-filter:blur(6px);
+    -webkit-backdrop-filter:blur(6px);
+    color:var(--gold);
+    border:1px solid var(--gold-soft);
+    padding:.4em .9em;
+    border-radius:999px;
+    z-index:999;
+    position:absolute;
+    top:1rem;
+    right:1rem;
+  }
+
+  img{
+    display:block;
+    max-height:90vh;
+    max-width:96%;
+    margin:1rem;
+    border-radius:2px;
+    box-shadow:0 20px 40px -10px rgba(0,0,0,0.6);
+    transition:transform .6s var(--ease), box-shadow .6s var(--ease);
+  }
+  img:hover{
+    transform:scale(1.015);
+    box-shadow:0 28px 55px -12px rgba(0,0,0,0.7);
+  }
+
+  article{
+    width:100%;
+    display:flex;
+    justify-content:center;
+    align-items:stretch;
+    line-height:2;
+    flex-wrap:wrap;
+  }
+
+  article > div{
+    width:33.333%;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding:1.5rem;
+    position:relative;
+    background:transparent;
+    border:1px solid transparent;
+  }
+  article > div:nth-of-type(2n){
+    background:var(--bg-alt);
+    border-color:var(--line);
+  }
+
+  .frame{border:solid 1px #000;}
+
+  /* ---------- Scroll-reveal ---------- */
+  .reveal{
+    opacity:0;
+    transform:translateY(28px);
+    transition:opacity .8s var(--ease), transform .8s var(--ease);
+    will-change:opacity, transform;
+  }
+  .reveal.is-visible{
+    opacity:1;
+    transform:translateY(0);
+  }
+  @media (prefers-reduced-motion: reduce){
+    .reveal{opacity:1;transform:none;transition:none;}
+    img{transition:none;}
+    img:hover{transform:none;}
+  }
+
+  /* ---------- Breakpoints (kept consistent with original layout logic) ---------- */
+  @media (max-width:1000px){
+    article > div{width:50%;}
+  }
+  @media (max-width:500px){
+    article > div{width:100%;height:auto;padding:1.25rem 1rem;}
+    main{width:92%;}
+  }
+</style>
+</head>
+<body>
+  <article>
+    <div class="reveal">
+        <!-- <h1>সুবীর বিশ্বাসের স্বপ্ন উড়ান </h1> -->
+        <p><strong>Congratulations to Swarna Chitrakar for winning the National Award! </strong><br><br>
+        <img src="https://scontent.fccu13-2.fna.fbcdn.net/v/t39.30808-6/596297752_1275545404610862_1412932131786736530_n.jpg?stp=dst-jpg_tt6&cstp=mx1156x867&ctp=s1156x867&_nc_cat=103&ccb=1-7&_nc_sid=127cfc&_nc_ohc=ye5w0M_zDjkQ7kNvwH1bEr4&_nc_oc=AdrUlMUXFKuZ-u4I-auGW4qt1Mg4M24p02o-8BmWqpENd4wyS0ofsS5QoX5hEubYq3q3ltqpDUjXFECKxUhKgtjq&_nc_zt=23&_nc_ht=scontent.fccu13-2.fna&_nc_gid=FIVLff_YA8lMG4socjSqNw&_nc_ss=7d2a8&oh=00_AQIU0MI3oMmYSh61d1vLz1re9Nt-pp91prtkTbh2M9ZB9Q&oe=6AA030EA" alt="">
+Swarna Chitrakar is a renowned Patachitra artist from Naya village, Pingla Block, West Medinipur. She has represented her art and community at a national and global scale, having travelled to the US, UK, France, and many other countries! </p>
+        <p>She has spearheaded the economic and social empowerment of other women artists in her village, and is an inspiration to us all.</p>
+    </div>
+    <div class="reveal">
+        <img src="https://bengalpatachitra.com/wp-content/uploads/2019/11/swarno.png" alt="">
+    </div>
+    <div class="reveal">
+        <h3>Swarna Chitrakar <small>Naya Pingla, Patachitra</small></h3>
+        <p>
+The exploration of metal in sculptural form has been one of the preoccupations of artist Janardhanan Rudhramoorthy, over the last decade. Deeply inspired by nature, he has found various means to adapt the hard and heavy medium into visibly fluid and dynamic objects. Coming from a background in painting, Jana was drawn to processes of three-dimensionality that translated and presented his concepts in ways beyond the surface of a canvas. 
+        </p>
+        <img src="https://scontent.fixb5-1.fna.fbcdn.net/v/t39.30808-6/719798452_4165889340368962_1150844091978606967_n.jpg?stp=cp6_dst-jpg_tt6&cstp=mx2048x1536&ctp=s2048x1536&_nc_cat=105&ccb=1-7&_nc_sid=833d8c&_nc_ohc=WKdI_apapdMQ7kNvwGkQFQM&_nc_oc=Adpa31GVvZTCJ-8I4Wlw7nzBTHU6H_QDrMrkwASvQjiRHHeGqejBRond0hG3gGDSEhN5d6fwIkU4mOxmqQ3cVkSP&_nc_zt=23&_nc_ht=scontent.fixb5-1.fna&_nc_gid=VsFL7QqOKOmmd7-uukuM9A&_nc_ss=7d2a8&oh=00_AQJmHlWeGFSfHO_r8biTkr6ay6OfvO-4EQ4nf-YeT73eHg&oe=6A9D36E9" alt="">
+    </div>
+    <div class="reveal">
+        <img src="https://scontent.fccu13-4.fna.fbcdn.net/v/t39.30808-6/596300468_1275545421277527_7642037118444363907_n.jpg?stp=dst-jpg_tt6&cstp=mx867x1156&ctp=s867x1156&_nc_cat=101&ccb=1-7&_nc_sid=127cfc&_nc_ohc=dPoap4eBkqoQ7kNvwEo_D56&_nc_oc=Adp6MOm1MBS09p0Y5VQPQTy3yLUstCSMD6FQT0bLbjSmiEcFD8pVq8983xXpaCHTteT3gwTs3kOL_N83Foc_Wfyo&_nc_zt=23&_nc_ht=scontent.fccu13-4.fna&_nc_gid=6gpWxj6hAoPKQmMfaQDVbQ&_nc_ss=7d2a8&oh=00_AQLvNMm4Dgjti7eui0yHlSl82bcwxDY24-ItwLxao2fiWw&oe=6AA056F3" alt="">
+    </div>
+    <div class="reveal">
+        <p>As he expertly pursues potential shapes and figures, Jana's grammar has grown to accommodate visual and material paradoxes. Solid iron is teased into softness, furthering the experience of malleable matter that can bend and turn with ease. </p>
+        <p>
+        <img src="https://scontent-ccu2-2.xx.fbcdn.net/v/t39.30808-6/478155318_3698029843821583_6332337120073612812_n.jpg?stp=dst-jpg_tt6&cstp=mx2048x922&ctp=s2048x922&_nc_cat=100&ccb=1-7&_nc_sid=833d8c&_nc_ohc=rJ34fajtRMwQ7kNvwFgtdHw&_nc_oc=AdpgVk_hsRHsoVZG92lXYu0Wsp-ABQgdkn8zcryD0ZqOjLRLmiKWG1K9Xe792a472XmjJgZESdK-z2b4ea_1TZDa&_nc_zt=23&_nc_ht=scontent-ccu2-2.xx&_nc_gid=5FeblmDwGUaUXd9W9pfBZw&_nc_ss=7d2a8&oh=00_AQLDnSI_woRT9LreeEm2XHX245ye0fC4wrQvL_FayXl6VQ&oe=6A9D51A7" alt="">
+Dense sheets of metal are forged into multiple slender strips, developing the illusion of transparency and graceful movement. Despite the large scale, many forms are sculpted and displayed to emulate lightness and the lack of gravity, defying the nature of the material. </p>
+    </div>
+
+    <div class="reveal">
+        <img src="https://scontent.fixb5-1.fna.fbcdn.net/v/t39.30808-6/730749021_4183454898612406_7318953856790959423_n.jpg?stp=cp6_dst-jpg_tt6&cstp=mx1536x2048&ctp=s1536x2048&_nc_cat=105&ccb=1-7&_nc_sid=833d8c&_nc_ohc=fRA1veJFdyEQ7kNvwEyLbp2&_nc_oc=Adq4coGjWHU8Fcd1XaLnxHXsh5Sgw2qtlKEtD4j8CUkeLQHBNFXyNQKho2uSJROM5Oeypyo5IvzPLHc5_kRF286m&_nc_zt=23&_nc_ht=scontent.fixb5-1.fna&_nc_gid=IEmkID6IJb6PxHLkpoGW7g&_nc_ss=7d2a8&oh=00_AQLlIBLJdcqalwO_kdGzOdxTFqgEDL_PjZ_9oc65FvT8Ew&oe=6A9D389C" alt="">
+    </div>
+    <div class="reveal">
+        <p>
+As he expertly pursues potential shapes and figures, Jana's grammar has grown to accommodate visual and material paradoxes. Solid iron is teased into softness, furthering the experience of malleable matter that can bend and turn with ease. Dense sheets of metal are forged into multiple slender strips, developing the illusion of transparency and graceful movement. Despite the large scale, many forms are sculpted and displayed to emulate lightness and the lack of gravity, defying the nature of the material. </p>
+        <img src="https://scontent.fixb5-1.fna.fbcdn.net/v/t39.30808-6/699505273_4136322393325657_2843907192777323258_n.jpg?stp=cp6_dst-jpg_tt6&cstp=mx2048x1557&ctp=s2048x1557&_nc_cat=101&ccb=1-7&_nc_sid=833d8c&_nc_ohc=VBlHKk3tDiAQ7kNvwEQh4MG&_nc_oc=AdrpYXQgyoPO-x6RdPejQVyx-q7nSLb6FLfgZSLkreNObaslFK1XfHVpG38WzgHoUzB-D7iDtWii4N1KBujy0V_L&_nc_zt=23&_nc_ht=scontent.fixb5-1.fna&_nc_gid=DRAdFHIpovGkI-HhIbIP0A&_nc_ss=7d2a8&oh=00_AQKmhxLULwVln9d5v7MYFi5FDy0R1ch4xX6JKB6KDiaLAw&oe=6A9D3A52" alt="">
+    </div>
+    <div class="reveal" style="width:66%">
+        <img src="https://scontent.fixb5-1.fna.fbcdn.net/v/t39.30808-6/497501749_3783527125271854_1966730131719360890_n.jpg?stp=dst-jpg_tt6&cstp=mx1080x637&ctp=s1080x637&_nc_cat=109&ccb=1-7&_nc_sid=833d8c&_nc_ohc=LjrMnLl2-NkQ7kNvwELNIIE&_nc_oc=Adpqq8CHOQBPgIx9MCL1swSODllhbdpcYgZlZru7NATGOL0fx1a-dhx9FF3-3Eldr-LuhmATi0iCqa_xlonTD3Nm&_nc_zt=23&_nc_ht=scontent.fixb5-1.fna&_nc_gid=5nR6XlnVbGjb1-8qxptGvw&_nc_ss=7d2a8&oh=00_AQIr_XS0jDJ3f_DQLB0J5RP2bNQfsc8NAqLD3GwJ5IAqYw&oe=6A9D6412" alt="">
+    </div>
+
+    <div class="reveal">
+        <img src="https://scontent-ccu2-2.xx.fbcdn.net/v/t39.30808-6/557592803_3917884241836141_532382422191390926_n.jpg?stp=dst-jpg_tt6&cstp=mx1001x853&ctp=s1001x853&_nc_cat=104&ccb=1-7&_nc_sid=833d8c&_nc_ohc=0k2AVQkRWXsQ7kNvwFocBkF&_nc_oc=Adrh1ANaIG3O1G5jY9Wa41zIOawdhCnTXOchbvf51nMUkiTZTYdFQzHx4qgXjFBNpBJMGUBYKxR6JiHzroTB2oE2&_nc_zt=23&_nc_ht=scontent-ccu2-1.xx&_nc_gid=kP_69wnkH9t3A-008i7WKA&_nc_ss=7b2a8&oh=00_AQIvWB9y7-0Wfe10eizr93r5lCMPNpLHxxI4zl01jns3rQ&oe=6A9D48B6" alt="">
+        <img src="https://scontent-ccu2-1.xx.fbcdn.net/v/t39.30808-6/634840489_4050867078537856_5881053244505625448_n.jpg?stp=cp6_dst-jpg_tt6&cstp=mx2048x1536&ctp=s2048x1536&_nc_cat=103&ccb=1-7&_nc_sid=833d8c&_nc_ohc=bHtENweF3Y8Q7kNvwEJuclT&_nc_oc=AdpWGLzQRcDDc0D5RYVKLfVnqoN8D9KtCxuTlf67KwTMDsH7M1DBQau00JbMLIAEZgQE1veVD-FXn9g9Hzy7mYMX&_nc_zt=23&_nc_ht=scontent-ccu2-1.xx&_nc_gid=kP_69wnkH9t3A-008i7WKA&_nc_ss=7b2a8&oh=00_AQIvWB9y7-0Wfe10eizr93r5lCMPNpLHxxI4zl01jns3rQ&oe=6A9D48B6" alt="">
+    </div>
+    <div class="reveal">
+        <img src="https://scontent-ccu2-2.xx.fbcdn.net/v/t39.30808-6/497867193_3786209071670326_7677780233995464659_n.jpg?stp=cp6_dst-jpg_tt6&cstp=mx752x1020&ctp=s752x1020&_nc_cat=100&ccb=1-7&_nc_sid=127cfc&_nc_ohc=0t7Pd_1issYQ7kNvwFIMHtF&_nc_oc=AdpyTL1Gk4d4v7ukukGIx8V28dHtHJm9leH95fjbdwywnJACc9zqxrnP8XaCUBN3tXn-h0QEzQnA-0VyKU0rShjl&_nc_zt=23&_nc_ht=scontent-ccu2-2.xx&_nc_gid=sQwARrTyy1FPc3zp3WRWyQ&_nc_ss=7b2a8&oh=00_AQIieZSjPJizjY30pg1Axc-H9b-Hr2J7ym-B0DSS99g3Lg&oe=6A9D413A" alt="">
+    </div>
+    <div class="reveal">
+        <b>INR 1.50L</b>
+        <img src="https://scontent-ccu1-2.xx.fbcdn.net/v/t39.30808-6/473787422_3676910905933477_7003526511220556513_n.jpg?stp=dst-jpg_tt6&cstp=mx922x2048&ctp=s922x2048&_nc_cat=111&ccb=1-7&_nc_sid=833d8c&_nc_ohc=OdoxOa2yNEkQ7kNvwH6GR-_&_nc_oc=AdpPaMdfB4EaObtcJKqulLIDcvCBe3ksGoLdtMWex46BpCngi0UpA5-cHNbOWED7mWMG_KgQvmNmEaR-PxB-hAfS&_nc_zt=23&_nc_ht=scontent-ccu1-2.xx&_nc_gid=45EwvBEu_3NMV3VMud0Oxg&_nc_ss=7b2a8&oh=00_AQLwupVSYxR3jkIKNecLvpcBwZhFrODI-e6qMRRgIAU33w&oe=6A9D62D4" alt="">
+    </div>
+    <div class="reveal">
+        <b>INR 2.25L</b>
+        <img src="https://scontent-ccu2-2.xx.fbcdn.net/v/t39.30808-6/599964301_3989083418049556_3535457640551979926_n.jpg?stp=cp6_dst-jpg_tt6&cstp=mx1536x2048&ctp=s1536x2048&_nc_cat=104&ccb=1-7&_nc_sid=833d8c&_nc_ohc=ccXAfsKhtg8Q7kNvwFTRIMn&_nc_oc=AdqUCFUWT4TSK6YwRiluAOKNnxqiwHGx3wHASKqXXcKkQAzLwJKPYv7IOK1ornSqnAGBpm88F0cnitltIJrAkVcx&_nc_zt=23&_nc_ht=scontent-ccu2-2.xx&_nc_gid=U8N2g5GvK6Is9X2_83DLzQ&_nc_ss=7b2a8&oh=00_AQLARVs42YW4LNzbTbPkPbIjxO4-YIiQpOEqwVqXnjClfw&oe=6A9D7561" alt="">
+    </div>
+    <div class="reveal">
+        <b>INR 1.36L</b>
+        <img src="https://scontent-ccu2-1.xx.fbcdn.net/v/t39.30808-6/784426829_4243879992569896_4025145612961630187_n.jpg?stp=cp6_dst-jpg_tt6&cstp=mx1803x2048&ctp=s1803x2048&_nc_cat=109&ccb=1-7&_nc_sid=833d8c&_nc_ohc=wxNKg5D-nBMQ7kNvwEGVErf&_nc_oc=AdrtWgM0ieh2pFYzxy_2QhYh6352zzg3DV-3cDPjD5WXtfbgQnJa5rJCtX0xDCnrcNs_E82pWe4qFyY7DjkkQCdk&_nc_zt=23&_nc_ht=scontent-ccu2-1.xx&_nc_gid=Hbg12QCEYTQqFpF_lqKRjA&_nc_ss=7b2a8&oh=00_AQKKZXcO6Yv5PrlieGZWttTVxIh4ABB0cfMv5Evh1g4OUg&oe=6A9D5B31" alt="">
+    </div>
+    <div class="reveal">
+        <img src="https://scontent-ccu2-2.xx.fbcdn.net/v/t39.30808-6/493844432_3770260379931862_6406194449794291817_n.jpg?stp=dst-jpg_tt6&cstp=mx625x1280&ctp=s625x1280&_nc_cat=100&ccb=1-7&_nc_sid=127cfc&_nc_ohc=mCKcLN-CrbAQ7kNvwEx2U0a&_nc_oc=Adpar7yE8hwI0NUM-mrj_Mvx3TYCuNXmJq0GcEdD3UJxfWH-qJXfb-YEuRVM68G0WcDw68KNV-4uYIwvr8CDPdAf&_nc_zt=23&_nc_ht=scontent-ccu2-2.xx&_nc_gid=GHSz2dZdvorG0hypKlZtBA&_nc_ss=7b2a8&oh=00_AQJDTSIaifHXnEfzM9_JV3x6uBWHTKZ7GppsMT4YGGs63g&oe=6A9D4676" alt="">
+    </div>
+    <div class="reveal">
+        <b>INR 4.20L</b>
+        <img src="https://scontent-ccu2-2.xx.fbcdn.net/v/t39.30808-6/474947881_3683282455296322_2682320152546842482_n.jpg?stp=dst-jpg_tt6&cstp=mx1269x2048&ctp=s1269x2048&_nc_cat=105&ccb=1-7&_nc_sid=833d8c&_nc_ohc=SpWDpwhioBcQ7kNvwEuJU36&_nc_oc=AdrzAMP_Wo3GHvvxnSsntHxTAuAhfUwje_-NUO_n8pvCkgtS4nmGJs_gztRas7KmOEbXXz0L88rgdy_ncR24WY7P&_nc_zt=23&_nc_ht=scontent-ccu2-2.xx&_nc_gid=2OVVnfzRYm3f7aOTtDjXUw&_nc_ss=7b2a8&oh=00_AQKS1LJvSHu-TmnvgfHgwDuMgzPA2Y95M0p-NXBpUxtEYw&oe=6A9D59DE" alt="">
+    </div>
+    <div class="reveal" style="width:66%;">
+        <img src="https://scontent-ccu2-1.xx.fbcdn.net/v/t39.30808-6/474492381_3680398398918061_4126948195742860270_n.jpg?stp=dst-jpg_tt6&cstp=mx2048x922&ctp=s2048x922&_nc_cat=108&ccb=1-7&_nc_sid=833d8c&_nc_ohc=nFUG0J-BiboQ7kNvwEPBePy&_nc_oc=Adr2QyDtazoE5GSJnp_gDgPHq7Nx9fn6q83_zTLIxTM5VjlHSyM-sQxwETAq1n0PFAyW4ameS5ePiSxsMcfESumz&_nc_zt=23&_nc_ht=scontent-ccu2-1.xx&_nc_gid=cAM-hbz0x9O4FECCSAMwfQ&_nc_ss=7b2a8&oh=00_AQLpA0Nv17bWKI2gsxEnJNGJPBaoFH6YTREHNKpoubt-3A&oe=6A9D50A7" alt="">
+    </div>
+    <div class="reveal">
+        <b>INR 42k</b>
+        <img src="https://scontent-ccu2-2.xx.fbcdn.net/v/t39.30808-6/592325065_3978522765772288_6590577864673905278_n.jpg?stp=dst-jpg_tt6&cstp=mx1532x2048&ctp=s1532x2048&_nc_cat=107&ccb=1-7&_nc_sid=127cfc&_nc_ohc=bJdtFkfOk8sQ7kNvwEgjsjH&_nc_oc=AdrHwRg6iD1HQtaQ9PkVnD0CZqW7peBGZ_2YWXhtQwUzmYExEX3jcWr2n1W-mbioLyCVNooAgCWFbP9zzXLhC01B&_nc_zt=23&_nc_ht=scontent-ccu2-2.xx&_nc_gid=2BVLiqjl4itjJ4_lT8oFOA&_nc_ss=7b2a8&oh=00_AQKGRVx1o2zB3OVjCxV42YX0aCWxcC5kuFD0OEYb3B9sfQ&oe=6A9D7460" alt="">
+    </div>
+  </article>
+
+<script>
+(function(){
+  var items = document.querySelectorAll('.reveal');
+  if(!('IntersectionObserver' in window)){
+    items.forEach(function(el){ el.classList.add('is-visible'); });
+    return;
+  }
+  var observer = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry, i){
+      if(entry.isIntersecting){
+        var el = entry.target;
+        var delay = (Array.prototype.indexOf.call(items, el) % 3) * 90;
+        el.style.transitionDelay = delay + 'ms';
+        el.classList.add('is-visible');
+        observer.unobserve(el);
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+
+  items.forEach(function(el){ observer.observe(el); });
+})();
+</script>
+</body>
+</html>

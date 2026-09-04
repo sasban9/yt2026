@@ -4,7 +4,7 @@ https://www.swadeshonline.com/product/family-scene-kalighat-painting-9309257
 
 SEP02 WED
 https://kynkyny.com/collections/puviyarasu-kannadasan
-artflute.com
+https://www.artflute.com/artists/yograj-verma
 
 ===
 AUG31 MON
